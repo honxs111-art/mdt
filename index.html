@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>San Andreas Government Portal</title>
+  <title>San Andreas Government Portal | MDT System</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -13,74 +13,515 @@
       --primary-dark: #2563eb;
       --success: #10b981;
       --danger: #ef4444;
+      --warning: #f59e0b;
       --dark: #0a0e17;
       --darker: #111827;
+      --card: #1a2332;
       --light: #f8fafc;
       --lspd: #1e40af;
       --lssd: #b45309;
       --sahp: #047857;
       --doj: #6d28d9;
-      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 10px 40px rgba(0,0,0,0.3);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --glass: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.1);
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0a0e17, #1a2332, #0a0e17);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--dark);
       min-height: 100vh;
       color: var(--light);
       overflow-x: hidden;
+      position: relative;
     }
-    .header { background: rgba(10, 14, 23, 0.95); padding: 0 40px; display: none; align-items: center; justify-content: space-between; height: 75px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
-    .header.active { display: flex; }
-    .logo-container { display: flex; align-items: center; gap: 15px; }
-    .logo-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: white; }
-    .logo-text { font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .menu-nav { display: flex; gap: 6px; }
-    .menu-item { color: #94a3b8; padding: 10px 16px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; transition: var(--transition); display: flex; align-items: center; gap: 6px; }
-    .menu-item:hover { color: white; background: rgba(255,255,255,0.1); }
-    .menu-item.active { background: var(--primary); color: white; }
-    .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); }
-
-    .main-content { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 30px 20px; }
-    .main-content.with-header { padding-top: 105px; display: block; }
-
-    .flip-container { perspective: 1500px; width: 100%; max-width: 480px; margin: 0 auto; min-height: 580px; }
-    .flip-inner { position: relative; width: 100%; min-height: 580px; transition: transform 0.7s; transform-style: preserve-3d; }
-    .flip-inner.flipped { transform: rotateY(180deg); }
-    .flip-front, .flip-back { position: absolute; top: 0; left: 0; width: 100%; min-height: 580px; backface-visibility: hidden; border-radius: 25px; }
-    .flip-front { z-index: 2; }
-    .flip-back { transform: rotateY(180deg); z-index: 1; }
-
-    .welcome-screen, .login-screen { background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(255,255,255,0.1); padding: 45px 40px; text-align: center; width: 100%; min-height: 580px; display: flex; flex-direction: column; justify-content: center; box-shadow: var(--shadow); }
-    .welcome-icon { width: 90px; height: 90px; border-radius: 28px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 3rem; color: white; }
-    .welcome-screen h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
-    .welcome-screen p { color: #94a3b8; margin-bottom: 35px; font-size: 1.05rem; }
-    .btn { padding: 16px 25px; border: none; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: var(--transition); }
-    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; }
-    .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-    .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
-    .department-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-    .dept-tab { padding: 14px; border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; font-weight: 700; text-align: center; transition: var(--transition); background: rgba(255,255,255,0.05); letter-spacing: 1px; }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(109, 40, 217, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Particle animation */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: float 15s infinite;
+      opacity: 0.3;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-100px) translateX(50px); }
+      50% { transform: translateY(-200px) translateX(-50px); }
+      75% { transform: translateY(-100px) translateX(100px); }
+    }
+    
+    /* Header */
+    .header {
+      background: rgba(10, 14, 23, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 0 40px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      height: 75px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .header.active {
+      display: flex;
+      animation: slideDown 0.5s ease;
+    }
+    
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: white;
+      background: var(--gradient);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    }
+    
+    .logo-text {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .menu-nav {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .menu-item {
+      color: #94a3b8;
+      padding: 10px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary);
+      border-radius: 30px;
+      transform: scale(0);
+      transition: var(--transition);
+    }
+    
+    .menu-item:hover::before {
+      transform: scale(1);
+    }
+    
+    .menu-item:hover {
+      color: white;
+    }
+    
+    .menu-item.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .menu-item span, .menu-item i {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+      background: var(--glass);
+    }
+    
+    .user-info:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+    
+    /* Main Content */
+    .main-content {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .main-content.with-header {
+      padding-top: 105px;
+      display: block;
+    }
+    
+    /* Flip Container */
+    .flip-container {
+      perspective: 1500px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 600px;
+    }
+    
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      min-height: 600px;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    
+    .flip-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .flip-front, .flip-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 600px;
+      backface-visibility: hidden;
+      border-radius: 30px;
+    }
+    
+    .flip-front {
+      z-index: 2;
+    }
+    
+    .flip-back {
+      transform: rotateY(180deg);
+      z-index: 1;
+    }
+    
+    /* Welcome & Login Screens */
+    .welcome-screen, .login-screen {
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      padding: 50px 40px;
+      text-align: center;
+      width: 100%;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      border-radius: 30px;
+    }
+    
+    .welcome-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 30px;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      font-size: 3rem;
+      color: white;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .welcome-screen h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .welcome-screen p {
+      color: #94a3b8;
+      margin-bottom: 35px;
+      font-size: 1.05rem;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 16px 25px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(239, 68, 68, 0.5);
+    }
+    
+    /* Department Tabs */
+    .department-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .dept-tab {
+      padding: 14px;
+      border: 2px solid var(--glass-border);
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      text-align: center;
+      transition: var(--transition);
+      background: var(--glass);
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .dept-tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary);
+      transform: scale(0);
+      transition: var(--transition);
+    }
+    
+    .dept-tab:hover::before {
+      transform: scale(1);
+    }
+    
+    .dept-tab.active {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
     .dept-tab.lspd.active { background: var(--lspd); color: white; }
     .dept-tab.lssd.active { background: var(--lssd); color: white; }
     .dept-tab.sahp.active { background: var(--sahp); color: white; }
     .dept-tab.doj.active { background: var(--doj); color: white; }
-    .form-group { margin-bottom: 18px; text-align: left; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.85rem; color: #cbd5e1; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 18px; border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; background: rgba(255,255,255,0.05); color: white; outline: none; transition: var(--transition); font-size: 0.95rem; }
-    .form-group select option { background: var(--darker); color: white; }
-    .message { padding: 14px 18px; border-radius: 14px; margin-bottom: 15px; font-weight: 600; }
-    .message.error { background: rgba(239,68,68,0.15); color: #fca5a5; }
-    .message.success { background: rgba(16,185,129,0.15); color: #6ee7b7; }
-
-    .photo-upload { margin-bottom: 20px; text-align: center; }
+    
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+    
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--glass-border);
+      border-radius: 14px;
+      background: var(--glass);
+      color: white;
+      outline: none;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .form-group select option {
+      background: var(--darker);
+      color: white;
+    }
+    
+    /* Messages */
+    .message {
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    /* Photo Upload */
+    .photo-upload {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
     .photo-preview {
-      width: 150px;
-      height: 150px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      border: 3px dashed rgba(255,255,255,0.2);
+      background: var(--glass);
+      border: 3px dashed var(--glass-border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -88,90 +529,663 @@
       cursor: pointer;
       overflow: hidden;
       transition: var(--transition);
-      position: relative;
     }
-    .photo-preview:hover { border-color: var(--primary); box-shadow: 0 0 20px rgba(59,130,246,0.3); }
-    .photo-preview i { font-size: 3rem; color: #94a3b8; }
-    .photo-preview img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
-    .btn-upload { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 50px; padding: 10px 20px; cursor: pointer; font-size: 0.85rem; transition: var(--transition); }
-    .btn-upload:hover { background: rgba(255,255,255,0.2); }
-
-    .dashboard-content { display: none; }
-    .dashboard-content.active { display: block; }
-    .dashboard-header { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; padding: 35px; text-align: center; margin-bottom: 25px; }
-    .dashboard-header h1 { font-size: 2rem; font-weight: 800; }
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
-    .info-card { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 22px; padding: 28px; text-align: center; cursor: pointer; transition: var(--transition); }
-    .info-card:hover { transform: translateY(-5px); }
-    .info-card .icon { width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; color: white; }
-    .info-card h3 { font-size: 1.15rem; }
-
-    .mdt-page { display: none; }
-    .mdt-page.active { display: block; }
-    .page-header { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 22px; padding: 28px; text-align: center; margin-bottom: 20px; position: relative; }
-    .page-header h2 { font-size: 1.7rem; font-weight: 800; }
-    .page-header .btn-create-incident { position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 50px; padding: 12px 20px; cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-    .call-sign-card { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 18px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; }
-    .badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; }
-    .badge-blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
-    .badge-green { background: rgba(16,185,129,0.2); color: #6ee7b7; }
-    .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
-    .badge-purple { background: rgba(109,40,217,0.2); color: #c4b5fd; }
-    .btn-back { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 50px; padding: 12px 25px; cursor: pointer; margin-top: 15px; }
-    .btn-remove { background: rgba(239,68,68,0.3); color: #fca5a5; border: none; border-radius: 8px; padding: 4px 8px; cursor: pointer; font-size: 0.7rem; }
-    .btn-note { background: rgba(59,130,246,0.2); color: #93c5fd; border: none; border-radius: 8px; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; }
-    .btn-summon { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; }
-    .btn-add-law { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 8px 15px; cursor: pointer; font-size: 0.8rem; }
+    
+    .photo-preview:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    
+    .photo-preview i {
+      font-size: 2.5rem;
+      color: #94a3b8;
+    }
+    
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .btn-upload {
+      background: var(--glass);
+      color: white;
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    
+    .btn-upload:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--primary);
+    }
+    
+    /* Dashboard */
+    .dashboard-content {
+      display: none;
+    }
+    
+    .dashboard-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .dashboard-header {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      border-radius: 25px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+    
+    .dashboard-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transition: var(--transition);
+    }
+    
+    .info-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .info-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .info-card .icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+      color: white;
+    }
+    
+    .info-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    
+    /* MDT Pages */
+    .mdt-page {
+      display: none;
+    }
+    
+    .mdt-page.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .page-header {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    
+    .page-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    
+    .page-header .btn-create-incident {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    
+    .page-header .btn-create-incident:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+    }
+    
+    /* Cards */
+    .call-sign-card {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .call-sign-card:hover {
+      background: rgba(59, 130, 246, 0.1);
+      transform: translateX(5px);
+      border-color: var(--primary);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    
+    .badge-blue { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+    .badge-green { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .badge-red { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+    .badge-purple { background: rgba(109, 40, 217, 0.2); color: #c4b5fd; }
+    .badge-yellow { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+    
+    .btn-back {
+      background: var(--glass);
+      color: white;
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 12px 25px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: var(--transition);
+    }
+    
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-remove {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      border: none;
+      border-radius: 8px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.7rem;
+      transition: var(--transition);
+    }
+    
+    .btn-remove:hover {
+      background: rgba(239, 68, 68, 0.5);
+    }
+    
+    .btn-note {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    
+    .btn-note:hover {
+      background: rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-summon {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    
+    .btn-summon:hover {
+      background: rgba(16, 185, 129, 0.4);
+    }
+    
+    .btn-add-law {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 10px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    
+    .btn-add-law:hover {
+      background: rgba(16, 185, 129, 0.4);
+    }
+    
     .hidden { display: none !important; }
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-    .modal { background: var(--darker); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 25px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
-    .modal h3 { margin-bottom: 15px; text-align: center; }
-    .modal-member { padding: 12px 16px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); margin-bottom: 6px; }
-    .modal-member:hover { background: rgba(59,130,246,0.2); }
-    .btn-modal-close { background: rgba(239,68,68,0.2); color: #fca5a5; border: none; border-radius: 10px; padding: 10px; cursor: pointer; width: 100%; }
-    .toggle-container { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
-    .toggle-switch { position: relative; width: 50px; height: 26px; cursor: pointer; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(239,68,68,0.3); border-radius: 26px; transition: 0.3s; }
-    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 2px; bottom: 2px; background: #ef4444; border-radius: 50%; transition: 0.3s; }
-    .toggle-switch input:checked + .toggle-slider { background: rgba(16,185,129,0.3); }
-    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); background: #10b981; }
-
-    .detail-layout { display: flex; gap: 20px; }
-    .detail-main { flex: 1; min-width: 0; }
-    .detail-sidebar { width: 220px; flex-shrink: 0; background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 18px; }
-    .detail-sidebar h3 { font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-bottom: 12px; text-transform: uppercase; }
-    .detail-tag { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; cursor: pointer; transition: var(--transition); font-size: 0.8rem; color: #cbd5e1; margin-bottom: 4px; }
-    .detail-tag:hover { background: rgba(255,255,255,0.1); }
-    .detail-tag.active { background: rgba(59,130,246,0.2); color: white; border-left: 3px solid var(--primary); }
-    .tag-item { display: flex; align-items: center; gap: 5px; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 6px; font-size: 0.75rem; margin-bottom: 3px; margin-left: 20px; }
-    .person-clickable { cursor: pointer; }
-    .notes-section { margin-top: 15px; width: 100%; }
-    .notes-section h4 { font-size: 0.9rem; font-weight: 700; color: #94a3b8; margin-bottom: 8px; }
-    .note-item { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 8px; }
-    .incident-card { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; margin-bottom: 5px; font-size: 0.75rem; }
-    .call-sign-divider { text-align: center; color: #475569; margin: 12px 0; font-size: 0.8rem; letter-spacing: 5px; }
-    .incident-form-layout { display: flex; gap: 20px; }
-    .incident-form-main { flex: 1; }
-    .incident-form-sidebar { width: 200px; flex-shrink: 0; }
-    .incident-form-sidebar h4 { font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-bottom: 10px; text-transform: uppercase; }
-    .incident-tag { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: var(--transition); font-size: 0.8rem; color: #cbd5e1; margin-bottom: 3px; }
-    .incident-tag:hover { background: rgba(255,255,255,0.1); }
-    .incident-tag.active { background: rgba(59,130,246,0.2); color: white; border-left: 3px solid var(--primary); }
-    .added-laws-list { margin-top: 10px; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 10px; }
-    .added-law-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 4px; font-size: 0.75rem; }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal {
+      background: var(--darker);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal h3 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    
+    .modal-member {
+      padding: 15px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass);
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+    
+    .modal-member:hover {
+      background: rgba(59, 130, 246, 0.2);
+      transform: translateX(5px);
+    }
+    
+    .btn-modal-close {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      transition: var(--transition);
+    }
+    
+    .btn-modal-close:hover {
+      background: rgba(239, 68, 68, 0.4);
+    }
+    
+    /* Toggle Switch */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      cursor: pointer;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(239, 68, 68, 0.3);
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+    
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 2px;
+      bottom: 2px;
+      background: #ef4444;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+      background: rgba(16, 185, 129, 0.3);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(24px);
+      background: #10b981;
+    }
+    
+    /* Detail Layout */
+    .detail-layout {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .detail-main {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .detail-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+    
+    .detail-sidebar h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    
+    .detail-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+    }
+    
+    .detail-tag:hover {
+      background: var(--glass);
+    }
+    
+    .detail-tag.active {
+      background: rgba(59, 130, 246, 0.2);
+      color: white;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      background: var(--glass);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      margin-bottom: 3px;
+      margin-left: 20px;
+    }
+    
+    .person-clickable {
+      cursor: pointer;
+    }
+    
+    .notes-section {
+      margin-top: 15px;
+      width: 100%;
+    }
+    
+    .notes-section h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+    
+    .note-item {
+      background: var(--glass);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    
+    .incident-card {
+      background: var(--glass);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 5px;
+      font-size: 0.75rem;
+    }
+    
+    .call-sign-divider {
+      text-align: center;
+      color: #475569;
+      margin: 12px 0;
+      font-size: 0.8rem;
+      letter-spacing: 5px;
+    }
+    
+    .incident-form-layout {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .incident-form-main {
+      flex: 1;
+    }
+    
+    .incident-form-sidebar {
+      width: 200px;
+      flex-shrink: 0;
+    }
+    
+    .incident-form-sidebar h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    
+    .incident-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 3px;
+    }
+    
+    .incident-tag:hover {
+      background: var(--glass);
+    }
+    
+    .incident-tag.active {
+      background: rgba(59, 130, 246, 0.2);
+      color: white;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .added-laws-list {
+      margin-top: 10px;
+      background: var(--glass);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    
+    .added-law-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      background: var(--glass);
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 0.75rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 20px;
+      }
+      
+      .menu-nav {
+        display: none;
+      }
+      
+      .welcome-screen, .login-screen {
+        padding: 30px 20px;
+      }
+      
+      .welcome-screen h1 {
+        font-size: 2rem;
+      }
+      
+      .department-tabs {
+        grid-template-columns: 1fr;
+      }
+      
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .detail-layout,
+      .incident-form-layout {
+        flex-direction: column;
+      }
+      
+      .detail-sidebar,
+      .incident-form-sidebar {
+        width: 100%;
+      }
+      
+      .page-header .btn-create-incident {
+        position: static;
+        margin-top: 15px;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    /* Loading Animation */
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--glass);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+  <!-- Particles Background -->
+  <div class="particles" id="particles"></div>
+  
   <header class="header" id="header">
     <div class="logo-container">
       <div class="logo-icon" id="headerLogoIcon">SA</div>
       <div class="logo-text" id="headerLogoText">PORTÁL</div>
     </div>
     <nav class="menu-nav">
-      <a class="menu-item active" onclick="showHome()"><i class="fas fa-home"></i> Domů</a>
-      <a class="menu-item" onclick="showServices()"><i class="fas fa-concierge-bell"></i> Služby</a>
-      <a class="menu-item" onclick="showContact()"><i class="fas fa-envelope"></i> Kontakt</a>
+      <a class="menu-item active" onclick="showHome()"><i class="fas fa-home"></i><span>Domů</span></a>
+      <a class="menu-item" onclick="showServices()"><i class="fas fa-concierge-bell"></i><span>Služby</span></a>
+      <a class="menu-item" onclick="showContact()"><i class="fas fa-envelope"></i><span>Kontakt</span></a>
     </nav>
     <div class="user-info" id="userInfo" onclick="logout()">
       <i class="fas fa-user-circle"></i>
@@ -187,7 +1201,7 @@
           <div class="welcome-screen">
             <div class="welcome-icon"><i class="fas fa-shield-halved"></i></div>
             <h1>San Andreas</h1>
-            <p>Vládní portál pro správu dokumentů</p>
+            <p>Vládní portál pro správu dokumentů a MDT</p>
             <button class="btn btn-primary" onclick="flipTo('login')"><i class="fas fa-sign-in-alt"></i> Přihlásit se</button>
             <button class="btn btn-outline" onclick="flipTo('create')"><i class="fas fa-id-card"></i> Vytvořit doklady</button>
           </div>
@@ -221,10 +1235,8 @@
               </div>
               <div id="personalFields">
                 <div class="photo-upload">
-                  <div class="photo-preview" id="photoPreview">
-                    <i class="fas fa-camera"></i>
-                  </div>
-                  <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="previewPhoto(event)">
+                  <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photoInput').click()"><i class="fas fa-camera"></i></div>
+                  <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="previewPhoto()">
                   <button class="btn-upload" onclick="document.getElementById('photoInput').click()"><i class="fas fa-upload"></i> Přidat fotku</button>
                 </div>
                 <div class="form-group"><label>Jméno</label><input type="text" id="firstName"></div>
@@ -248,44 +1260,75 @@
       </div>
     </div>
 
-    <div id="dashboardContent" class="dashboard-content" style="width:100%;max-width:950px;margin:0 auto;">
-      <div class="dashboard-header"><h1 id="welcomeTitle">Vítejte!</h1><p id="welcomeMessage">Jste přihlášeni.</p></div>
+    <div id="dashboardContent" class="dashboard-content" style="width:100%;max-width:1000px;margin:0 auto;">
+      <div class="dashboard-header">
+        <h1 id="welcomeTitle">Vítejte!</h1>
+        <p id="welcomeMessage" style="color:#94a3b8;margin-top:10px;">Jste přihlášeni do systému</p>
+      </div>
       <div class="cards-grid" id="dashboardCards">
-        <div class="info-card" onclick="showMdtPage()"><div class="icon"><i class="fas fa-address-card"></i></div><h3>MDT</h3><p>Správa systému</p></div>
-        <div class="info-card" id="managePersonsCard" onclick="showManagePersonsPage()"><div class="icon"><i class="fas fa-users"></i></div><h3>Správa členů</h3><p>Přidávání členů</p></div>
-        <div class="info-card" onclick="showLegislationPage()"><div class="icon"><i class="fas fa-gavel"></i></div><h3>Legislativa</h3><p>Zákony a tresty</p></div>
-        <div class="info-card" onclick="showAnnouncementsPage()"><div class="icon"><i class="fas fa-bullhorn"></i></div><h3>Oznámení</h3><p>Zprávy od DOJ</p></div>
+        <div class="info-card" onclick="showMdtPage()">
+          <div class="icon"><i class="fas fa-address-card"></i></div>
+          <h3>MDT</h3>
+          <p style="color:#94a3b8;">Správa systému</p>
+        </div>
+        <div class="info-card" id="managePersonsCard" onclick="showManagePersonsPage()">
+          <div class="icon"><i class="fas fa-users"></i></div>
+          <h3>Správa členů</h3>
+          <p style="color:#94a3b8;">Přidávání členů</p>
+        </div>
+        <div class="info-card" onclick="showLegislationPage()">
+          <div class="icon"><i class="fas fa-gavel"></i></div>
+          <h3>Legislativa</h3>
+          <p style="color:#94a3b8;">Zákony a tresty</p>
+        </div>
+        <div class="info-card" onclick="showAnnouncementsPage()">
+          <div class="icon"><i class="fas fa-bullhorn"></i></div>
+          <h3>Oznámení</h3>
+          <p style="color:#94a3b8;">Zprávy od DOJ</p>
+        </div>
       </div>
     </div>
 
-    <div id="mdtPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="mdtPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>MDT Systém</h2></div>
       <div class="cards-grid">
-        <div class="info-card" onclick="showPersonPage()"><div class="icon"><i class="fas fa-user"></i></div><h3>Osoby</h3></div>
-        <div class="info-card" onclick="showVehiclePage()"><div class="icon"><i class="fas fa-car"></i></div><h3>Vozidla</h3></div>
-        <div class="info-card" onclick="showIncidentsPage()"><div class="icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Incidenty</h3></div>
+        <div class="info-card" onclick="showPersonPage()">
+          <div class="icon"><i class="fas fa-user"></i></div>
+          <h3>Osoby</h3>
+          <p style="color:#94a3b8;">Evidence osob</p>
+        </div>
+        <div class="info-card" onclick="showVehiclePage()">
+          <div class="icon"><i class="fas fa-car"></i></div>
+          <h3>Vozidla</h3>
+          <p style="color:#94a3b8;">Evidence vozidel</p>
+        </div>
+        <div class="info-card" onclick="showIncidentsPage()">
+          <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <h3>Incidenty</h3>
+          <p style="color:#94a3b8;">Správa incidentů</p>
+        </div>
       </div>
-      <button class="btn-back" onclick="showDashboard()">Zpět</button>
+      <button class="btn-back" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="personPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="personPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>Evidence osob</h2></div>
       <div id="personList"></div>
-      <button class="btn-back" onclick="showMdtPage()">Zpět</button>
+      <button class="btn-back" onclick="showMdtPage()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="vehiclePage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="vehiclePage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>Evidence vozidel</h2></div>
       <div id="vehicleList"></div>
-      <button class="btn-back" onclick="showMdtPage()">Zpět</button>
+      <button class="btn-back" onclick="showMdtPage()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="incidentsPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="incidentsPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header">
         <h2>Incidenty</h2>
         <button class="btn-create-incident" onclick="openCreateIncidentForm()"><i class="fas fa-plus"></i> Vytvořit incident</button>
       </div>
-      <div id="createIncidentForm" class="hidden" style="background: rgba(17,24,39,0.9); border-radius: 20px; padding: 20px; margin-bottom: 20px; border:1px solid rgba(255,255,255,0.1);">
+      <div id="createIncidentForm" class="hidden" style="background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px; border:1px solid var(--glass-border);">
         <div class="incident-form-layout">
           <div class="incident-form-sidebar">
             <h4>Štítky</h4>
@@ -297,7 +1340,7 @@
           <div class="incident-form-main">
             <div class="form-group"><label>Popis incidentu</label><textarea id="incidentDesc" rows="4"></textarea></div>
             <div class="form-group"><label>Osoba</label><select id="incidentPersonSelect"><option value="">Vyberte osobu</option></select></div>
-            <div style="border-top:1px solid rgba(255,255,255,0.1); margin:15px 0; padding-top:15px;">
+            <div style="border-top:1px solid var(--glass-border); margin:15px 0; padding-top:15px;">
               <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
                 <h4 style="font-size:0.9rem; font-weight:700; color:#94a3b8;">Pokuta a trest</h4>
                 <button class="btn-add-law" onclick="addLawToIncident()"><i class="fas fa-plus"></i> Přidat zákon</button>
@@ -309,29 +1352,31 @@
         </div>
       </div>
       <div id="incidentList"></div>
-      <button class="btn-back" onclick="showMdtPage()">Zpět</button>
+      <button class="btn-back" onclick="showMdtPage()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="legislationPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="legislationPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>Legislativa</h2></div>
-      <div id="addLawForm" class="hidden" style="background: rgba(17,24,39,0.9); border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+      <div id="addLawForm" class="hidden" style="background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px;">
         <div class="form-group"><label>Název zákona</label><input type="text" id="lawTitle"></div>
         <div class="form-group"><label>Popis</label><textarea id="lawDescription" rows="3"></textarea></div>
-        <div class="form-group"><label>Minimální pokuta ($)</label><input type="number" id="lawMinFine" min="0"></div>
-        <div class="form-group"><label>Maximální pokuta ($)</label><input type="number" id="lawMaxFine" min="0"></div>
-        <div class="form-group"><label>Doporučená pokuta ($)</label><input type="number" id="lawRecFine" min="0"></div>
-        <div class="form-group"><label>Minimální trest (měsíce)</label><input type="number" id="lawMinMonths" min="0"></div>
-        <div class="form-group"><label>Maximální trest (měsíce)</label><input type="number" id="lawMaxMonths" min="0"></div>
-        <div class="form-group"><label>Doporučený trest (měsíce)</label><input type="number" id="lawRecMonths" min="0"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+          <div class="form-group"><label>Min. pokuta ($)</label><input type="number" id="lawMinFine" min="0"></div>
+          <div class="form-group"><label>Max. pokuta ($)</label><input type="number" id="lawMaxFine" min="0"></div>
+          <div class="form-group"><label>Dop. pokuta ($)</label><input type="number" id="lawRecFine" min="0"></div>
+          <div class="form-group"><label>Min. trest (měs.)</label><input type="number" id="lawMinMonths" min="0"></div>
+          <div class="form-group"><label>Max. trest (měs.)</label><input type="number" id="lawMaxMonths" min="0"></div>
+          <div class="form-group"><label>Dop. trest (měs.)</label><input type="number" id="lawRecMonths" min="0"></div>
+        </div>
         <button class="btn btn-primary" onclick="addLaw()">Přidat zákon</button>
       </div>
       <div id="lawList"></div>
-      <button class="btn-back" onclick="showDashboard()">Zpět</button>
+      <button class="btn-back" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="managePersonsPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="managePersonsPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>Správa členů</h2></div>
-      <div style="background: rgba(17,24,39,0.9); border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+      <div style="background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px;">
         <div class="form-group"><label>Jméno</label><input type="text" id="memberName"></div>
         <div class="form-group"><label>Heslo</label><input type="password" id="memberPassword"></div>
         <div class="form-group"><label>Hodnost</label><select id="memberRank"><option value="">Vyberte hodnost</option></select></div>
@@ -339,25 +1384,59 @@
         <button class="btn btn-primary" onclick="addMember()">Přidat člena</button>
       </div>
       <div id="memberList"></div>
-      <button class="btn-back" onclick="showDashboard()">Zpět</button>
+      <button class="btn-back" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Zpět</button>
     </div>
 
-    <div id="announcementsPage" class="mdt-page" style="width:100%;max-width:950px;margin:0 auto;">
+    <div id="announcementsPage" class="mdt-page" style="width:100%;max-width:1000px;margin:0 auto;">
       <div class="page-header"><h2>Oznámení</h2></div>
-      <div id="addAnnouncementForm" class="hidden" style="background: rgba(17,24,39,0.9); border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+      <div id="addAnnouncementForm" class="hidden" style="background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 20px;">
         <div class="form-group"><label>Nadpis</label><input type="text" id="announcementTitle"></div>
         <div class="form-group"><label>Zpráva</label><textarea id="announcementText" rows="4"></textarea></div>
         <button class="btn btn-primary" onclick="addAnnouncement()">Zveřejnit</button>
       </div>
       <div id="announcementList"></div>
-      <button class="btn-back" onclick="showDashboard()">Zpět</button>
+      <button class="btn-back" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Zpět</button>
+    </div>
+  </div>
+
+  <!-- Law Selection Modal -->
+  <div id="lawSelectionModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Vyberte zákon</h3>
+      <div class="form-group">
+        <label>Zákon</label>
+        <select id="lawSelectForIncident"><option value="">Vyberte zákon</option></select>
+      </div>
+      <div class="form-group">
+        <label>Pokuta ($)</label>
+        <input type="number" id="incidentFine" min="0" placeholder="Volitelné">
+      </div>
+      <div class="form-group">
+        <label>Trest (měsíce)</label>
+        <input type="number" id="incidentMonths" min="0" placeholder="Volitelné">
+      </div>
+      <button class="btn btn-primary" onclick="confirmAddLawToIncident()">Přidat</button>
+      <button class="btn-modal-close" onclick="closeLawSelectionModal()">Zrušit</button>
     </div>
   </div>
 
   <script>
-    // POUŽIJEME localStorage (funguje okamžitě)
+    // ⚠️ ZDE VLOŽTE SVÉ FIREBASE ÚDAJE
+    const firebaseConfig = {
+      apiKey: "VAS_API_KEY",
+      authDomain: "vas-projekt.firebaseapp.com",
+      projectId: "vas-projekt",
+      storageBucket: "vas-projekt.appspot.com",
+      messagingSenderId: "VAS_SENDER_ID",
+      appId: "VAS_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const VALID_USERNAME = "honza2001";
     const VALID_PASSWORD = "1234";
+    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1537887132616622301/vyNR26Wyc3mNMOT3TVxOgD-uR0tw7kLmIQoG_sbXTX0iAlaafnFHKgvSo-aftpqBQ_fw";
     
     const DEPARTMENTS = {
       LSPD: { name: 'LSPD', color: '#1e40af', ranks: ['Cadet','Police Officer I','Police Officer II','Police Officer III','Police Officer III+I','Sergeant I','Sergeant II','Lieutenant','Captain','Commander','Deputy Chief','Assistant Chief Of Police','Chief Of Police'] },
@@ -366,28 +1445,66 @@
       DOJ: { name: 'DOJ', color: '#6d28d9', ranks: ['Clerk','Paralegal','Attorney','Senior Attorney','Prosecutor','Senior Prosecutor','Deputy District Attorney','District Attorney','Attorney General'] }
     };
 
-    function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
-    function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {} }
-
-    let documents = loadData('persons', []);
-    let vehicles = loadData('vehicles', []);
-    let members = loadData('members', [{ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
-    let laws = loadData('laws', []);
-    let announcements = loadData('announcements', []);
-    let globalIncidents = loadData('incidents', []);
+    let documents = [];
+    let vehicles = [];
+    let members = [];
+    let laws = [];
+    let announcements = [];
+    let globalIncidents = [];
 
     let currentDepartment = 'LSPD';
     let currentUser = null;
+    let currentDetailId = null;
+    let currentDetailType = null;
     let selectedIncidentTag = 'incident';
     let addedLawsToIncident = [];
+    let summonPersonId = null;
 
-    function saveAllData() {
-      saveData('persons', documents);
-      saveData('vehicles', vehicles);
-      saveData('members', members);
-      saveData('laws', laws);
-      saveData('announcements', announcements);
-      saveData('incidents', globalIncidents);
+    // Initialize particles
+    function initParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        particle.style.width = particle.style.height = (Math.random() * 3 + 1) + 'px';
+        container.appendChild(particle);
+      }
+    }
+
+    async function loadAllData() {
+      try {
+        const [personsSnap, vehiclesSnap, membersSnap, lawsSnap, annsSnap, incsSnap] = await Promise.all([
+          db.collection('persons').get(),
+          db.collection('vehicles').get(),
+          db.collection('members').get(),
+          db.collection('laws').get(),
+          db.collection('announcements').get(),
+          db.collection('incidents').get()
+        ]);
+        documents = personsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        vehicles = vehiclesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        members = membersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        laws = lawsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        announcements = annsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalIncidents = incsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (members.length === 0) {
+          await db.collection('members').add({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
+          members = [{ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
+        }
+      } catch(e) { 
+        console.error(e); 
+        showNotification('Chyba při načítání dat', 'error');
+      }
+    }
+
+    function showNotification(message, type = 'success') {
+      const container = document.getElementById('messageContainer');
+      container.innerHTML = `<div class="message ${type}">${message}</div>`;
+      setTimeout(() => container.innerHTML = '', 3000);
     }
 
     function flipTo(page) {
@@ -409,34 +1526,47 @@
         toggleDocFields();
       }
     }
-    function flipBackToWelcome() { document.getElementById('flipInner').classList.remove('flipped'); }
-
-    function previewPhoto(event) {
-      const file = event.target.files[0];
-      if (file) {
+    
+    function flipBackToWelcome() { 
+      document.getElementById('flipInner').classList.remove('flipped'); 
+    }
+    
+    function previewPhoto() {
+      const input = document.getElementById('photoInput');
+      const preview = document.getElementById('photoPreview');
+      if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('photoPreview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        reader.onload = e => { 
+          preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`; 
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(input.files[0]);
       }
     }
-
+    
     function switchDepartment(dept) {
       currentDepartment = dept;
       ['LSPD','LSSD','SAHP','DOJ'].forEach(d => document.getElementById('tab' + d).classList.remove('active'));
       document.getElementById('tab' + dept).classList.add('active');
+      document.getElementById('loginButton').style.background = 'linear-gradient(135deg, ' + DEPARTMENTS[dept].color + ', #3b82f6)';
     }
+    
     function populateRanks() {
       const select = document.getElementById('memberRank');
       select.innerHTML = '<option value="">Vyberte hodnost</option>';
-      DEPARTMENTS[currentDepartment].ranks.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; select.appendChild(o); });
+      DEPARTMENTS[currentDepartment].ranks.forEach(r => { 
+        const o = document.createElement('option'); 
+        o.value = r; 
+        o.textContent = r; 
+        select.appendChild(o); 
+      });
     }
+    
     function toggleDocFields() {
       const type = document.getElementById('docType').value;
       document.getElementById('personalFields').classList.toggle('hidden', type === 'Registrace vozidla');
       document.getElementById('vehicleFields').classList.toggle('hidden', type !== 'Registrace vozidla');
     }
+    
     function hideAllPages() {
       ['dashboardContent','mdtPage','personPage','vehiclePage','incidentsPage','legislationPage','managePersonsPage','announcementsPage'].forEach(id => {
         const el = document.getElementById(id);
@@ -444,35 +1574,76 @@
       });
       document.getElementById('flipContainer').classList.add('hidden');
     }
+    
     function showFlipContainer() {
       document.getElementById('flipContainer').classList.remove('hidden');
       document.getElementById('flipInner').classList.remove('flipped');
       document.getElementById('header').classList.remove('active');
     }
-    function showWelcomeScreen() { hideAllPages(); showFlipContainer(); currentUser = null; }
-
-    function submitDocument() {
-      const type = document.getElementById('docType').value;
-      if (!type) { alert('Vyberte typ.'); return; }
-      if (type === 'Registrace vozidla') {
-        vehicles.push({ id: Date.now(), spz: document.getElementById('vehicleSPZ').value, make: document.getElementById('vehicleMake').value, model: document.getElementById('vehicleModel').value, color: document.getElementById('vehicleColor').value, owner: document.getElementById('vehicleOwner').value, regDate: document.getElementById('vehicleRegDate').value });
-      } else {
-        const photo = document.getElementById('photoPreview').querySelector('img')?.src || '';
-        documents.push({ id: Date.now(), docType: type, firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, birthDate: document.getElementById('birthDate').value, bloodType: document.getElementById('bloodType').value, photo: photo });
-      }
-      saveAllData();
-      alert('Doklad vytvořen!');
-      showWelcomeScreen();
+    
+    function showWelcomeScreen() { 
+      hideAllPages(); 
+      showFlipContainer(); 
+      currentUser = null; 
     }
 
-    function handleLogin() {
+    async function submitDocument() {
+      const type = document.getElementById('docType').value;
+      if (!type) { 
+        showNotification('Vyberte typ dokladu', 'error'); 
+        return; 
+      }
+      
+      try {
+        if (type === 'Registrace vozidla') {
+          await db.collection('vehicles').add({ 
+            spz: document.getElementById('vehicleSPZ').value, 
+            make: document.getElementById('vehicleMake').value, 
+            model: document.getElementById('vehicleModel').value, 
+            color: document.getElementById('vehicleColor').value, 
+            owner: document.getElementById('vehicleOwner').value, 
+            regDate: document.getElementById('vehicleRegDate').value 
+          });
+        } else {
+          const photo = document.getElementById('photoPreview').querySelector('img')?.src || '';
+          await db.collection('persons').add({ 
+            docType: type, 
+            firstName: document.getElementById('firstName').value, 
+            lastName: document.getElementById('lastName').value, 
+            birthDate: document.getElementById('birthDate').value, 
+            bloodType: document.getElementById('bloodType').value, 
+            photo: photo 
+          });
+        }
+        await loadAllData();
+        showNotification('Doklad úspěšně vytvořen!', 'success');
+        setTimeout(() => showWelcomeScreen(), 1500);
+      } catch(e) {
+        showNotification('Chyba při vytváření dokladu', 'error');
+      }
+    }
+
+    async function handleLogin() {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const dept = DEPARTMENTS[currentDepartment];
       const c = document.getElementById('messageContainer');
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) { loginSuccess(username, dept, null); return; }
+      
+      if (!username || !password) {
+        c.innerHTML = '<div class="message error">Vyplňte jméno a heslo!</div>';
+        return;
+      }
+      
+      await loadAllData();
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        loginSuccess(username, dept, null);
+        return;
+      }
       const vm = members.find(m => m.name === username && m.password === password && m.department === dept.name);
-      if (vm) { loginSuccess(username, dept, vm); return; }
+      if (vm) { 
+        loginSuccess(username, dept, vm); 
+        return; 
+      }
       c.innerHTML = '<div class="message error">Chybné jméno nebo heslo!</div>';
     }
 
@@ -488,67 +1659,157 @@
       document.getElementById('headerLogoIcon').style.background = `linear-gradient(135deg, ${dept.color}, #3b82f6)`;
       document.getElementById('userName').textContent = username;
       document.getElementById('welcomeTitle').textContent = `Vítejte, ${username}!`;
+      document.getElementById('welcomeMessage').textContent = `Přihlášen jako ${currentUser.rank || 'Administrátor'} (${dept.name})`;
       document.getElementById('managePersonsCard').style.display = currentUser.canManage ? 'block' : 'none';
+      showNotification('Přihlášení úspěšné!', 'success');
     }
 
-    function logout() { showWelcomeScreen(); }
-    function showDashboard() { hideAllPages(); document.getElementById('dashboardContent').classList.add('active'); }
-    function showMdtPage() { hideAllPages(); document.getElementById('mdtPage').classList.add('active'); }
-    function showPersonPage() { hideAllPages(); document.getElementById('personPage').classList.add('active'); displayDocuments(); }
+    function logout() { 
+      showWelcomeScreen(); 
+      showNotification('Odhlášení úspěšné!', 'success');
+    }
+    
+    function showDashboard() { 
+      hideAllPages(); 
+      document.getElementById('dashboardContent').classList.add('active'); 
+    }
+    
+    function showMdtPage() { 
+      hideAllPages(); 
+      document.getElementById('mdtPage').classList.add('active'); 
+    }
+    
+    function showPersonPage() { 
+      hideAllPages(); 
+      document.getElementById('personPage').classList.add('active'); 
+      displayDocuments(); 
+    }
+    
     function displayDocuments() {
       const list = document.getElementById('personList');
-      list.innerHTML = documents.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné osoby</p>' : documents.map(d => `
-        <div class="call-sign-card person-clickable" onclick="showPersonDetail(${d.id})">
+      list.innerHTML = documents.length === 0 ? 
+        '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné osoby v evidenci</p>' : 
+        documents.map(d => `
+        <div class="call-sign-card person-clickable" onclick="showPersonDetail('${d.id}')">
           <div style="width:45px;height:45px;border-radius:50%;overflow:hidden;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;">
             ${d.photo ? `<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-user"></i>'}
           </div>
           <div style="flex:1;"><strong>${d.firstName} ${d.lastName}</strong><p style="color:#94a3b8;font-size:0.8rem;">${d.docType}</p></div>
+          <span class="badge badge-blue">${d.bloodType || 'N/A'}</span>
         </div>
       `).join('');
     }
+    
     function showPersonDetail(id) {
       const p = documents.find(d => d.id === id);
       if (!p) return;
-      alert(`Detail: ${p.firstName} ${p.lastName}\nTyp: ${p.docType}\nNarozen: ${p.birthDate}\nKrev: ${p.bloodType}`);
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <h3>Detail osoby</h3>
+          <div style="text-align:center;margin-bottom:20px;">
+            <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;margin:0 auto 15px;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;">
+              ${p.photo ? `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-user" style="font-size:2rem;"></i>'}
+            </div>
+            <h4>${p.firstName} ${p.lastName}</h4>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <div><strong>Typ:</strong> ${p.docType}</div>
+            <div><strong>Narozen:</strong> ${p.birthDate || 'N/A'}</div>
+            <div><strong>Krev:</strong> ${p.bloodType || 'N/A'}</div>
+          </div>
+          <button class="btn-modal-close" onclick="this.closest('.modal-overlay').remove()">Zavřít</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
     }
-    function showVehiclePage() { hideAllPages(); document.getElementById('vehiclePage').classList.add('active'); displayVehiclesList(); }
+    
+    function showVehiclePage() { 
+      hideAllPages(); 
+      document.getElementById('vehiclePage').classList.add('active'); 
+      displayVehiclesList(); 
+    }
+    
     function displayVehiclesList() {
       const list = document.getElementById('vehicleList');
-      list.innerHTML = vehicles.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádná vozidla</p>' : vehicles.map(v => `
+      list.innerHTML = vehicles.length === 0 ? 
+        '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádná vozidla v evidenci</p>' : 
+        vehicles.map(v => `
         <div class="call-sign-card">
           <div style="width:45px;height:45px;border-radius:10px;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;"><i class="fas fa-car"></i></div>
           <div style="flex:1;"><strong>${v.spz}</strong><p style="color:#94a3b8;font-size:0.8rem;">${v.make} ${v.model}</p></div>
+          <span class="badge badge-blue">${v.color || 'N/A'}</span>
         </div>
       `).join('');
     }
-    function showIncidentsPage() { hideAllPages(); document.getElementById('incidentsPage').classList.add('active'); displayGlobalIncidents(); }
-    function openCreateIncidentForm() { document.getElementById('createIncidentForm').classList.toggle('hidden'); populateIncidentForm(); }
-    function selectIncidentTag(tag, el) { selectedIncidentTag = tag; document.querySelectorAll('.incident-tag').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+    
+    function showIncidentsPage() { 
+      hideAllPages(); 
+      document.getElementById('incidentsPage').classList.add('active'); 
+      displayGlobalIncidents(); 
+    }
+    
+    function openCreateIncidentForm() { 
+      document.getElementById('createIncidentForm').classList.toggle('hidden'); 
+      populateIncidentForm(); 
+    }
+    
+    function selectIncidentTag(tag, el) { 
+      selectedIncidentTag = tag; 
+      document.querySelectorAll('.incident-tag').forEach(t => t.classList.remove('active')); 
+      el.classList.add('active'); 
+    }
+    
     function populateIncidentForm() {
       const sel = document.getElementById('incidentPersonSelect');
       sel.innerHTML = '<option value="">Vyberte osobu</option>';
-      documents.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = `${d.firstName} ${d.lastName}`; sel.appendChild(o); });
+      documents.forEach(d => { 
+        const o = document.createElement('option'); 
+        o.value = d.id; 
+        o.textContent = `${d.firstName} ${d.lastName}`; 
+        sel.appendChild(o); 
+      });
     }
+    
     function addLawToIncident() {
       const sel = document.getElementById('lawSelectForIncident');
       sel.innerHTML = '<option value="">Vyberte zákon</option>';
-      laws.forEach(l => { const o = document.createElement('option'); o.value = l.id; o.textContent = l.title; sel.appendChild(o); });
+      laws.forEach(l => { 
+        const o = document.createElement('option'); 
+        o.value = l.id; 
+        o.textContent = l.title; 
+        sel.appendChild(o); 
+      });
+      document.getElementById('incidentFine').value = '';
+      document.getElementById('incidentMonths').value = '';
       document.getElementById('lawSelectionModal').classList.remove('hidden');
     }
-    function closeLawSelectionModal() { document.getElementById('lawSelectionModal').classList.add('hidden'); }
+    
+    function closeLawSelectionModal() { 
+      document.getElementById('lawSelectionModal').classList.add('hidden'); 
+    }
+    
     function confirmAddLawToIncident() {
       const lawId = document.getElementById('lawSelectForIncident').value;
       const fine = parseInt(document.getElementById('incidentFine').value) || 0;
       const months = parseInt(document.getElementById('incidentMonths').value) || 0;
-      if (!lawId) { alert('Vyberte zákon.'); return; }
-      const law = laws.find(l => l.id === parseInt(lawId));
-      addedLawsToIncident.push({ lawId: parseInt(lawId), lawTitle: law ? law.title : 'Neznámý', fine, months });
+      if (!lawId) { 
+        showNotification('Vyberte zákon', 'error'); 
+        return; 
+      }
+      const law = laws.find(l => l.id === lawId);
+      addedLawsToIncident.push({ lawId, lawTitle: law ? law.title : 'Neznámý', fine, months });
       renderAddedLaws();
       closeLawSelectionModal();
     }
+    
     function renderAddedLaws() {
       const list = document.getElementById('addedLawsList');
-      list.innerHTML = addedLawsToIncident.length === 0 ? '<p style="color:#64748b; font-size:0.75rem; text-align:center;">Žádné zákony přidány</p>' : addedLawsToIncident.map((l, idx) => `
+      list.innerHTML = addedLawsToIncident.length === 0 ? 
+        '<p style="color:#64748b; font-size:0.75rem; text-align:center;">Žádné zákony přidány</p>' : 
+        addedLawsToIncident.map((l, idx) => `
         <div class="added-law-item">
           <span style="flex:1;">${l.lawTitle}</span>
           ${l.fine > 0 ? `<span class="badge badge-blue">$${l.fine.toLocaleString()}</span>` : ''}
@@ -557,60 +1818,114 @@
         </div>
       `).join('');
     }
-    function removeAddedLaw(idx) { addedLawsToIncident.splice(idx, 1); renderAddedLaws(); }
-    function createIncident() {
-      const personId = parseInt(document.getElementById('incidentPersonSelect').value);
-      const desc = document.getElementById('incidentDesc').value.trim();
-      if (!personId || !desc) { alert('Vyplňte všechny údaje.'); return; }
-      globalIncidents.push({ id: Date.now(), personId, text: desc, tag: selectedIncidentTag, laws: addedLawsToIncident, date: new Date().toLocaleString('cs-CZ') });
-      saveAllData();
-      document.getElementById('incidentDesc').value = '';
-      document.getElementById('incidentPersonSelect').value = '';
-      addedLawsToIncident = [];
-      renderAddedLaws();
-      displayGlobalIncidents();
+    
+    function removeAddedLaw(idx) { 
+      addedLawsToIncident.splice(idx, 1); 
+      renderAddedLaws(); 
     }
+    
+    async function createIncident() {
+      const personId = document.getElementById('incidentPersonSelect').value;
+      const desc = document.getElementById('incidentDesc').value.trim();
+      if (!personId || !desc) { 
+        showNotification('Vyplňte všechny údaje', 'error'); 
+        return; 
+      }
+      
+      try {
+        await db.collection('incidents').add({ 
+          personId, 
+          text: desc, 
+          tag: selectedIncidentTag, 
+          laws: addedLawsToIncident, 
+          date: new Date().toLocaleString('cs-CZ') 
+        });
+        await loadAllData();
+        document.getElementById('incidentDesc').value = '';
+        document.getElementById('incidentPersonSelect').value = '';
+        addedLawsToIncident = [];
+        renderAddedLaws();
+        displayGlobalIncidents();
+        showNotification('Incident vytvořen!', 'success');
+      } catch(e) {
+        showNotification('Chyba při vytváření incidentu', 'error');
+      }
+    }
+    
     function displayGlobalIncidents() {
       const list = document.getElementById('incidentList');
-      list.innerHTML = globalIncidents.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné incidenty</p>' : globalIncidents.map(inc => {
-        const p = documents.find(d => d.id === inc.personId);
-        return `<div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <strong>${p ? p.firstName + ' ' + p.lastName : 'Neznámý'}</strong>
-          <span class="badge badge-red">${inc.tag}</span>
-          <p>${inc.text}</p>
-        </div>`;
-      }).join('');
+      list.innerHTML = globalIncidents.length === 0 ? 
+        '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné incidenty</p>' : 
+        globalIncidents.map(inc => {
+          const p = documents.find(d => d.id === inc.personId);
+          return `<div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;width:100%;">
+              <strong>${p ? p.firstName + ' ' + p.lastName : 'Neznámý'}</strong>
+              <span class="badge badge-red">${inc.tag}</span>
+              <span style="margin-left:auto;color:#94a3b8;font-size:0.75rem;">${inc.date || ''}</span>
+            </div>
+            <p>${inc.text}</p>
+            ${inc.laws && inc.laws.length > 0 ? `<div style="display:flex;gap:5px;flex-wrap:wrap;">${inc.laws.map(l => `<span class="badge badge-yellow">${l.lawTitle}</span>`).join('')}</div>` : ''}
+          </div>`;
+        }).join('');
     }
+    
     function showLegislationPage() {
-      hideAllPages(); document.getElementById('legislationPage').classList.add('active');
+      hideAllPages(); 
+      document.getElementById('legislationPage').classList.add('active');
       const isDOJ = currentUser?.department === 'DOJ' || currentDepartment === 'DOJ';
       document.getElementById('addLawForm').classList.toggle('hidden', !isDOJ);
       displayLaws(isDOJ);
     }
-    function addLaw() {
+    
+    async function addLaw() {
       const title = document.getElementById('lawTitle').value.trim();
-      if (!title) { alert('Zadejte název.'); return; }
-      laws.push({ id: Date.now(), title, description: document.getElementById('lawDescription').value, minFine: parseInt(document.getElementById('lawMinFine').value) || 0, maxFine: parseInt(document.getElementById('lawMaxFine').value) || 0, recFine: parseInt(document.getElementById('lawRecFine').value) || 0, minMonths: parseInt(document.getElementById('lawMinMonths').value) || 0, maxMonths: parseInt(document.getElementById('lawMaxMonths').value) || 0, recMonths: parseInt(document.getElementById('lawRecMonths').value) || 0 });
-      saveAllData();
-      document.getElementById('lawTitle').value = '';
-      document.getElementById('lawDescription').value = '';
-      document.getElementById('lawMinFine').value = '';
-      document.getElementById('lawMaxFine').value = '';
-      document.getElementById('lawRecFine').value = '';
-      document.getElementById('lawMinMonths').value = '';
-      document.getElementById('lawMaxMonths').value = '';
-      document.getElementById('lawRecMonths').value = '';
-      displayLaws(true);
+      if (!title) { 
+        showNotification('Zadejte název zákona', 'error'); 
+        return; 
+      }
+      
+      try {
+        await db.collection('laws').add({ 
+          title, 
+          description: document.getElementById('lawDescription').value, 
+          minFine: parseInt(document.getElementById('lawMinFine').value) || 0, 
+          maxFine: parseInt(document.getElementById('lawMaxFine').value) || 0, 
+          recFine: parseInt(document.getElementById('lawRecFine').value) || 0, 
+          minMonths: parseInt(document.getElementById('lawMinMonths').value) || 0, 
+          maxMonths: parseInt(document.getElementById('lawMaxMonths').value) || 0, 
+          recMonths: parseInt(document.getElementById('lawRecMonths').value) || 0 
+        });
+        await loadAllData();
+        document.getElementById('lawTitle').value = '';
+        document.getElementById('lawDescription').value = '';
+        document.getElementById('lawMinFine').value = '';
+        document.getElementById('lawMaxFine').value = '';
+        document.getElementById('lawRecFine').value = '';
+        document.getElementById('lawMinMonths').value = '';
+        document.getElementById('lawMaxMonths').value = '';
+        document.getElementById('lawRecMonths').value = '';
+        displayLaws(true);
+        showNotification('Zákon přidán!', 'success');
+      } catch(e) {
+        showNotification('Chyba při přidávání zákona', 'error');
+      }
     }
+    
     function displayLaws(isDOJ) {
-      document.getElementById('lawList').innerHTML = laws.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádné zákony</p>' : laws.map(l => `
+      document.getElementById('lawList').innerHTML = laws.length === 0 ? 
+        '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádné zákony</p>' : 
+        laws.map(l => `
         <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <strong>${l.title}</strong>
+          <div style="display:flex;align-items:center;gap:10px;width:100%;">
+            <strong>${l.title}</strong>
+            <span class="badge badge-purple">Zákon</span>
+          </div>
           ${l.description ? `<p>${l.description}</p>` : ''}
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            ${l.minFine ? `<span class="badge badge-blue">Min: $${l.minFine}</span>` : ''}
-            ${l.maxFine ? `<span class="badge badge-blue">Max: $${l.maxFine}</span>` : ''}
-            ${l.recFine ? `<span class="badge badge-green">Dop: $${l.recFine}</span>` : ''}
+            ${l.minFine ? `<span class="badge badge-blue">Min: $${l.minFine.toLocaleString()}</span>` : ''}
+            ${l.maxFine ? `<span class="badge badge-blue">Max: $${l.maxFine.toLocaleString()}</span>` : ''}
+            ${l.recFine ? `<span class="badge badge-green">Dop: $${l.recFine.toLocaleString()}</span>` : ''}
             ${l.minMonths ? `<span class="badge badge-red">Min: ${l.minMonths}m</span>` : ''}
             ${l.maxMonths ? `<span class="badge badge-red">Max: ${l.maxMonths}m</span>` : ''}
             ${l.recMonths ? `<span class="badge badge-green">Dop: ${l.recMonths}m</span>` : ''}
@@ -618,64 +1933,137 @@
         </div>
       `).join('');
     }
+    
     function showManagePersonsPage() {
-      if (!currentUser?.canManage) { alert('Nemáte přístup.'); return; }
-      hideAllPages(); document.getElementById('managePersonsPage').classList.add('active');
-      populateRanks(); displayMembers();
+      if (!currentUser?.canManage) { 
+        showNotification('Nemáte přístup ke správě členů', 'error'); 
+        return; 
+      }
+      hideAllPages(); 
+      document.getElementById('managePersonsPage').classList.add('active');
+      populateRanks(); 
+      displayMembers();
     }
-    function addMember() {
+    
+    async function addMember() {
       const name = document.getElementById('memberName').value.trim();
       const password = document.getElementById('memberPassword').value;
       const rank = document.getElementById('memberRank').value;
       const canManage = document.getElementById('memberCanManage').checked;
-      if (!name || !password || !rank) { alert('Vyplňte všechna pole.'); return; }
-      members.push({ name, password, rank, department: currentDepartment, canManage });
-      saveAllData();
-      document.getElementById('memberName').value = '';
-      document.getElementById('memberPassword').value = '';
-      document.getElementById('memberRank').value = '';
-      document.getElementById('memberCanManage').checked = false;
-      displayMembers();
+      if (!name || !password || !rank) { 
+        showNotification('Vyplňte všechna pole', 'error'); 
+        return; 
+      }
+      
+      try {
+        await db.collection('members').add({ 
+          name, 
+          password, 
+          rank, 
+          department: currentDepartment, 
+          canManage 
+        });
+        await loadAllData();
+        document.getElementById('memberName').value = '';
+        document.getElementById('memberPassword').value = '';
+        document.getElementById('memberRank').value = '';
+        document.getElementById('memberCanManage').checked = false;
+        displayMembers();
+        showNotification('Člen přidán!', 'success');
+      } catch(e) {
+        showNotification('Chyba při přidávání člena', 'error');
+      }
     }
+    
     function displayMembers() {
-      document.getElementById('memberList').innerHTML = members.map(m => `
+      document.getElementById('memberList').innerHTML = members.length === 0 ?
+        '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádní členové</p>' :
+        members.map(m => `
         <div class="call-sign-card">
           <span class="badge badge-blue">${m.rank}</span>
           <strong>${m.name}</strong> (${m.department})
-          ${m.canManage ? '<span class="badge badge-green">✓</span>' : '<span class="badge badge-red">✗</span>'}
+          ${m.canManage ? '<span class="badge badge-green">✓ Správce</span>' : '<span class="badge badge-red">✗ Běžný člen</span>'}
         </div>
       `).join('');
     }
+    
     function showAnnouncementsPage() {
-      hideAllPages(); document.getElementById('announcementsPage').classList.add('active');
+      hideAllPages(); 
+      document.getElementById('announcementsPage').classList.add('active');
       const isDOJ = currentUser?.department === 'DOJ' || currentDepartment === 'DOJ';
       document.getElementById('addAnnouncementForm').classList.toggle('hidden', !isDOJ);
       displayAnnouncements(isDOJ);
     }
-    function addAnnouncement() {
+    
+    async function addAnnouncement() {
       const title = document.getElementById('announcementTitle').value.trim();
       const text = document.getElementById('announcementText').value.trim();
-      if (!title || !text) return;
-      announcements.unshift({ id: Date.now(), title, text, date: new Date().toLocaleString('cs-CZ') });
-      saveAllData();
-      document.getElementById('announcementTitle').value = '';
-      document.getElementById('announcementText').value = '';
-      displayAnnouncements(true);
+      if (!title || !text) {
+        showNotification('Vyplňte nadpis a zprávu', 'error');
+        return;
+      }
+      
+      try {
+        await db.collection('announcements').add({ 
+          title, 
+          text, 
+          date: new Date().toLocaleString('cs-CZ') 
+        });
+        await loadAllData();
+        document.getElementById('announcementTitle').value = '';
+        document.getElementById('announcementText').value = '';
+        displayAnnouncements(true);
+        showNotification('Oznámení zveřejněno!', 'success');
+      } catch(e) {
+        showNotification('Chyba při publikování oznámení', 'error');
+      }
     }
+    
     function displayAnnouncements(isDOJ) {
-      document.getElementById('announcementList').innerHTML = announcements.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádná oznámení</p>' : announcements.map(a => `
+      document.getElementById('announcementList').innerHTML = announcements.length === 0 ? 
+        '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádná oznámení</p>' : 
+        announcements.map(a => `
         <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <strong>${a.title}</strong>
+          <div style="display:flex;align-items:center;gap:10px;width:100%;">
+            <strong>${a.title}</strong>
+            <span style="margin-left:auto;color:#94a3b8;font-size:0.75rem;">${a.date || ''}</span>
+          </div>
           <p>${a.text}</p>
         </div>
       `).join('');
     }
 
-    function showHome() { showDashboard(); }
-    function showServices() { showDashboard(); }
-    function showContact() { showDashboard(); }
+    function showHome() { 
+      showDashboard(); 
+      setActiveMenuItem(0);
+    }
+    
+    function showServices() { 
+      showDashboard(); 
+      setActiveMenuItem(1);
+      showNotification('Služby jsou dostupné v hlavním menu', 'info');
+    }
+    
+    function showContact() { 
+      showDashboard(); 
+      setActiveMenuItem(2);
+      showNotification('Kontakt: support@sanandreas.gov', 'info');
+    }
+    
+    function setActiveMenuItem(index) {
+      const items = document.querySelectorAll('.menu-item');
+      items.forEach((item, i) => {
+        if (i === index) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
 
-    // Init
+    // Initialize
+    initParticles();
+    loadAllData();
     switchDepartment('LSPD');
     populateRanks();
     toggleDocFields();
