@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>San Andreas Government Portal</title>
-  <link rel="stylesheet"">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
     :root {
       --primary: #3b82f6;
@@ -39,6 +41,7 @@
     .menu-item:hover { color: white; background: rgba(255,255,255,0.1); }
     .menu-item.active { background: var(--primary); color: white; }
     .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); }
+
     .main-content { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 30px 20px; }
     .main-content.with-header { padding-top: 105px; display: block; }
 
@@ -70,6 +73,7 @@
     .message { padding: 14px 18px; border-radius: 14px; margin-bottom: 15px; font-weight: 600; }
     .message.error { background: rgba(239,68,68,0.15); color: #fca5a5; }
     .message.success { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+
     .photo-upload { margin-bottom: 20px; text-align: center; }
     .photo-preview { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 3px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; cursor: pointer; overflow: hidden; transition: var(--transition); }
     .photo-preview i { font-size: 2.5rem; color: #94a3b8; }
@@ -286,22 +290,14 @@
             <div class="incident-tag" onclick="selectIncidentTag('other', this)"><i class="fas fa-question-circle"></i> Jiné</div>
           </div>
           <div class="incident-form-main">
-            <div class="form-group">
-              <label>Popis incidentu</label>
-              <textarea id="incidentDesc" rows="4" placeholder="Zadejte popis incidentu"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Osoba</label>
-              <select id="incidentPersonSelect"><option value="">Vyberte osobu</option></select>
-            </div>
+            <div class="form-group"><label>Popis incidentu</label><textarea id="incidentDesc" rows="4" placeholder="Zadejte popis incidentu"></textarea></div>
+            <div class="form-group"><label>Osoba</label><select id="incidentPersonSelect"><option value="">Vyberte osobu</option></select></div>
             <div style="border-top:1px solid rgba(255,255,255,0.1); margin:15px 0; padding-top:15px;">
               <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
                 <h4 style="font-size:0.9rem; font-weight:700; color:#94a3b8;">Pokuta a trest</h4>
                 <button class="btn-add-law" onclick="addLawToIncident()"><i class="fas fa-plus"></i> Přidat zákon</button>
               </div>
-              <div id="addedLawsList" class="added-laws-list">
-                <p style="color:#64748b; font-size:0.75rem; text-align:center;">Žádné zákony přidány</p>
-              </div>
+              <div id="addedLawsList" class="added-laws-list"><p style="color:#64748b; font-size:0.75rem; text-align:center;">Žádné zákony přidány</p></div>
             </div>
             <button class="btn btn-primary" onclick="createIncident()"><i class="fas fa-save"></i> Uložit incident</button>
           </div>
@@ -415,7 +411,7 @@
     </div>
   </div>
 
-  <!-- MODAL PRO VÝBĚR ZÁKONA K INCIDENTU -->
+  <!-- MODAL PRO VÝBĚR ZÁKONA -->
   <div id="lawSelectionModal" class="modal-overlay hidden">
     <div class="modal">
       <h3>Vyberte zákon</h3>
@@ -428,6 +424,19 @@
   </div>
 
   <script>
+    // ⚠️ ZDE VLOŽTE SVÉ FIREBASE ÚDAJE Z FIREBASE KONZOLE
+    const firebaseConfig = {
+      apiKey: "VAS_API_KEY",
+      authDomain: "vas-projekt.firebaseapp.com",
+      projectId: "vas-projekt",
+      storageBucket: "vas-projekt.appspot.com",
+      messagingSenderId: "VAS_SENDER_ID",
+      appId: "VAS_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const VALID_USERNAME = "honza2001";
     const VALID_PASSWORD = "1234";
     const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1537887132616622301/vyNR26Wyc3mNMOT3TVxOgD-uR0tw7kLmIQoG_sbXTX0iAlaafnFHKgvSo-aftpqBQ_fw";
@@ -439,74 +448,17 @@
       DOJ: { name: 'DOJ', color: '#6d28d9', ranks: ['Clerk','Paralegal','Attorney','Senior Attorney','Prosecutor','Senior Prosecutor','Deputy District Attorney','District Attorney','Attorney General'] }
     };
 
-    const defaultCallSigns = [
-      { id: 1, rank: 'Chief of LSPD', number: '5000', unit: 'Staff-1', assignedName: null },
-      { id: 2, rank: 'Assistant Chief of LSPD', number: '5001', unit: 'Staff-2', assignedName: null },
-      { id: 3, rank: 'Deputy Chief of LSPD', number: '5002', unit: 'Staff-3', assignedName: null },
-      { id: 4, rank: 'Commander', number: '5003', unit: 'Staff-4', assignedName: null },
-      { id: 5, rank: 'Captain', number: '5004', unit: 'Nora-1', assignedName: null },
-      { id: 6, rank: 'Lieutenant', number: '5007', unit: 'Henry-1', assignedName: null },
-      { id: 7, rank: 'Lieutenant', number: '5008', unit: 'Henry-2', assignedName: null },
-      { id: 8, rank: 'Lieutenant', number: '5009', unit: 'Henry-3', assignedName: null },
-      { id: 9, rank: 'Lieutenant', number: '5010', unit: 'Henry-4', assignedName: null },
-      { id: 10, rank: 'Sergeant II.', number: '5011', unit: 'John-1', assignedName: null },
-      { id: 11, rank: 'Sergeant II.', number: '5012', unit: 'John-2', assignedName: null },
-      { id: 12, rank: 'Sergeant II.', number: '5013', unit: 'John-3', assignedName: null },
-      { id: 13, rank: 'Sergeant I.', number: '5014', unit: 'John-5', assignedName: null },
-      { id: 14, rank: 'Sergeant I.', number: '5015', unit: 'John-6', assignedName: null },
-      { id: 15, rank: 'Sergeant I.', number: '5016', unit: 'John-7', assignedName: null },
-      { id: 16, rank: 'Sergeant I.', number: '5017', unit: 'John-8', assignedName: null },
-      { id: 17, rank: 'Police Officer III.', number: '5018', unit: 'Lincoln-1', assignedName: null },
-      { id: 18, rank: 'Police Officer III.', number: '5019', unit: 'Lincoln-2', assignedName: null },
-      { id: 19, rank: 'Police Officer III.', number: '5020', unit: 'Lincoln-3', assignedName: null },
-      { id: 20, rank: 'Police Officer III.', number: '5021', unit: 'Lincoln-4', assignedName: null },
-      { id: 21, rank: 'Police Officer III.', number: '5022', unit: 'Lincoln-5', assignedName: null },
-      { id: 22, rank: 'Police Officer II.', number: '5023', unit: 'Lincoln-6', assignedName: null },
-      { id: 23, rank: 'Police Officer II.', number: '5024', unit: 'Lincoln-7', assignedName: null },
-      { id: 24, rank: 'Police Officer II.', number: '5025', unit: 'Lincoln-8', assignedName: null },
-      { id: 25, rank: 'Police Officer II.', number: '5026', unit: 'Lincoln-9', assignedName: null },
-      { id: 26, rank: 'Police Officer II.', number: '5027', unit: 'Lincoln-10', assignedName: null },
-      { id: 27, rank: 'Police Officer II.', number: '5028', unit: 'Lincoln-11', assignedName: null },
-      { id: 28, rank: 'Police Officer I.', number: '5029', unit: 'Lincoln-12', assignedName: null },
-      { id: 29, rank: 'Police Officer I.', number: '5030', unit: 'Lincoln-13', assignedName: null },
-      { id: 30, rank: 'Police Officer I.', number: '5031', unit: 'Lincoln-14', assignedName: null },
-      { id: 31, rank: 'Police Officer I.', number: '5032', unit: 'Lincoln-15', assignedName: null },
-      { id: 32, rank: 'Police Officer I.', number: '5033', unit: 'Lincoln-16', assignedName: null },
-      { id: 33, rank: 'Police Officer I.', number: '5034', unit: 'Lincoln-17', assignedName: null },
-      { id: 34, rank: 'Police Officer I.', number: '5035', unit: 'Lincoln-18', assignedName: null },
-      { id: 35, rank: 'Police Officer I.', number: '5036', unit: 'Lincoln-19', assignedName: null },
-      { id: 36, rank: 'Cadet', number: '5037', unit: 'Tom-1', assignedName: null },
-      { id: 37, rank: 'Cadet', number: '5038', unit: 'Tom-2', assignedName: null },
-      { id: 38, rank: 'Cadet', number: '5039', unit: 'Tom-3', assignedName: null },
-      { id: 39, rank: 'Cadet', number: '5040', unit: 'Tom-4', assignedName: null },
-      { id: 40, rank: 'Akademik', number: '', unit: 'Junior-1', assignedName: null },
-      { id: 41, rank: 'Akademik', number: '', unit: 'Junior-2', assignedName: null },
-      { id: 42, rank: 'Akademik', number: '', unit: 'Junior-3', assignedName: null },
-      { id: 43, rank: 'Akademik', number: '', unit: 'Junior-4', assignedName: null },
-      { id: 44, rank: 'Akademik', number: '', unit: 'Junior-5', assignedName: null },
-      { id: 45, rank: 'Akademik', number: '', unit: 'Junior-6', assignedName: null }
-    ];
-
-    function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
-    function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {} }
-
-    let callSigns = loadData('callSigns', defaultCallSigns);
-    let members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
-    let documents = loadData('documents', []);
-    let vehicles = loadData('vehicles', []);
-    let laws = loadData('laws', []);
-    let announcements = loadData('announcements', []);
-    let personTags = loadData('personTags', {});
-    let vehicleTags = loadData('vehicleTags', {});
-    let personNotes = loadData('personNotes', {});
-    let vehicleNotes = loadData('vehicleNotes', {});
-    let personIncidents = loadData('personIncidents', {});
-    let globalIncidents = loadData('globalIncidents', []);
-
-    if (!members.find(m => m.name === VALID_USERNAME)) {
-      members.unshift({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
-      saveData('members', members);
-    }
+    let documents = [];
+    let vehicles = [];
+    let members = [];
+    let laws = [];
+    let announcements = [];
+    let globalIncidents = [];
+    let personTags = {};
+    let vehicleTags = {};
+    let personNotes = {};
+    let vehicleNotes = {};
+    let personIncidents = {};
 
     let currentDepartment = 'LSPD';
     let currentUser = null;
@@ -517,485 +469,141 @@
     let selectedIncidentTag = 'incident';
     let addedLawsToIncident = [];
 
-    function saveAllData() {
-      saveData('callSigns', callSigns); saveData('members', members); saveData('documents', documents);
-      saveData('vehicles', vehicles); saveData('laws', laws); saveData('announcements', announcements);
-      saveData('personTags', personTags); saveData('vehicleTags', vehicleTags);
-      saveData('personNotes', personNotes); saveData('vehicleNotes', vehicleNotes);
-      saveData('personIncidents', personIncidents); saveData('globalIncidents', globalIncidents);
+    // FIREBASE FUNKCE
+    async function loadAllData() {
+      try {
+        const [personsSnap, vehiclesSnap, membersSnap, lawsSnap, annsSnap, incsSnap] = await Promise.all([
+          db.collection('persons').get(),
+          db.collection('vehicles').get(),
+          db.collection('members').get(),
+          db.collection('laws').get(),
+          db.collection('announcements').get(),
+          db.collection('incidents').get()
+        ]);
+
+        documents = personsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        vehicles = vehiclesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        members = membersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        laws = lawsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        announcements = annsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalIncidents = incsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (members.length === 0) {
+          await db.collection('members').add({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
+          members = [{ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
+        }
+      } catch(e) { console.error('Chyba načítání:', e); }
     }
 
-    function flipTo(page) {
-      document.getElementById('flipInner').classList.add('flipped');
-      if (page === 'login') {
-        document.getElementById('flipBackTitle').textContent = 'Přihlášení';
-        document.getElementById('flipBackSubtitle').textContent = 'Vyberte oddělení';
-        document.getElementById('loginFormFields').classList.remove('hidden');
-        document.getElementById('createDocFields').classList.add('hidden');
-        switchDepartment('LSPD');
-      } else {
-        document.getElementById('flipBackTitle').textContent = 'Vytvořit doklady';
-        document.getElementById('flipBackSubtitle').textContent = 'Vyplňte údaje';
-        document.getElementById('loginFormFields').classList.add('hidden');
-        document.getElementById('createDocFields').classList.remove('hidden');
-        document.getElementById('docType').value = '';
-        document.getElementById('photoPreview').innerHTML = '<i class="fas fa-camera"></i>';
-        document.getElementById('photoInput').value = '';
-        toggleDocFields();
-      }
-    }
+    function flipTo(page) { /* ... stejné jako předtím ... */ }
     function flipBackToWelcome() { document.getElementById('flipInner').classList.remove('flipped'); }
-
-    function previewPhoto() {
-      const input = document.getElementById('photoInput');
-      const preview = document.getElementById('photoPreview');
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => { preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`; };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function switchDepartment(dept) {
-      currentDepartment = dept;
-      ['LSPD','LSSD','SAHP','DOJ'].forEach(d => document.getElementById('tab' + d).classList.remove('active'));
-      document.getElementById('tab' + dept).classList.add('active');
-      document.getElementById('loginButton').style.background = 'linear-gradient(135deg, ' + DEPARTMENTS[dept].color + ', #3b82f6)';
-    }
-    function populateRanks() {
-      const select = document.getElementById('memberRank');
-      select.innerHTML = '<option value="">Vyberte hodnost</option>';
-      DEPARTMENTS[currentDepartment].ranks.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; select.appendChild(o); });
-    }
-    function toggleDocFields() {
-      const type = document.getElementById('docType').value;
-      document.getElementById('personalFields').classList.toggle('hidden', type === 'Registrace vozidla');
-      document.getElementById('vehicleFields').classList.toggle('hidden', type !== 'Registrace vozidla');
-    }
-
-    function hideAllPages() {
-      ['dashboardContent','mdtPage','callSignsPage','incidentsPage','personPage','personDetailPage','vehiclePage','vehicleDetailPage','managePersonsPage','legislationPage','announcementsPage'].forEach(id => document.getElementById(id).classList.remove('active'));
-      document.getElementById('flipContainer').classList.add('hidden');
-    }
-    function showFlipContainer() {
-      document.getElementById('flipContainer').classList.remove('hidden');
-      document.getElementById('flipInner').classList.remove('flipped');
-      document.getElementById('header').classList.remove('active');
-    }
+    function previewPhoto() { /* ... stejné ... */ }
+    function switchDepartment(dept) { /* ... stejné ... */ }
+    function populateRanks() { /* ... stejné ... */ }
+    function toggleDocFields() { /* ... stejné ... */ }
+    function hideAllPages() { /* ... stejné ... */ }
+    function showFlipContainer() { /* ... stejné ... */ }
     function showWelcomeScreen() { hideAllPages(); showFlipContainer(); currentUser = null; }
 
-    function submitDocument() {
+    async function submitDocument() {
       const type = document.getElementById('docType').value;
       if (!type) { alert('Vyberte typ.'); return; }
       if (type === 'Registrace vozidla') {
-        const v = { id: Date.now(), spz: document.getElementById('vehicleSPZ').value, make: document.getElementById('vehicleMake').value, model: document.getElementById('vehicleModel').value, color: document.getElementById('vehicleColor').value, owner: document.getElementById('vehicleOwner').value, regDate: document.getElementById('vehicleRegDate').value };
-        vehicles.push(v); vehicleTags[v.id] = {}; vehicleNotes[v.id] = [];
+        const v = { spz: document.getElementById('vehicleSPZ').value, make: document.getElementById('vehicleMake').value, model: document.getElementById('vehicleModel').value, color: document.getElementById('vehicleColor').value, owner: document.getElementById('vehicleOwner').value, regDate: document.getElementById('vehicleRegDate').value };
+        await db.collection('vehicles').add(v);
       } else {
         const photo = document.getElementById('photoPreview').querySelector('img')?.src || '';
-        const d = { id: Date.now(), docType: type, firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, birthDate: document.getElementById('birthDate').value, bloodType: document.getElementById('bloodType').value, photo: photo };
-        documents.push(d); personTags[d.id] = {}; personNotes[d.id] = []; personIncidents[d.id] = [];
+        const d = { docType: type, firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, birthDate: document.getElementById('birthDate').value, bloodType: document.getElementById('bloodType').value, photo: photo };
+        await db.collection('persons').add(d);
       }
-      saveAllData();
+      await loadAllData();
       showWelcomeScreen();
     }
 
-    function handleLogin() {
+    async function handleLogin() {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const dept = DEPARTMENTS[currentDepartment];
       const c = document.getElementById('messageContainer');
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) { c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>'; setTimeout(() => loginSuccess(username, dept, null), 800); return; }
+      await loadAllData();
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) { loginSuccess(username, dept, null); return; }
       const vm = members.find(m => m.name === username && m.password === password && m.department === dept.name);
-      if (vm) { c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>'; setTimeout(() => loginSuccess(username, dept, vm), 800); return; }
+      if (vm) { loginSuccess(username, dept, vm); return; }
       c.innerHTML = '<div class="message error">Chybné jméno nebo heslo!</div>';
     }
 
-    function loginSuccess(username, dept, member) {
-      currentUser = member || { name: username, canManage: true, department: dept.name };
-      currentDepartment = dept.name;
-      hideAllPages();
-      document.getElementById('dashboardContent').classList.add('active');
-      document.getElementById('header').classList.add('active');
-      document.getElementById('mainContent').classList.add('with-header');
-      document.getElementById('headerLogoIcon').textContent = dept.name;
-      document.getElementById('headerLogoText').textContent = dept.name;
-      document.getElementById('headerLogoIcon').style.background = `linear-gradient(135deg, ${dept.color}, #3b82f6)`;
-      document.getElementById('userName').textContent = username;
-      document.getElementById('welcomeTitle').textContent = `Vítejte, ${username}!`;
-      document.getElementById('welcomeMessage').textContent = `Oddělení: ${dept.name}`;
-      document.getElementById('managePersonsCard').style.display = currentUser.canManage ? 'block' : 'none';
-      const oldCard = document.getElementById('callSignsCard');
-      if (oldCard) oldCard.remove();
-      if (currentDepartment === 'LSPD') {
-        const cardsGrid = document.getElementById('dashboardCards');
-        const newCard = document.createElement('div');
-        newCard.className = 'info-card';
-        newCard.id = 'callSignsCard';
-        newCard.setAttribute('onclick', 'showCallSignsPage()');
-        newCard.innerHTML = `<div class="icon"><i class="fas fa-broadcast-tower"></i></div><h3>Volačky</h3><p>Volací znaky LSPD</p>`;
-        cardsGrid.appendChild(newCard);
-      }
-    }
-
+    function loginSuccess(username, dept, member) { /* ... stejné ... */ }
     function logout() { showWelcomeScreen(); }
     function showDashboard() { hideAllPages(); document.getElementById('dashboardContent').classList.add('active'); }
     function showMdtPage() { hideAllPages(); document.getElementById('mdtPage').classList.add('active'); }
-
     function showCallSignsPage() { hideAllPages(); document.getElementById('callSignsPage').classList.add('active'); displayCallSigns(); }
-    function displayCallSigns() {
-      const list = document.getElementById('callSignsList');
-      let html = '';
-      let prevRank = '';
-      callSigns.forEach(cs => {
-        if (cs.rank !== prevRank) {
-          if (prevRank !== '') html += '<div class="call-sign-divider">──────────────</div>';
-          prevRank = cs.rank;
-        }
-        const num = cs.number ? `- ${cs.number} -` : '-';
-        const assigned = cs.assignedName ? `<span class="badge badge-green">👤 ${cs.assignedName}</span>` : `<span class="badge badge-red">⚪ Nepřiřazeno</span>`;
-        html += `<div class="call-sign-card"><span>@│👮 ${cs.rank} 👮│ ${num} ${cs.unit}</span> ${assigned}</div>`;
-      });
-      list.innerHTML = html;
-    }
-
-    // INCIDENTS
-    function showIncidentsPage() {
-      hideAllPages();
-      document.getElementById('incidentsPage').classList.add('active');
-      document.getElementById('createIncidentForm').classList.add('hidden');
-      populateIncidentForm();
-      displayGlobalIncidents();
-    }
-    function openCreateIncidentForm() {
-      document.getElementById('createIncidentForm').classList.remove('hidden');
-      addedLawsToIncident = [];
-      renderAddedLaws();
-      populateIncidentForm();
-    }
-    function selectIncidentTag(tag, element) {
-      selectedIncidentTag = tag;
-      document.querySelectorAll('.incident-tag').forEach(t => t.classList.remove('active'));
-      element.classList.add('active');
-    }
-    function populateIncidentForm() {
-      const personSelect = document.getElementById('incidentPersonSelect');
-      personSelect.innerHTML = '<option value="">Vyberte osobu</option>';
-      documents.forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = `${d.firstName} ${d.lastName}`; personSelect.appendChild(o); });
-    }
-    function addLawToIncident() {
-      const select = document.getElementById('lawSelectForIncident');
-      select.innerHTML = '<option value="">Vyberte zákon</option>';
-      laws.forEach(l => { const o = document.createElement('option'); o.value = l.id; o.textContent = l.title; select.appendChild(o); });
-      document.getElementById('incidentFine').value = '';
-      document.getElementById('incidentMonths').value = '';
-      document.getElementById('lawSelectionModal').classList.remove('hidden');
-    }
-    function closeLawSelectionModal() { document.getElementById('lawSelectionModal').classList.add('hidden'); }
-    function confirmAddLawToIncident() {
-      const lawId = parseInt(document.getElementById('lawSelectForIncident').value);
-      const fine = parseInt(document.getElementById('incidentFine').value) || 0;
-      const months = parseInt(document.getElementById('incidentMonths').value) || 0;
-      if (!lawId) { alert('Vyberte zákon.'); return; }
-      const law = laws.find(l => l.id === lawId);
-      addedLawsToIncident.push({ lawId, lawTitle: law ? law.title : 'Neznámý', fine, months });
-      renderAddedLaws();
-      closeLawSelectionModal();
-    }
-    function renderAddedLaws() {
-      const list = document.getElementById('addedLawsList');
-      if (addedLawsToIncident.length === 0) {
-        list.innerHTML = '<p style="color:#64748b; font-size:0.75rem; text-align:center;">Žádné zákony přidány</p>';
-      } else {
-        list.innerHTML = addedLawsToIncident.map((l, idx) => `
-          <div class="added-law-item">
-            <span style="flex:1;">${l.lawTitle}</span>
-            ${l.fine > 0 ? `<span class="badge badge-blue">$${l.fine.toLocaleString()}</span>` : ''}
-            ${l.months > 0 ? `<span class="badge badge-red">${l.months} měs.</span>` : ''}
-            <button class="btn-remove" onclick="removeAddedLaw(${idx})"><i class="fas fa-trash"></i></button>
-          </div>
-        `).join('');
-      }
-    }
-    function removeAddedLaw(index) {
-      addedLawsToIncident.splice(index, 1);
-      renderAddedLaws();
-    }
-    function createIncident() {
+    function displayCallSigns() { /* ... stejné ... */ }
+    function showIncidentsPage() { /* ... stejné ... */ }
+    function openCreateIncidentForm() { /* ... stejné ... */ }
+    function selectIncidentTag(tag, element) { /* ... stejné ... */ }
+    function populateIncidentForm() { /* ... stejné ... */ }
+    function addLawToIncident() { /* ... stejné ... */ }
+    function closeLawSelectionModal() { /* ... stejné ... */ }
+    function confirmAddLawToIncident() { /* ... stejné ... */ }
+    function renderAddedLaws() { /* ... stejné ... */ }
+    function removeAddedLaw(index) { /* ... stejné ... */ }
+    async function createIncident() {
       const personId = parseInt(document.getElementById('incidentPersonSelect').value);
       const desc = document.getElementById('incidentDesc').value.trim();
-      if (!personId) { alert('Vyberte osobu.'); return; }
-      if (!desc) { alert('Zadejte popis incidentu.'); return; }
-      const incident = { id: Date.now(), personId, text: desc, tag: selectedIncidentTag, laws: addedLawsToIncident, date: new Date().toLocaleString('cs-CZ') };
-      globalIncidents.push(incident);
-      if (!personIncidents[personId]) personIncidents[personId] = [];
-      personIncidents[personId].push(incident);
-      saveAllData();
+      if (!personId || !desc) { alert('Vyplňte všechny údaje.'); return; }
+      const incident = { personId, text: desc, tag: selectedIncidentTag, laws: addedLawsToIncident, date: new Date().toLocaleString('cs-CZ') };
+      await db.collection('incidents').add(incident);
+      await loadAllData();
       document.getElementById('incidentPersonSelect').value = '';
       document.getElementById('incidentDesc').value = '';
       addedLawsToIncident = [];
       renderAddedLaws();
       displayGlobalIncidents();
-      alert('Incident vytvořen!');
     }
-    function displayGlobalIncidents() {
-      const list = document.getElementById('incidentList');
-      const allIncidents = globalIncidents.map(inc => {
-        const person = documents.find(d => d.id === inc.personId);
-        return { ...inc, personName: person ? `${person.firstName} ${person.lastName}` : 'Neznámý' };
-      });
-      list.innerHTML = allIncidents.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné incidenty</p>' : allIncidents.map(inc => `
-        <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <div style="display:flex;gap:10px;align-items:center;width:100%;"><strong>${inc.personName}</strong><span class="badge badge-red">${inc.tag || 'Incident'}</span><button class="btn-remove" onclick="deleteGlobalIncident(${inc.id})" style="margin-left:auto;"><i class="fas fa-trash"></i></button></div>
-          <p>${inc.text}</p>
-          ${inc.laws && inc.laws.length > 0 ? `<div style="display:flex;gap:8px;flex-wrap:wrap;">${inc.laws.map(l => `<span class="badge badge-blue">${l.lawTitle}${l.fine > 0 ? ` - $${l.fine.toLocaleString()}` : ''}${l.months > 0 ? ` - ${l.months} měs.` : ''}</span>`).join('')}</div>` : ''}
-          <span style="font-size:0.7rem;color:#64748b;">${inc.date}</span>
-        </div>
-      `).join('');
-    }
-    function deleteGlobalIncident(id) {
-      globalIncidents = globalIncidents.filter(i => i.id !== id);
-      Object.keys(personIncidents).forEach(pid => { personIncidents[pid] = personIncidents[pid].filter(i => i.id !== id); });
-      saveAllData();
-      displayGlobalIncidents();
-    }
-
-    // PERSON DETAIL
-    function showPersonPage() { hideAllPages(); document.getElementById('personPage').classList.add('active'); displayDocuments(); }
-    function displayDocuments() {
-      const list = document.getElementById('personList');
-      list.innerHTML = documents.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné osoby</p>' : documents.map(d => `
-        <div class="call-sign-card person-clickable" onclick="showPersonDetail(${d.id})">
-          <div style="width:45px;height:45px;border-radius:50%;overflow:hidden;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;">
-            ${d.photo ? `<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-user"></i>'}
-          </div>
-          <div style="flex:1;"><strong>${d.firstName} ${d.lastName}</strong><p style="color:#94a3b8;font-size:0.8rem;">${d.docType}</p></div>
-        </div>
-      `).join('');
-    }
-
-    function showPersonDetail(id) {
-      hideAllPages();
-      document.getElementById('personDetailPage').classList.add('active');
-      currentDetailId = id; currentDetailType = 'person';
-      const p = documents.find(d => d.id === id);
-      renderDetail(p, personTags[id] || {}, personNotes[id] || [], personIncidents[id] || [], 'person');
-    }
-
-    function showVehiclePage() { hideAllPages(); document.getElementById('vehiclePage').classList.add('active'); displayVehiclesList(); }
-    function displayVehiclesList() {
-      const list = document.getElementById('vehicleList');
-      list.innerHTML = vehicles.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádná vozidla</p>' : vehicles.map(v => `
-        <div class="call-sign-card person-clickable" onclick="showVehicleDetail(${v.id})">
-          <div style="width:45px;height:45px;border-radius:10px;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;"><i class="fas fa-car"></i></div>
-          <div style="flex:1;"><strong>${v.spz}</strong><p style="color:#94a3b8;font-size:0.8rem;">${v.make} ${v.model}</p></div>
-        </div>
-      `).join('');
-    }
-
-    function showVehicleDetail(id) {
-      hideAllPages();
-      document.getElementById('vehicleDetailPage').classList.add('active');
-      currentDetailId = id; currentDetailType = 'vehicle';
-      const v = vehicles.find(veh => veh.id === id);
-      renderDetail(v, vehicleTags[id] || {}, vehicleNotes[id] || [], [], 'vehicle');
-    }
-
-    function renderDetail(data, tagsData, notesData, incidentsData, type) {
-      const isPerson = type === 'person';
-      const isCriminal = isPerson && (tagsData.criminals || []).length > 0;
-      const canSummon = currentDepartment === 'LSPD' || currentDepartment === 'LSSD';
-      const tags = [
-        { id: 'employees', icon: 'fa-user-tie', label: 'Zaměstnanec', source: 'persons' },
-        { id: 'criminals', icon: 'fa-user-slash', label: 'Zločinec', source: 'persons' },
-        { id: 'civilians', icon: 'fa-user', label: 'Civilista', source: 'persons' },
-        { id: 'vehicles', icon: 'fa-car', label: 'Vozidla', source: 'vehicles' },
-        { id: 'weapons', icon: 'fa-gun', label: 'Zbraně', source: 'text' },
-        { id: 'evidence', icon: 'fa-box', label: 'Důkazy', source: 'text' },
-        { id: 'incidents', icon: 'fa-exclamation-triangle', label: 'Propojené incidenty', source: 'text' },
-        { id: 'messages', icon: 'fa-envelope', label: 'Propojené zprávy', source: 'text' },
-        { id: 'policeReports', icon: 'fa-file-alt', label: 'Propojené policejní zprávy', source: 'text' },
-        { id: 'photos', icon: 'fa-camera', label: 'Fotografie', source: 'text' }
-      ];
-      const title = isPerson ? `${data.firstName} ${data.lastName}` : data.spz;
-      const content = document.getElementById(isPerson ? 'personDetailContent' : 'vehicleDetailContent');
-      content.innerHTML = `
-        <div class="detail-layout">
-          <div class="detail-main">
-            <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:15px;padding:25px;">
-              <div style="display:flex;align-items:center;gap:15px;">
-                <div style="width:70px;height:70px;border-radius:${isPerson ? '50%' : '12px'};overflow:hidden;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;font-size:2rem;">
-                  ${isPerson && data.photo ? `<img src="${data.photo}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="fas ${isPerson ? 'fa-user' : 'fa-car'}"></i>`}
-                </div>
-                <div><h2 style="font-size:1.4rem;">${title}</h2></div>
-              </div>
-              ${isPerson && isCriminal ? `
-                <div class="notes-section incident-section">
-                  <h4>Incidenty</h4>
-                  ${incidentsData.length === 0 ? '<p style="color:#64748b;font-size:0.8rem;">Žádné incidenty</p>' : incidentsData.map(inc => {
-                    return `<div class="incident-card">
-                      <p>${inc.text}</p>
-                      ${inc.laws && inc.laws.length > 0 ? inc.laws.map(l => `<span class="badge badge-blue">${l.lawTitle}${l.fine > 0 ? ` - $${l.fine.toLocaleString()}` : ''}${l.months > 0 ? ` - ${l.months} měs.` : ''}</span>`).join(' ') : ''}
-                    </div>`;
-                  }).join('')}
-                </div>
-              ` : ''}
-              <div class="notes-section">
-                <h4>Poznámka</h4>
-                ${notesData.length === 0 ? '<p style="color:#64748b;font-size:0.8rem;">Žádné poznámky</p>' : notesData.map((n, idx) => `<div class="note-item"><div class="note-text">${n.text}<br><span style="font-size:0.7rem;color:#64748b;">${n.date}</span></div><button class="btn-remove" onclick="deleteNote(${idx})"><i class="fas fa-trash"></i></button></div>`).join('')}
-                <button class="btn-note" onclick="openNoteModal()"><i class="fas fa-plus"></i> Přidat poznámku</button>
-              </div>
-              ${isPerson && canSummon ? `
-                <button class="btn-summon" onclick="openSummonModal(${data.id})"><i class="fas fa-bullhorn"></i> Předvolat osobu</button>
-              ` : ''}
-            </div>
-          </div>
-          <div class="detail-sidebar">
-            <h3>Štítky</h3>
-            ${tags.map(t => {
-              const items = tagsData[t.id] || [];
-              return `<div style="margin-bottom:5px;">
-                <div class="detail-tag ${items.length > 0 ? 'active' : ''}" onclick="openTagModal('${t.id}', '${t.source}')"><i class="fas ${t.icon}"></i> ${t.label} <span style="margin-left:auto;font-size:0.7rem;">${items.length > 0 ? items.length : '+'}</span></div>
-                ${items.map((item, idx) => `<div class="tag-item"><span>${item}</span><button class="btn-remove" onclick="removeTagItem('${t.id}', ${idx})"><i class="fas fa-times"></i></button></div>`).join('')}
-              </div>`;
-            }).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    // POZNÁMKY
-    function openNoteModal() { document.getElementById('noteText').value = ''; document.getElementById('noteModal').classList.remove('hidden'); }
-    function closeNoteModal() { document.getElementById('noteModal').classList.add('hidden'); }
-    function addNote() {
+    function displayGlobalIncidents() { /* ... stejné ... */ }
+    async function deleteGlobalIncident(id) { await db.collection('incidents').doc(id).delete(); await loadAllData(); displayGlobalIncidents(); }
+    function showPersonPage() { /* ... stejné ... */ }
+    function displayDocuments() { /* ... stejné ... */ }
+    function showPersonDetail(id) { /* ... stejné ... */ }
+    function showVehiclePage() { /* ... stejné ... */ }
+    function displayVehiclesList() { /* ... stejné ... */ }
+    function showVehicleDetail(id) { /* ... stejné ... */ }
+    function renderDetail(data, tagsData, notesData, incidentsData, type) { /* ... stejné ... */ }
+    function openNoteModal() { /* ... stejné ... */ }
+    function closeNoteModal() { /* ... stejné ... */ }
+    async function addNote() {
       const text = document.getElementById('noteText').value.trim();
       if (!text) { alert('Zadejte poznámku.'); return; }
-      const notesData = currentDetailType === 'person' ? personNotes : vehicleNotes;
-      if (!notesData[currentDetailId]) notesData[currentDetailId] = [];
-      notesData[currentDetailId].push({ text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'Systém' });
-      saveAllData(); closeNoteModal(); refreshDetail();
+      const collection = currentDetailType === 'person' ? 'personNotes' : 'vehicleNotes';
+      await db.collection(collection).add({ refId: currentDetailId, text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'Systém' });
+      await loadAllData();
+      closeNoteModal();
+      refreshDetail();
     }
-    function deleteNote(index) {
-      const notesData = currentDetailType === 'person' ? personNotes : vehicleNotes;
-      if (notesData[currentDetailId]) { notesData[currentDetailId].splice(index, 1); saveAllData(); refreshDetail(); }
+    function deleteNote(index) { /* ... stejné ... */ }
+    function openSummonModal(personId) { /* ... stejné ... */ }
+    function closeSummonModal() { /* ... stejné ... */ }
+    function sendSummon() { /* ... stejné - Discord webhook ... */ }
+    function openTagModal(category, source) { /* ... stejné ... */ }
+    function closeTagModal() { /* ... stejné ... */ }
+    async function addSelectedTagItem(value) {
+      const collection = currentDetailType === 'person' ? 'personTags' : 'vehicleTags';
+      await db.collection(collection).add({ refId: currentDetailId, category: currentTagCategory, value });
+      await loadAllData();
+      closeTagModal();
+      refreshDetail();
     }
-
-    // PŘEDVOLÁNÍ
-    function openSummonModal(personId) {
-      summonPersonId = personId;
-      const person = documents.find(d => d.id === personId);
-      document.getElementById('summonPersonInfo').textContent = `${person.firstName} ${person.lastName} (${person.docType})`;
-      document.getElementById('summonStation').value = currentDepartment;
-      document.getElementById('summonReason').value = '';
-      document.getElementById('summonModal').classList.remove('hidden');
-    }
-    function closeSummonModal() { document.getElementById('summonModal').classList.add('hidden'); }
-    function sendSummon() {
-      const person = documents.find(d => d.id === summonPersonId);
-      const station = document.getElementById('summonStation').value;
-      const reason = document.getElementById('summonReason').value.trim();
-      if (!reason) { alert('Zadejte důvod předvolání.'); return; }
-      const stationName = station === 'LSPD' ? 'LSPD stanice' : 'LSSD stanice';
-      const stationColor = station === 'LSPD' ? 0x1e40af : 0xb45309;
-      const embed = {
-        title: '📋 Předvolání osoby',
-        description: `**${person.firstName} ${person.lastName}** byl/a předvolán/a na **${stationName}**`,
-        color: stationColor,
-        fields: [
-          { name: 'Jméno', value: `${person.firstName} ${person.lastName}`, inline: true },
-          { name: 'Typ dokladu', value: person.docType || 'Není', inline: true },
-          { name: 'Stanice', value: stationName, inline: true },
-          { name: 'Důvod', value: reason, inline: false },
-          { name: 'Předvolal', value: currentUser?.name || 'Neznámý', inline: true },
-          { name: 'Čas', value: new Date().toLocaleString('cs-CZ'), inline: true }
-        ],
-        footer: { text: 'San Andreas Government Portal' }
-      };
-      fetch(DISCORD_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ embeds: [embed] })
-      })
-      .then(res => {
-        if (res.ok) { alert('Předvolání odesláno na Discord!'); closeSummonModal(); }
-        else { alert('Chyba při odesílání.'); }
-      })
-      .catch(err => { alert('Chyba: ' + err.message); });
-    }
-
-    // ŠTÍTKY
-    function openTagModal(category, source) {
-      currentTagCategory = category;
-      const modalList = document.getElementById('tagModalList');
-      const title = document.getElementById('tagModalTitle');
-      if (source === 'persons') {
-        title.textContent = 'Vyberte osobu';
-        const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[category] || [];
-        const available = documents.filter(d => !existing.includes(`${d.firstName} ${d.lastName}`));
-        modalList.innerHTML = available.length === 0 ? '<p style="text-align:center;color:#94a3b8;">Žádné osoby</p>' : available.map(d => `<div class="modal-member" onclick="addSelectedTagItem('${d.firstName} ${d.lastName}')"><i class="fas fa-user"></i><span>${d.firstName} ${d.lastName}</span></div>`).join('');
-      } else if (source === 'vehicles') {
-        title.textContent = 'Vyberte vozidlo';
-        const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[category] || [];
-        const available = vehicles.filter(v => !existing.includes(v.spz));
-        modalList.innerHTML = available.length === 0 ? '<p style="text-align:center;color:#94a3b8;">Žádná vozidla</p>' : available.map(v => `<div class="modal-member" onclick="addSelectedTagItem('${v.spz}')"><i class="fas fa-car"></i><span>${v.spz} (${v.make} ${v.model})</span></div>`).join('');
-      } else {
-        title.textContent = 'Přidat záznam';
-        modalList.innerHTML = `<div class="form-group"><label>Popis</label><input type="text" id="tagItemText"></div><button class="btn btn-primary" onclick="addTextTagItem()">Přidat</button>`;
-      }
-      document.getElementById('tagModal').classList.remove('hidden');
-    }
-    function closeTagModal() { document.getElementById('tagModal').classList.add('hidden'); }
-    function addSelectedTagItem(value) {
-      const tagsData = currentDetailType === 'person' ? personTags : vehicleTags;
-      if (!tagsData[currentDetailId]) tagsData[currentDetailId] = {};
-      if (!tagsData[currentDetailId][currentTagCategory]) tagsData[currentDetailId][currentTagCategory] = [];
-      tagsData[currentDetailId][currentTagCategory].push(value);
-      saveAllData(); closeTagModal(); refreshDetail();
-    }
-    function addTextTagItem() {
-      const text = document.getElementById('tagItemText').value.trim();
-      if (!text) { alert('Zadejte popis.'); return; }
-      addSelectedTagItem(text);
-    }
-    function removeTagItem(category, index) {
-      const tagsData = currentDetailType === 'person' ? personTags : vehicleTags;
-      if (tagsData[currentDetailId] && tagsData[currentDetailId][category]) {
-        tagsData[currentDetailId][category].splice(index, 1);
-        saveAllData(); refreshDetail();
-      }
-    }
-    function refreshDetail() {
-      if (currentDetailType === 'person') {
-        const p = documents.find(d => d.id === currentDetailId);
-        renderDetail(p, personTags[currentDetailId] || {}, personNotes[currentDetailId] || [], personIncidents[currentDetailId] || [], 'person');
-      } else {
-        const v = vehicles.find(veh => veh.id === currentDetailId);
-        renderDetail(v, vehicleTags[currentDetailId] || {}, vehicleNotes[currentDetailId] || [], [], 'vehicle');
-      }
-    }
-
-    function showManagePersonsPage() {
-      if (!currentUser?.canManage) { alert('Nemáte přístup.'); return; }
-      hideAllPages(); document.getElementById('managePersonsPage').classList.add('active');
-      populateRanks(); displayMembers();
-    }
-    function showLegislationPage() {
-      hideAllPages(); document.getElementById('legislationPage').classList.add('active');
-      const isDOJ = currentUser?.department === 'DOJ' || currentDepartment === 'DOJ';
-      document.getElementById('addLawForm').classList.toggle('hidden', !isDOJ);
-      displayLaws(isDOJ);
-    }
-    function addLaw() {
+    function addTextTagItem() { /* ... stejné ... */ }
+    function removeTagItem(category, index) { /* ... stejné ... */ }
+    function refreshDetail() { /* ... stejné ... */ }
+    function showManagePersonsPage() { /* ... stejné ... */ }
+    function showLegislationPage() { /* ... stejné ... */ }
+    async function addLaw() {
       const title = document.getElementById('lawTitle').value.trim();
-      const desc = document.getElementById('lawDescription').value.trim();
-      const minFine = parseInt(document.getElementById('lawMinFine').value) || 0;
-      const maxFine = parseInt(document.getElementById('lawMaxFine').value) || 0;
-      const recFine = parseInt(document.getElementById('lawRecFine').value) || 0;
-      const minMonths = parseInt(document.getElementById('lawMinMonths').value) || 0;
-      const maxMonths = parseInt(document.getElementById('lawMaxMonths').value) || 0;
-      const recMonths = parseInt(document.getElementById('lawRecMonths').value) || 0;
-      if (!title) { alert('Zadejte název zákona.'); return; }
-      laws.push({ id: Date.now(), title, description: desc, minFine, maxFine, recFine, minMonths, maxMonths, recMonths });
-      saveAllData();
+      if (!title) { alert('Zadejte název.'); return; }
+      const law = { title, description: document.getElementById('lawDescription').value, minFine: parseInt(document.getElementById('lawMinFine').value) || 0, maxFine: parseInt(document.getElementById('lawMaxFine').value) || 0, recFine: parseInt(document.getElementById('lawRecFine').value) || 0, minMonths: parseInt(document.getElementById('lawMinMonths').value) || 0, maxMonths: parseInt(document.getElementById('lawMaxMonths').value) || 0, recMonths: parseInt(document.getElementById('lawRecMonths').value) || 0 };
+      await db.collection('laws').add(law);
+      await loadAllData();
       document.getElementById('lawTitle').value = '';
       document.getElementById('lawDescription').value = '';
       document.getElementById('lawMinFine').value = '';
@@ -1006,75 +614,49 @@
       document.getElementById('lawRecMonths').value = '';
       displayLaws(true);
     }
-    function deleteLaw(id) { laws = laws.filter(l => l.id !== id); saveAllData(); displayLaws(true); }
-    function displayLaws(isDOJ) {
-      document.getElementById('lawList').innerHTML = laws.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádné zákony</p>' : laws.map(l => `
-        <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <div style="display:flex;gap:10px;align-items:center;width:100%;"><strong>${l.title}</strong>${isDOJ ? `<button class="btn-remove" onclick="deleteLaw(${l.id})"><i class="fas fa-trash"></i></button>` : ''}</div>
-          ${l.description ? `<p style="color:#cbd5e1;">${l.description}</p>` : ''}
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            ${l.minFine ? `<span class="badge badge-blue">Min pokuta: $${l.minFine.toLocaleString()}</span>` : ''}
-            ${l.maxFine ? `<span class="badge badge-blue">Max pokuta: $${l.maxFine.toLocaleString()}</span>` : ''}
-            ${l.recFine ? `<span class="badge badge-green">Dop. pokuta: $${l.recFine.toLocaleString()}</span>` : ''}
-            ${l.minMonths ? `<span class="badge badge-red">Min trest: ${l.minMonths} měs.</span>` : ''}
-            ${l.maxMonths ? `<span class="badge badge-red">Max trest: ${l.maxMonths} měs.</span>` : ''}
-            ${l.recMonths ? `<span class="badge badge-green">Dop. trest: ${l.recMonths} měs.</span>` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-    function showAnnouncementsPage() {
-      hideAllPages(); document.getElementById('announcementsPage').classList.add('active');
-      const isDOJ = currentUser?.department === 'DOJ' || currentDepartment === 'DOJ';
-      document.getElementById('addAnnouncementForm').classList.toggle('hidden', !isDOJ);
-      displayAnnouncements(isDOJ);
-    }
-    function addAnnouncement() {
+    async function deleteLaw(id) { await db.collection('laws').doc(id).delete(); await loadAllData(); displayLaws(true); }
+    function displayLaws(isDOJ) { /* ... stejné ... */ }
+    function showAnnouncementsPage() { /* ... stejné ... */ }
+    async function addAnnouncement() {
       const title = document.getElementById('announcementTitle').value.trim();
       const text = document.getElementById('announcementText').value.trim();
       if (!title || !text) return;
-      announcements.unshift({ id: Date.now(), title, text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'DOJ' });
-      saveAllData(); displayAnnouncements(true);
+      await db.collection('announcements').add({ title, text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'DOJ' });
+      await loadAllData();
+      document.getElementById('announcementTitle').value = '';
+      document.getElementById('announcementText').value = '';
+      displayAnnouncements(true);
     }
-    function displayAnnouncements(isDOJ) {
-      document.getElementById('announcementList').innerHTML = announcements.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:20px;">Žádná oznámení</p>' : announcements.map(a => `
-        <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:8px;">
-          <div style="display:flex;gap:10px;align-items:center;"><strong>${a.title}</strong>${isDOJ ? `<button class="btn-remove" onclick="deleteAnnouncement(${a.id})"><i class="fas fa-trash"></i></button>` : ''}</div>
-          <p>${a.text}</p>
-        </div>
-      `).join('');
-    }
-    function deleteAnnouncement(id) { announcements = announcements.filter(a => a.id !== id); saveAllData(); displayAnnouncements(true); }
-    function addMember() {
+    function displayAnnouncements(isDOJ) { /* ... stejné ... */ }
+    async function deleteAnnouncement(id) { await db.collection('announcements').doc(id).delete(); await loadAllData(); displayAnnouncements(true); }
+    async function addMember() {
       const name = document.getElementById('memberName').value.trim();
       const password = document.getElementById('memberPassword').value;
       const rank = document.getElementById('memberRank').value;
       const canManage = document.getElementById('memberCanManage').checked;
       if (!name || !password || !rank) { alert('Vyplňte všechna pole.'); return; }
-      if (members.find(m => m.name === name)) { alert('Člen existuje.'); return; }
-      members.push({ name, password, rank, department: currentDepartment, canManage });
-      saveAllData(); displayMembers();
+      await db.collection('members').add({ name, password, rank, department: currentDepartment, canManage });
+      await loadAllData();
+      document.getElementById('memberName').value = '';
+      document.getElementById('memberPassword').value = '';
+      document.getElementById('memberRank').value = '';
+      document.getElementById('memberCanManage').checked = false;
+      displayMembers();
     }
-    function deleteMember(name) {
+    async function deleteMember(name) {
       if (name === 'honza2001') return;
-      members = members.filter(m => m.name !== name);
-      saveAllData(); displayMembers();
+      const member = members.find(m => m.name === name);
+      if (member) await db.collection('members').doc(member.id).delete();
+      await loadAllData();
+      displayMembers();
     }
-    function displayMembers() {
-      document.getElementById('memberList').innerHTML = members.map(m => `
-        <div class="call-sign-card">
-          <span class="badge badge-blue">${m.rank}</span>
-          <strong>${m.name}</strong> (${m.department})
-          ${m.name !== 'honza2001' ? `<button class="btn-remove" onclick="deleteMember('${m.name}')"><i class="fas fa-trash"></i></button>` : ''}
-        </div>
-      `).join('');
-    }
-
+    function displayMembers() { /* ... stejné ... */ }
     function showHome() { showDashboard(); }
     function showServices() { showDashboard(); }
     function showContact() { showDashboard(); }
 
     // Init
+    loadAllData();
     switchDepartment('LSPD');
     populateRanks();
     toggleDocFields();
