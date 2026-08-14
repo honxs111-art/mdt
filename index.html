@@ -41,14 +41,17 @@
     .menu-item:hover { color: white; background: rgba(255,255,255,0.1); }
     .menu-item.active { background: var(--primary); color: white; }
     .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); }
+
     .main-content { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 30px 20px; }
     .main-content.with-header { padding-top: 105px; display: block; }
+
     .flip-container { perspective: 1500px; width: 100%; max-width: 480px; margin: 0 auto; min-height: 580px; }
     .flip-inner { position: relative; width: 100%; min-height: 580px; transition: transform 0.7s; transform-style: preserve-3d; }
     .flip-inner.flipped { transform: rotateY(180deg); }
     .flip-front, .flip-back { position: absolute; top: 0; left: 0; width: 100%; min-height: 580px; backface-visibility: hidden; border-radius: 25px; }
     .flip-front { z-index: 2; }
     .flip-back { transform: rotateY(180deg); z-index: 1; }
+
     .welcome-screen, .login-screen { background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(255,255,255,0.1); padding: 45px 40px; text-align: center; width: 100%; min-height: 580px; display: flex; flex-direction: column; justify-content: center; box-shadow: var(--shadow); }
     .welcome-icon { width: 90px; height: 90px; border-radius: 28px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 3rem; color: white; }
     .welcome-screen h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
@@ -70,11 +73,29 @@
     .message { padding: 14px 18px; border-radius: 14px; margin-bottom: 15px; font-weight: 600; }
     .message.error { background: rgba(239,68,68,0.15); color: #fca5a5; }
     .message.success { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+
     .photo-upload { margin-bottom: 20px; text-align: center; }
-    .photo-preview { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 3px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; cursor: pointer; overflow: hidden; transition: var(--transition); }
-    .photo-preview i { font-size: 2.5rem; color: #94a3b8; }
-    .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-    .btn-upload { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 50px; padding: 10px 20px; cursor: pointer; font-size: 0.85rem; }
+    .photo-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 3px dashed rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: var(--transition);
+      position: relative;
+    }
+    .photo-preview:hover { border-color: var(--primary); box-shadow: 0 0 20px rgba(59,130,246,0.3); }
+    .photo-preview i { font-size: 3rem; color: #94a3b8; }
+    .photo-preview img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+    .btn-upload { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 50px; padding: 10px 20px; cursor: pointer; font-size: 0.85rem; transition: var(--transition); }
+    .btn-upload:hover { background: rgba(255,255,255,0.2); }
+
     .dashboard-content { display: none; }
     .dashboard-content.active { display: block; }
     .dashboard-header { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; padding: 35px; text-align: center; margin-bottom: 25px; }
@@ -84,6 +105,7 @@
     .info-card:hover { transform: translateY(-5px); }
     .info-card .icon { width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 1.8rem; color: white; }
     .info-card h3 { font-size: 1.15rem; }
+
     .mdt-page { display: none; }
     .mdt-page.active { display: block; }
     .page-header { background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 22px; padding: 28px; text-align: center; margin-bottom: 20px; position: relative; }
@@ -114,6 +136,7 @@
     .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 2px; bottom: 2px; background: #ef4444; border-radius: 50%; transition: 0.3s; }
     .toggle-switch input:checked + .toggle-slider { background: rgba(16,185,129,0.3); }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(24px); background: #10b981; }
+
     .detail-layout { display: flex; gap: 20px; }
     .detail-main { flex: 1; min-width: 0; }
     .detail-sidebar { width: 220px; flex-shrink: 0; background: rgba(17, 24, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 18px; }
@@ -198,8 +221,10 @@
               </div>
               <div id="personalFields">
                 <div class="photo-upload">
-                  <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photoInput').click()"><i class="fas fa-camera"></i></div>
-                  <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="previewPhoto()">
+                  <div class="photo-preview" id="photoPreview">
+                    <i class="fas fa-camera"></i>
+                  </div>
+                  <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="previewPhoto(event)">
                   <button class="btn-upload" onclick="document.getElementById('photoInput').click()"><i class="fas fa-upload"></i> Přidat fotku</button>
                 </div>
                 <div class="form-group"><label>Jméno</label><input type="text" id="firstName"></div>
@@ -330,22 +355,9 @@
   </div>
 
   <script>
-    // ⚠️ ZDE VLOŽTE SVÉ FIREBASE ÚDAJE
-    const firebaseConfig = {
-      apiKey: "VAS_API_KEY",
-      authDomain: "vas-projekt.firebaseapp.com",
-      projectId: "vas-projekt",
-      storageBucket: "vas-projekt.appspot.com",
-      messagingSenderId: "VAS_SENDER_ID",
-      appId: "VAS_APP_ID"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
+    // POUŽIJEME localStorage (funguje okamžitě)
     const VALID_USERNAME = "honza2001";
     const VALID_PASSWORD = "1234";
-    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1537887132616622301/vyNR26Wyc3mNMOT3TVxOgD-uR0tw7kLmIQoG_sbXTX0iAlaafnFHKgvSo-aftpqBQ_fw";
     
     const DEPARTMENTS = {
       LSPD: { name: 'LSPD', color: '#1e40af', ranks: ['Cadet','Police Officer I','Police Officer II','Police Officer III','Police Officer III+I','Sergeant I','Sergeant II','Lieutenant','Captain','Commander','Deputy Chief','Assistant Chief Of Police','Chief Of Police'] },
@@ -354,42 +366,28 @@
       DOJ: { name: 'DOJ', color: '#6d28d9', ranks: ['Clerk','Paralegal','Attorney','Senior Attorney','Prosecutor','Senior Prosecutor','Deputy District Attorney','District Attorney','Attorney General'] }
     };
 
-    let documents = [];
-    let vehicles = [];
-    let members = [];
-    let laws = [];
-    let announcements = [];
-    let globalIncidents = [];
+    function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
+    function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) {} }
+
+    let documents = loadData('persons', []);
+    let vehicles = loadData('vehicles', []);
+    let members = loadData('members', [{ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
+    let laws = loadData('laws', []);
+    let announcements = loadData('announcements', []);
+    let globalIncidents = loadData('incidents', []);
 
     let currentDepartment = 'LSPD';
     let currentUser = null;
-    let currentDetailId = null;
-    let currentDetailType = null;
     let selectedIncidentTag = 'incident';
     let addedLawsToIncident = [];
-    let summonPersonId = null;
 
-    async function loadAllData() {
-      try {
-        const [personsSnap, vehiclesSnap, membersSnap, lawsSnap, annsSnap, incsSnap] = await Promise.all([
-          db.collection('persons').get(),
-          db.collection('vehicles').get(),
-          db.collection('members').get(),
-          db.collection('laws').get(),
-          db.collection('announcements').get(),
-          db.collection('incidents').get()
-        ]);
-        documents = personsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        vehicles = vehiclesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        members = membersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        laws = lawsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        announcements = annsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        globalIncidents = incsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        if (members.length === 0) {
-          await db.collection('members').add({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
-          members = [{ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
-        }
-      } catch(e) { console.error(e); }
+    function saveAllData() {
+      saveData('persons', documents);
+      saveData('vehicles', vehicles);
+      saveData('members', members);
+      saveData('laws', laws);
+      saveData('announcements', announcements);
+      saveData('incidents', globalIncidents);
     }
 
     function flipTo(page) {
@@ -412,20 +410,22 @@
       }
     }
     function flipBackToWelcome() { document.getElementById('flipInner').classList.remove('flipped'); }
-    function previewPhoto() {
-      const input = document.getElementById('photoInput');
-      const preview = document.getElementById('photoPreview');
-      if (input.files && input.files[0]) {
+
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
         const reader = new FileReader();
-        reader.onload = e => { preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`; };
-        reader.readAsDataURL(input.files[0]);
+        reader.onload = function(e) {
+          document.getElementById('photoPreview').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        };
+        reader.readAsDataURL(file);
       }
     }
+
     function switchDepartment(dept) {
       currentDepartment = dept;
       ['LSPD','LSSD','SAHP','DOJ'].forEach(d => document.getElementById('tab' + d).classList.remove('active'));
       document.getElementById('tab' + dept).classList.add('active');
-      document.getElementById('loginButton').style.background = 'linear-gradient(135deg, ' + DEPARTMENTS[dept].color + ', #3b82f6)';
     }
     function populateRanks() {
       const select = document.getElementById('memberRank');
@@ -451,30 +451,26 @@
     }
     function showWelcomeScreen() { hideAllPages(); showFlipContainer(); currentUser = null; }
 
-    async function submitDocument() {
+    function submitDocument() {
       const type = document.getElementById('docType').value;
       if (!type) { alert('Vyberte typ.'); return; }
       if (type === 'Registrace vozidla') {
-        await db.collection('vehicles').add({ spz: document.getElementById('vehicleSPZ').value, make: document.getElementById('vehicleMake').value, model: document.getElementById('vehicleModel').value, color: document.getElementById('vehicleColor').value, owner: document.getElementById('vehicleOwner').value, regDate: document.getElementById('vehicleRegDate').value });
+        vehicles.push({ id: Date.now(), spz: document.getElementById('vehicleSPZ').value, make: document.getElementById('vehicleMake').value, model: document.getElementById('vehicleModel').value, color: document.getElementById('vehicleColor').value, owner: document.getElementById('vehicleOwner').value, regDate: document.getElementById('vehicleRegDate').value });
       } else {
         const photo = document.getElementById('photoPreview').querySelector('img')?.src || '';
-        await db.collection('persons').add({ docType: type, firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, birthDate: document.getElementById('birthDate').value, bloodType: document.getElementById('bloodType').value, photo: photo });
+        documents.push({ id: Date.now(), docType: type, firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, birthDate: document.getElementById('birthDate').value, bloodType: document.getElementById('bloodType').value, photo: photo });
       }
-      await loadAllData();
+      saveAllData();
       alert('Doklad vytvořen!');
       showWelcomeScreen();
     }
 
-    async function handleLogin() {
+    function handleLogin() {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const dept = DEPARTMENTS[currentDepartment];
       const c = document.getElementById('messageContainer');
-      await loadAllData();
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        loginSuccess(username, dept, null);
-        return;
-      }
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) { loginSuccess(username, dept, null); return; }
       const vm = members.find(m => m.name === username && m.password === password && m.department === dept.name);
       if (vm) { loginSuccess(username, dept, vm); return; }
       c.innerHTML = '<div class="message error">Chybné jméno nebo heslo!</div>';
@@ -502,7 +498,7 @@
     function displayDocuments() {
       const list = document.getElementById('personList');
       list.innerHTML = documents.length === 0 ? '<p style="text-align:center;color:#94a3b8;padding:30px;">Žádné osoby</p>' : documents.map(d => `
-        <div class="call-sign-card person-clickable" onclick="showPersonDetail('${d.id}')">
+        <div class="call-sign-card person-clickable" onclick="showPersonDetail(${d.id})">
           <div style="width:45px;height:45px;border-radius:50%;overflow:hidden;background:rgba(59,130,246,0.2);display:flex;align-items:center;justify-content:center;">
             ${d.photo ? `<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<i class="fas fa-user"></i>'}
           </div>
@@ -537,8 +533,6 @@
       const sel = document.getElementById('lawSelectForIncident');
       sel.innerHTML = '<option value="">Vyberte zákon</option>';
       laws.forEach(l => { const o = document.createElement('option'); o.value = l.id; o.textContent = l.title; sel.appendChild(o); });
-      document.getElementById('incidentFine').value = '';
-      document.getElementById('incidentMonths').value = '';
       document.getElementById('lawSelectionModal').classList.remove('hidden');
     }
     function closeLawSelectionModal() { document.getElementById('lawSelectionModal').classList.add('hidden'); }
@@ -547,8 +541,8 @@
       const fine = parseInt(document.getElementById('incidentFine').value) || 0;
       const months = parseInt(document.getElementById('incidentMonths').value) || 0;
       if (!lawId) { alert('Vyberte zákon.'); return; }
-      const law = laws.find(l => l.id === lawId);
-      addedLawsToIncident.push({ lawId, lawTitle: law ? law.title : 'Neznámý', fine, months });
+      const law = laws.find(l => l.id === parseInt(lawId));
+      addedLawsToIncident.push({ lawId: parseInt(lawId), lawTitle: law ? law.title : 'Neznámý', fine, months });
       renderAddedLaws();
       closeLawSelectionModal();
     }
@@ -564,12 +558,12 @@
       `).join('');
     }
     function removeAddedLaw(idx) { addedLawsToIncident.splice(idx, 1); renderAddedLaws(); }
-    async function createIncident() {
-      const personId = document.getElementById('incidentPersonSelect').value;
+    function createIncident() {
+      const personId = parseInt(document.getElementById('incidentPersonSelect').value);
       const desc = document.getElementById('incidentDesc').value.trim();
       if (!personId || !desc) { alert('Vyplňte všechny údaje.'); return; }
-      await db.collection('incidents').add({ personId, text: desc, tag: selectedIncidentTag, laws: addedLawsToIncident, date: new Date().toLocaleString('cs-CZ') });
-      await loadAllData();
+      globalIncidents.push({ id: Date.now(), personId, text: desc, tag: selectedIncidentTag, laws: addedLawsToIncident, date: new Date().toLocaleString('cs-CZ') });
+      saveAllData();
       document.getElementById('incidentDesc').value = '';
       document.getElementById('incidentPersonSelect').value = '';
       addedLawsToIncident = [];
@@ -593,11 +587,11 @@
       document.getElementById('addLawForm').classList.toggle('hidden', !isDOJ);
       displayLaws(isDOJ);
     }
-    async function addLaw() {
+    function addLaw() {
       const title = document.getElementById('lawTitle').value.trim();
       if (!title) { alert('Zadejte název.'); return; }
-      await db.collection('laws').add({ title, description: document.getElementById('lawDescription').value, minFine: parseInt(document.getElementById('lawMinFine').value) || 0, maxFine: parseInt(document.getElementById('lawMaxFine').value) || 0, recFine: parseInt(document.getElementById('lawRecFine').value) || 0, minMonths: parseInt(document.getElementById('lawMinMonths').value) || 0, maxMonths: parseInt(document.getElementById('lawMaxMonths').value) || 0, recMonths: parseInt(document.getElementById('lawRecMonths').value) || 0 });
-      await loadAllData();
+      laws.push({ id: Date.now(), title, description: document.getElementById('lawDescription').value, minFine: parseInt(document.getElementById('lawMinFine').value) || 0, maxFine: parseInt(document.getElementById('lawMaxFine').value) || 0, recFine: parseInt(document.getElementById('lawRecFine').value) || 0, minMonths: parseInt(document.getElementById('lawMinMonths').value) || 0, maxMonths: parseInt(document.getElementById('lawMaxMonths').value) || 0, recMonths: parseInt(document.getElementById('lawRecMonths').value) || 0 });
+      saveAllData();
       document.getElementById('lawTitle').value = '';
       document.getElementById('lawDescription').value = '';
       document.getElementById('lawMinFine').value = '';
@@ -629,14 +623,14 @@
       hideAllPages(); document.getElementById('managePersonsPage').classList.add('active');
       populateRanks(); displayMembers();
     }
-    async function addMember() {
+    function addMember() {
       const name = document.getElementById('memberName').value.trim();
       const password = document.getElementById('memberPassword').value;
       const rank = document.getElementById('memberRank').value;
       const canManage = document.getElementById('memberCanManage').checked;
       if (!name || !password || !rank) { alert('Vyplňte všechna pole.'); return; }
-      await db.collection('members').add({ name, password, rank, department: currentDepartment, canManage });
-      await loadAllData();
+      members.push({ name, password, rank, department: currentDepartment, canManage });
+      saveAllData();
       document.getElementById('memberName').value = '';
       document.getElementById('memberPassword').value = '';
       document.getElementById('memberRank').value = '';
@@ -658,12 +652,12 @@
       document.getElementById('addAnnouncementForm').classList.toggle('hidden', !isDOJ);
       displayAnnouncements(isDOJ);
     }
-    async function addAnnouncement() {
+    function addAnnouncement() {
       const title = document.getElementById('announcementTitle').value.trim();
       const text = document.getElementById('announcementText').value.trim();
       if (!title || !text) return;
-      await db.collection('announcements').add({ title, text, date: new Date().toLocaleString('cs-CZ') });
-      await loadAllData();
+      announcements.unshift({ id: Date.now(), title, text, date: new Date().toLocaleString('cs-CZ') });
+      saveAllData();
       document.getElementById('announcementTitle').value = '';
       document.getElementById('announcementText').value = '';
       displayAnnouncements(true);
@@ -682,7 +676,6 @@
     function showContact() { showDashboard(); }
 
     // Init
-    loadAllData();
     switchDepartment('LSPD');
     populateRanks();
     toggleDocFields();
