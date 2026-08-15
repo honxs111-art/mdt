@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>San Andreas Government Portal</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
@@ -1387,6 +1390,22 @@
 
   <!-- ===== SCRIPT ===== -->
   <script>
+    // ----- FIREBASE KONFIGURACE -----
+    // 🔥 NAHRAĎ TOTO SVOJÍ KONFIGURACÍ Z FIREBASE KONZOLE 🔥
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Inicializace Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     // ----- CONFIG -----
     const VALID_USERNAME = "honza2001";
     const VALID_PASSWORD = "1234";
@@ -1447,34 +1466,20 @@
       { id: 45, rank: 'Akademik', number: '', unit: 'Junior-6', assignedName: null }
     ];
 
-    // ----- DATA HELPERS -----
-    function loadData(key, def) {
-      try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch { return def; }
-    }
-
-    function saveData(key, data) {
-      try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
-    }
-
-    // ----- STATE -----
-    let callSigns = loadData('callSigns', defaultCallSigns);
-    let members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
-    let documents = loadData('documents', []);
-    let vehicles = loadData('vehicles', []);
-    let laws = loadData('laws', []);
-    let announcements = loadData('announcements', []);
-    let personTags = loadData('personTags', {});
-    let vehicleTags = loadData('vehicleTags', {});
-    let personNotes = loadData('personNotes', {});
-    let vehicleNotes = loadData('vehicleNotes', {});
-    let personIncidents = loadData('personIncidents', {});
-    let globalIncidents = loadData('globalIncidents', []);
-    let fines = loadData('fines', []);
-
-    if (!members.find(m => m.name === VALID_USERNAME)) {
-      members.unshift({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
-      saveData('members', members);
-    }
+    // ----- DATA (budou načteny z Firebase) -----
+    let callSigns = [];
+    let members = [];
+    let documents = [];
+    let vehicles = [];
+    let laws = [];
+    let announcements = [];
+    let personTags = {};
+    let vehicleTags = {};
+    let personNotes = {};
+    let vehicleNotes = {};
+    let personIncidents = {};
+    let globalIncidents = [];
+    let fines = [];
 
     let currentDepartment = 'LSPD';
     let currentUser = null;
@@ -1491,20 +1496,58 @@
     let filteredIncidents = [];
     let filteredFines = [];
 
+    // ----- NAČTENÍ DAT Z FIREBASE -----
+    function loadDataFromFirebase() {
+      return new Promise((resolve) => {
+        db.ref('/').once('value').then((snapshot) => {
+          const data = snapshot.val() || {};
+          callSigns = data.callSigns || defaultCallSigns;
+          members = data.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
+          documents = data.documents || [];
+          vehicles = data.vehicles || [];
+          laws = data.laws || [];
+          announcements = data.announcements || [];
+          personTags = data.personTags || {};
+          vehicleTags = data.vehicleTags || {};
+          personNotes = data.personNotes || {};
+          vehicleNotes = data.vehicleNotes || {};
+          personIncidents = data.personIncidents || {};
+          globalIncidents = data.globalIncidents || [];
+          fines = data.fines || [];
+          resolve();
+        }).catch((error) => {
+          console.error('Chyba načítání dat:', error);
+          resolve();
+        });
+      });
+    }
+
+    // ----- ULOŽENÍ DAT DO FIREBASE -----
+    function saveAllDataToFirebase() {
+      const data = {
+        callSigns,
+        members,
+        documents,
+        vehicles,
+        laws,
+        announcements,
+        personTags,
+        vehicleTags,
+        personNotes,
+        vehicleNotes,
+        personIncidents,
+        globalIncidents,
+        fines
+      };
+      db.ref('/').set(data).catch((error) => {
+        console.error('Chyba ukládání dat:', error);
+        alert('Chyba při ukládání do Firebase. Zkontrolujte připojení.');
+      });
+    }
+
+    // ----- DATA HELPERS (pro kompatibilitu s původním kódem) -----
     function saveAllData() {
-      saveData('callSigns', callSigns);
-      saveData('members', members);
-      saveData('documents', documents);
-      saveData('vehicles', vehicles);
-      saveData('laws', laws);
-      saveData('announcements', announcements);
-      saveData('personTags', personTags);
-      saveData('vehicleTags', vehicleTags);
-      saveData('personNotes', personNotes);
-      saveData('vehicleNotes', vehicleNotes);
-      saveData('personIncidents', personIncidents);
-      saveData('globalIncidents', globalIncidents);
-      saveData('fines', fines);
+      saveAllDataToFirebase();
     }
 
     // ----- UI HELPERS -----
@@ -1634,18 +1677,22 @@
       const password = document.getElementById('password').value;
       const dept = DEPARTMENTS[currentDepartment];
       const c = document.getElementById('messageContainer');
-      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>';
-        setTimeout(() => loginSuccess(username, dept, null), 800);
-        return;
-      }
-      const vm = members.find(m => m.name === username && m.password === password && m.department === dept.name);
-      if (vm) {
-        c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>';
-        setTimeout(() => loginSuccess(username, dept, vm), 800);
-        return;
-      }
-      c.innerHTML = '<div class="message error">Chybné jméno nebo heslo!</div>';
+      
+      // Načíst data před přihlášením
+      loadDataFromFirebase().then(() => {
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+          c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>';
+          setTimeout(() => loginSuccess(username, dept, null), 800);
+          return;
+        }
+        const vm = members.find(m => m.name === username && m.password === password && m.department === dept.name);
+        if (vm) {
+          c.innerHTML = '<div class="message success">Přihlášení úspěšné!</div>';
+          setTimeout(() => loginSuccess(username, dept, vm), 800);
+          return;
+        }
+        c.innerHTML = '<div class="message error">Chybné jméno nebo heslo!</div>';
+      });
     }
 
     function loginSuccess(username, dept, member) {
@@ -1656,6 +1703,11 @@
           department: dept.name,
           rank: DEPARTMENTS[dept.name].ranks[DEPARTMENTS[dept.name].ranks.length - 1]
         };
+        // Ujistíme se, že honza2001 je v members
+        if (!members.find(m => m.name === username)) {
+          members.push(member);
+          saveAllData();
+        }
       }
       currentUser = member;
       currentDepartment = dept.name;
@@ -2495,7 +2547,6 @@
       const target = members.find(m => m.name === name);
       if (!current || !target) return;
 
-      // Povolit správci mazat ze všech oddělení
       if (!currentUser.canManage) {
         if (current.department !== target.department) {
           alert('Nemůžete mazat členy z jiného oddělení.');
@@ -2511,7 +2562,6 @@
         alert('Nemůžete smazat sami sebe.');
         return;
       }
-      // Povolit smazání stejné hodnosti, pokud je uživatel správce
       if (targetRankIndex > currentRankIndex) {
         alert('Nemůžete smazat člena s vyšší hodností.');
         return;
@@ -2685,9 +2735,13 @@
     function showContact() { showDashboard(); }
 
     // ----- INIT -----
-    switchDepartment('LSPD');
-    populateRanks();
-    toggleDocFields();
+    // Nejprve načteme data z Firebase a pak inicializujeme UI
+    loadDataFromFirebase().then(() => {
+      switchDepartment('LSPD');
+      populateRanks();
+      toggleDocFields();
+      console.log('Data načtena z Firebase');
+    });
   </script>
 
 </body>
