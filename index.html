@@ -9,15 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-        /* ============================================================
-                   RESET & ROOT
-                   ============================================================ */
+        /* ===== RESET & ROOT ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary: #7c3aed;
             --primary-light: #a78bfa;
@@ -46,15 +43,7 @@
             --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.15);
 
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
             --font: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        /* ============================================================
-                   BASE
-                   ============================================================ */
-        html {
-            scroll-behavior: smooth;
         }
 
         body {
@@ -85,10 +74,8 @@
             background: var(--primary-light);
         }
 
-        /* ============================================================
-                   iCLOUD STATUS
-                   ============================================================ */
-        #icloudStatus {
+        /* ===== CLOUD STATUS (klikací) ===== */
+        #cloudStatus {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -107,21 +94,21 @@
             align-items: center;
             gap: 8px;
             transition: var(--transition);
+            cursor: pointer;
         }
-        #icloudStatus.ok {
+        #cloudStatus.ok {
             color: var(--success);
             border-color: rgba(16, 185, 129, 0.2);
         }
-        #icloudStatus.error {
+        #cloudStatus.error {
             color: var(--danger);
             border-color: rgba(239, 68, 68, 0.2);
         }
-        #icloudStatus.syncing {
+        #cloudStatus.syncing {
             color: var(--secondary);
             border-color: rgba(6, 182, 212, 0.2);
             animation: pulse-dot 1.2s ease-in-out infinite;
         }
-
         @keyframes pulse-dot {
             0%,
             100% {
@@ -132,9 +119,7 @@
             }
         }
 
-        /* ============================================================
-                   LOADING OVERLAY
-                   ============================================================ */
+        /* ===== LOADING ===== */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -173,9 +158,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* ============================================================
-                   HEADER
-                   ============================================================ */
+        /* ===== HEADER ===== */
         .header {
             position: fixed;
             top: 0;
@@ -195,7 +178,6 @@
         .header.active {
             display: flex;
         }
-
         .header-brand {
             display: flex;
             align-items: center;
@@ -223,7 +205,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .header-nav {
             display: flex;
             gap: 2px;
@@ -253,7 +234,6 @@
             color: #fff;
             box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
         }
-
         .header-user {
             display: flex;
             align-items: center;
@@ -296,9 +276,7 @@
             color: var(--danger);
         }
 
-        /* ============================================================
-                   MAIN CONTENT
-                   ============================================================ */
+        /* ===== MAIN ===== */
         .main-content {
             min-height: 100vh;
             display: flex;
@@ -311,9 +289,7 @@
             display: block;
         }
 
-        /* ============================================================
-                   FLIP CONTAINER (Welcome / Login)
-                   ============================================================ */
+        /* ===== FLIP ===== */
         .flip-container {
             perspective: 1600px;
             width: 100%;
@@ -344,9 +320,6 @@
             margin-top: -100%;
         }
 
-        /* ============================================================
-                   WELCOME SCREEN
-                   ============================================================ */
         .welcome-screen {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
@@ -392,16 +365,13 @@
             margin: 6px 0 32px;
             font-size: 1.05rem;
         }
-
         .btn-group {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        /* ============================================================
-                   BUTTONS
-                   ============================================================ */
+        /* ===== BUTTONS ===== */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -476,14 +446,6 @@
             font-size: 0.8rem;
             width: auto;
         }
-        .btn-icon {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
         .btn-back {
             background: var(--bg-glass);
             color: var(--text-secondary);
@@ -505,9 +467,7 @@
             color: #fff;
         }
 
-        /* ============================================================
-                   LOGIN SCREEN
-                   ============================================================ */
+        /* ===== LOGIN SCREEN ===== */
         .login-screen {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
@@ -529,7 +489,6 @@
             font-size: 0.95rem;
         }
 
-        /* Department Tabs */
         .dept-tabs {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -579,7 +538,6 @@
             color: #a78bfa;
         }
 
-        /* Forms */
         .form-group {
             margin-bottom: 16px;
             text-align: left;
@@ -623,7 +581,6 @@
             color: #fff;
         }
 
-        /* Photo Upload */
         .photo-upload {
             margin-bottom: 20px;
             text-align: center;
@@ -672,7 +629,6 @@
             border-color: var(--border-hover);
         }
 
-        /* Messages */
         .message {
             padding: 14px 18px;
             border-radius: var(--radius-md);
@@ -691,9 +647,7 @@
             border-left: 4px solid var(--success);
         }
 
-        /* ============================================================
-                   DASHBOARD
-                   ============================================================ */
+        /* ===== DASHBOARD ===== */
         .dashboard-content {
             display: none;
             width: 100%;
@@ -811,23 +765,58 @@
             z-index: 1;
         }
 
-        /* iCloud action row */
-        .icloud-actions {
+        /* ===== CLOUD SETTINGS PANEL ===== */
+        .cloud-settings {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin: 24px 0 16px;
             display: flex;
-            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 16px;
-            justify-content: center;
+            align-items: flex-end;
+            gap: 16px;
         }
-        .icloud-actions .btn {
+        .cloud-settings.hidden {
+            display: none;
+        }
+        .cloud-settings .form-group {
+            flex: 1;
+            min-width: 180px;
+            margin-bottom: 0;
+        }
+        .cloud-settings .form-group label {
+            font-size: 0.65rem;
+        }
+        .cloud-settings .btn {
             width: auto;
-            padding: 10px 22px;
-            font-size: 0.8rem;
+            padding: 12px 24px;
+        }
+        .cloud-settings .status-badge {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .cloud-settings .status-badge.online {
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        .cloud-settings .status-badge.offline {
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        .cloud-settings .status-badge.checking {
+            color: var(--secondary);
+            border-color: rgba(6, 182, 212, 0.2);
         }
 
-        /* ============================================================
-                   PAGE (MDT, etc.)
-                   ============================================================ */
+        /* ===== PAGE ===== */
         .page {
             display: none;
             width: 100%;
@@ -869,9 +858,6 @@
             flex-wrap: wrap;
         }
 
-        /* ============================================================
-                   SEARCH
-                   ============================================================ */
         .search-bar {
             display: flex;
             gap: 12px;
@@ -901,9 +887,6 @@
             color: var(--text-muted);
         }
 
-        /* ============================================================
-                   CARDS (list items)
-                   ============================================================ */
         .list-card {
             background: var(--bg-card);
             backdrop-filter: blur(8px);
@@ -927,7 +910,6 @@
         .list-card.clickable:hover {
             background: rgba(255, 255, 255, 0.03);
         }
-
         .list-card .avatar-sm {
             width: 44px;
             height: 44px;
@@ -958,15 +940,7 @@
             color: var(--text-secondary);
             font-size: 0.8rem;
         }
-        .list-card .tags {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
 
-        /* ============================================================
-                   BADGES
-                   ============================================================ */
         .badge {
             display: inline-block;
             padding: 4px 14px;
@@ -1009,9 +983,7 @@
             color: #c4b5fd;
         }
 
-        /* ============================================================
-                   INCIDENT FORM
-                   ============================================================ */
+        /* Incident form */
         .incident-form {
             background: var(--bg-card);
             border-radius: var(--radius-xl);
@@ -1090,9 +1062,7 @@
             font-size: 0.75rem;
         }
 
-        /* ============================================================
-                   DETAIL LAYOUT
-                   ============================================================ */
+        /* Detail layout */
         .detail-layout {
             display: flex;
             gap: 24px;
@@ -1149,7 +1119,6 @@
             margin-bottom: 3px;
             margin-left: 16px;
         }
-
         .notes-section {
             margin-top: 18px;
             width: 100%;
@@ -1173,7 +1142,6 @@
             gap: 10px;
             border-left: 3px solid var(--primary);
         }
-
         .incident-block {
             background: rgba(255, 255, 255, 0.04);
             border-radius: var(--radius-md);
@@ -1183,9 +1151,7 @@
             border-left: 3px solid var(--danger);
         }
 
-        /* ============================================================
-                   MODALS
-                   ============================================================ */
+        /* Modals */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -1252,9 +1218,6 @@
             background: rgba(239, 68, 68, 0.2);
         }
 
-        /* ============================================================
-                   TOGGLE
-                   ============================================================ */
         .toggle-row {
             display: flex;
             align-items: center;
@@ -1300,9 +1263,7 @@
             background: var(--success);
         }
 
-        /* ============================================================
-                   FOOTER
-                   ============================================================ */
+        /* Footer */
         .app-footer {
             margin-top: 48px;
             padding: 20px 0 10px;
@@ -1322,9 +1283,7 @@
             text-decoration: underline;
         }
 
-        /* ============================================================
-                   RESPONSIVE
-                   ============================================================ */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 820px) {
             .header {
                 padding: 0 16px;
@@ -1343,7 +1302,6 @@
             .header-user {
                 padding: 6px 10px;
             }
-
             .dash-header .dept-badge {
                 position: static;
                 transform: none;
@@ -1352,7 +1310,6 @@
             .dash-header {
                 padding: 28px 24px;
             }
-
             .welcome-screen,
             .login-screen {
                 padding: 32px 24px;
@@ -1360,29 +1317,24 @@
             .welcome-screen h1 {
                 font-size: 2.2rem;
             }
-
             .cards-grid {
                 grid-template-columns: 1fr 1fr;
             }
-
             .dept-tabs {
                 grid-template-columns: 1fr 1fr;
             }
-
             .detail-layout {
                 flex-direction: column;
             }
             .detail-sidebar {
                 width: 100%;
             }
-
             .incident-form-layout {
                 flex-direction: column;
             }
             .incident-form-layout .sidebar {
                 width: 100%;
             }
-
             .page-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -1392,16 +1344,17 @@
             .page-header .actions {
                 justify-content: center;
             }
-
             .main-content.with-header {
                 padding-top: 76px;
             }
-
-            .icloud-actions .btn {
+            .cloud-settings {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cloud-settings .btn {
                 width: 100%;
             }
         }
-
         @media (max-width: 480px) {
             .cards-grid {
                 grid-template-columns: 1fr;
@@ -1440,27 +1393,17 @@
             }
         }
 
-        /* ============================================================
-                   UTILITY
-                   ============================================================ */
         .hidden {
             display: none !important;
         }
-        .flex {
-            display: flex;
+        .text-center {
+            text-align: center;
         }
-        .flex-center {
-            align-items: center;
-            justify-content: center;
+        .text-secondary {
+            color: var(--text-secondary);
         }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .gap-16 {
-            gap: 16px;
+        .text-muted {
+            color: var(--text-muted);
         }
         .mt-8 {
             margin-top: 8px;
@@ -1471,29 +1414,32 @@
         .mt-24 {
             margin-top: 24px;
         }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
         .w-full {
             width: 100%;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .text-secondary {
-            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== iCLOUD STATUS ===== -->
-    <div id="icloudStatus" class="syncing">☁ iCloud synchronizace…</div>
+    <!-- ===== CLOUD STATUS (klikací) ===== -->
+    <div id="cloudStatus" class="syncing" onclick="toggleCloudSettings()">☁ Cloud: synchronizace…</div>
 
     <!-- ===== LOADING ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Načítání dat z iCloudu…</div>
+        <div class="loading-text">Načítání dat z cloudu…</div>
     </div>
 
     <!-- ===== HEADER ===== -->
@@ -1517,10 +1463,9 @@
     <!-- ===== MAIN ===== -->
     <div class="main-content" id="mainContent">
 
-        <!-- ===== FLIP CONTAINER ===== -->
+        <!-- ===== FLIP ===== -->
         <div class="flip-container" id="flipContainer">
             <div class="flip-inner" id="flipInner">
-
                 <!-- FRONT -->
                 <div class="flip-front">
                     <div class="welcome-screen">
@@ -1533,7 +1478,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- BACK -->
                 <div class="flip-back">
                     <div class="login-screen">
@@ -1586,7 +1530,6 @@
                         <button class="btn-back" onclick="flipBackToWelcome()">Zpět</button>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -1597,6 +1540,31 @@
                 <p id="welcomeMessage">Jste přihlášeni do systému.</p>
                 <span class="dept-badge" id="deptBadge">LSPD</span>
             </div>
+
+            <!-- ===== CLOUD SETTINGS PANEL (kliknutím na stav se zobrazí) ===== -->
+            <div id="cloudSettingsPanel" class="cloud-settings hidden">
+                <div class="form-group" style="flex:2;">
+                    <label>Bin ID (JSONBin)</label>
+                    <input type="text" id="cloudBinId" placeholder="např. 67ecf60b8561e97a50f14d3a" />
+                </div>
+                <div class="form-group" style="flex:2;">
+                    <label>API Key (Master Key)</label>
+                    <input type="text" id="cloudApiKey" placeholder="zadejte master klíč" />
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                    <button class="btn btn-primary btn-sm" onclick="saveCloudSettings()"><i class="fas fa-save"></i> Uložit</button>
+                    <button class="btn btn-success btn-sm" onclick="testCloudConnection()"><i class="fas fa-check"></i> Otestovat</button>
+                    <span id="cloudTestResult" class="status-badge offline">⚠ nenastaveno</span>
+                </div>
+            </div>
+
+            <!-- Tlačítko pro ruční synchronizaci -->
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin:12px 0 16px; justify-content:center;">
+                <button class="btn btn-secondary btn-sm" onclick="manualSync()" style="background:var(--secondary);color:#fff;box-shadow:0 4px 16px rgba(6,182,212,0.3);">
+                    <i class="fas fa-sync"></i> Synchronizovat s cloudem
+                </button>
+            </div>
+
             <div class="cards-grid" id="dashboardCards">
                 <div class="dash-card" onclick="showMdtPage()"><div class="icon"><i class="fas fa-address-card"></i></div><h3>MDT</h3><p>Správa systému</p></div>
                 <div class="dash-card" id="managePersonsCard" onclick="showManagePersonsPage()"><div class="icon"><i class="fas fa-users"></i></div><h3>Správa členů</h3><p>Přidávání členů</p></div>
@@ -1604,17 +1572,16 @@
                 <div class="dash-card" onclick="showAnnouncementsPage()"><div class="icon"><i class="fas fa-bullhorn"></i></div><h3>Oznámení</h3><p>Zprávy od DOJ</p></div>
             </div>
 
-            <!-- iCloud akce -->
-            <div class="icloud-actions">
-                <button class="btn btn-success btn-sm" onclick="exportData()"><i class="fas fa-cloud-download-alt"></i> Export dat do iCloud</button>
-                <button class="btn btn-primary btn-sm" onclick="document.getElementById('importFileInput').click()"><i class="fas fa-cloud-upload-alt"></i> Import dat z iCloudu</button>
+            <!-- Export / Import -->
+            <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; justify-content:center;">
+                <button class="btn btn-success btn-sm" onclick="exportData()"><i class="fas fa-cloud-download-alt"></i> Export do JSON</button>
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('importFileInput').click()"><i class="fas fa-cloud-upload-alt"></i> Import z JSON</button>
                 <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importData(event)" />
             </div>
 
-            <!-- Footer s informací o hostingu na GitHubu -->
             <div class="app-footer">
                 <span>🏛 San Andreas Government Portal – MDT systém</span>
-                <span>Hostováno na <a href="#" target="_blank">GitHub Pages</a> • Data synchronizována s <i class="fab fa-apple"></i> iCloud</span>
+                <span>Hostováno na <a href="#" target="_blank">GitHub Pages</a> • Data synchronizována s <i class="fas fa-cloud"></i> JSONBin</span>
                 <span style="font-size:0.65rem;color:var(--text-muted);">© 2026 – Všechna práva vyhrazena</span>
             </div>
         </div>
@@ -1859,13 +1826,17 @@
     ============================================================ -->
     <script>
         // ============================================================
-        // JSONBIN.IO – cloudové úložiště (iCloud backend)
+        // KONFIGURACE CLOUD – načtení z localStorage
         // ============================================================
-        const JSONBIN_CONFIG = {
-            binId: "67ecf60b8561e97a50f14d3a",
-            apiKey: "$2a$10$rM3yZ1wVYhZ5xQ8J7kL9mN"
-        };
+        const DEFAULT_BIN_ID = "67ecf60b8561e97a50f14d3a";
+        const DEFAULT_API_KEY = "$2a$10$rM3yZ1wVYhZ5xQ8J7kL9mN";
 
+        let cloudBinId = localStorage.getItem('cloudBinId') || DEFAULT_BIN_ID;
+        let cloudApiKey = localStorage.getItem('cloudApiKey') || DEFAULT_API_KEY;
+
+        // ============================================================
+        // DATA
+        // ============================================================
         const VALID_USERNAME = "honza2001";
         const VALID_PASSWORD = "1234";
         const DISCORD_WEBHOOK =
@@ -1971,24 +1942,119 @@
         let syncInProgress = false;
 
         // ============================================================
-        // iCLOUD SYNCHRONIZACE (JSONBin.io backend)
+        // CLOUD FUNKCE – opravený endpoint a hlavičky
         // ============================================================
-        function setiCloudStatus(type, text) {
-            const el = document.getElementById('icloudStatus');
+        function setCloudStatus(type, text) {
+            const el = document.getElementById('cloudStatus');
             if (!el) return;
             el.className = type || '';
             el.textContent = text;
         }
 
-        async function loadDataFromCloud(options = {}) {
+        function toggleCloudSettings() {
+            const panel = document.getElementById('cloudSettingsPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                document.getElementById('cloudBinId').value = cloudBinId;
+                document.getElementById('cloudApiKey').value = cloudApiKey;
+            }
+        }
+
+        function saveCloudSettings() {
+            const bin = document.getElementById('cloudBinId').value.trim();
+            const key = document.getElementById('cloudApiKey').value.trim();
+            if (!bin || !key) {
+                alert('Vyplňte prosím obě pole.');
+                return;
+            }
+            cloudBinId = bin;
+            cloudApiKey = key;
+            localStorage.setItem('cloudBinId', bin);
+            localStorage.setItem('cloudApiKey', key);
+            setCloudStatus('syncing', '☁ Nastavení uloženo, testuji…');
+            testCloudConnection();
+        }
+
+        async function testCloudConnection() {
+            const bin = document.getElementById('cloudBinId').value.trim() || cloudBinId;
+            const key = document.getElementById('cloudApiKey').value.trim() || cloudApiKey;
+            const resultEl = document.getElementById('cloudTestResult');
+            resultEl.className = 'status-badge checking';
+            resultEl.textContent = '⏳ testuji…';
             try {
-                setiCloudStatus('syncing', '☁ iCloud: načítání dat…');
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}?meta=false`, {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${bin}?meta=false`, {
                     method: 'GET',
-                    headers: { 'X-Master-Key': JSONBIN_CONFIG.apiKey, 'Accept': 'application/json' },
+                    headers: {
+                        'X-Master-Key': key,
+                        'X-Bin-Meta': 'false',
+                        'Accept': 'application/json'
+                    },
                     cache: 'no-store'
                 });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                if (res.ok) {
+                    resultEl.className = 'status-badge online';
+                    resultEl.textContent = '✅ online';
+                    setCloudStatus('ok', '☁ Cloud dostupný');
+                    cloudReady = true;
+                    // Zkusíme načíst data
+                    await loadDataFromCloud({ silent: true });
+                } else {
+                    const err = await res.text().catch(() => '');
+                    throw new Error(`HTTP ${res.status} – ${err.slice(0, 80)}`);
+                }
+            } catch (e) {
+                resultEl.className = 'status-badge offline';
+                resultEl.textContent = `❌ offline (${e.message})`;
+                setCloudStatus('error', '⚠ Cloud nedostupný – lokální data');
+                cloudReady = false;
+            }
+        }
+
+        // Ruční synchronizace
+        async function manualSync() {
+            setCloudStatus('syncing', '☁ Ruční synchronizace…');
+            const ok = await loadDataFromCloud({ silent: false });
+            if (ok) {
+                // obnovit UI
+                if (currentUser) {
+                    displayCallSigns();
+                    displayMembers();
+                    displayGlobalIncidents();
+                    renderFines();
+                    displayDocuments();
+                    displayVehiclesList();
+                    displayLaws(true);
+                    displayAnnouncements(true);
+                }
+                alert('Data byla úspěšně synchronizována z cloudu.');
+            } else {
+                alert('Synchronizace selhala. Zkontrolujte nastavení cloudu a klikněte na "Otestovat".');
+            }
+        }
+
+        async function loadDataFromCloud(options = {}) {
+            if (!cloudBinId || !cloudApiKey) {
+                if (!options.silent) {
+                    setCloudStatus('error', '⚠ Cloud nenastaven – lokální data');
+                }
+                if (!options.silent) loadFromLocalStorage();
+                return false;
+            }
+            try {
+                if (!options.silent) setCloudStatus('syncing', '☁ Načítání dat z cloudu…');
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}?meta=false`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': cloudApiKey,
+                        'X-Bin-Meta': 'false',
+                        'Accept': 'application/json'
+                    },
+                    cache: 'no-store'
+                });
+                if (!res.ok) {
+                    const errText = await res.text().catch(() => '');
+                    throw new Error(`HTTP ${res.status} – ${errText.slice(0, 80)}`);
+                }
                 const record = await res.json() || {};
 
                 callSigns = record.callSigns || defaultCallSigns;
@@ -2007,43 +2073,53 @@
                 fines = record.fines || [];
 
                 cloudReady = true;
-                setiCloudStatus('ok', `✓ iCloud synchronizováno • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                if (!options.silent) setCloudStatus('ok', `☁ Synchronizováno • ${new Date().toLocaleTimeString('cs-CZ')}`);
                 return true;
             } catch (e) {
                 cloudReady = false;
-                console.error('Chyba načítání z iCloudu:', e);
-                if (!options.silent) loadFromLocalStorage();
-                setiCloudStatus('error', '⚠ iCloud nedostupný – lokální data');
+                console.error('Chyba načítání z cloudu:', e);
+                if (!options.silent) {
+                    setCloudStatus('error', `⚠ Cloud nedostupný: ${e.message}`);
+                    loadFromLocalStorage();
+                }
                 return false;
             }
         }
 
         async function saveDataToCloud() {
             if (syncInProgress) return false;
+            if (!cloudBinId || !cloudApiKey) {
+                setCloudStatus('error', '⚠ Cloud nenastaven – data uložena lokálně');
+                saveToLocalStorage();
+                return false;
+            }
             syncInProgress = true;
             try {
-                setiCloudStatus('syncing', '☁ iCloud: ukládání dat…');
+                setCloudStatus('syncing', '☁ Ukládání dat do cloudu…');
                 const data = { callSigns, members, documents, vehicles, laws, announcements, personTags, vehicleTags,
                     personNotes, vehicleNotes, personIncidents, globalIncidents, fines };
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                        'X-Master-Key': cloudApiKey,
                         'X-Bin-Versioning': 'false'
                     },
                     body: JSON.stringify(data),
                     cache: 'no-store'
                 });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                if (!res.ok) {
+                    const err = await res.text().catch(() => '');
+                    throw new Error(`HTTP ${res.status} – ${err.slice(0, 80)}`);
+                }
                 cloudReady = true;
-                setiCloudStatus('ok', `✓ iCloud uloženo • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                setCloudStatus('ok', `☁ Uloženo do cloudu • ${new Date().toLocaleTimeString('cs-CZ')}`);
                 return true;
             } catch (e) {
                 cloudReady = false;
-                console.error('Chyba ukládání do iCloudu:', e);
+                console.error('Chyba ukládání do cloudu:', e);
                 saveToLocalStorage();
-                setiCloudStatus('error', '⚠ Uložení do iCloudu selhalo');
+                setCloudStatus('error', `⚠ Uložení do cloudu selhalo: ${e.message} – data lokálně`);
                 return false;
             } finally {
                 syncInProgress = false;
@@ -2098,18 +2174,8 @@
             return await saveDataToCloud();
         }
 
-        // Pravidelná synchronizace
-        setInterval(async () => {
-            if (document.hidden || syncInProgress) return;
-            await loadDataFromCloud({ silent: true });
-        }, 5000);
-
-        document.addEventListener('visibilitychange', async () => {
-            if (!document.hidden) await loadDataFromCloud({ silent: true });
-        });
-
         // ============================================================
-        // EXPORT / IMPORT (iCloud Drive manuální záloha)
+        // EXPORT / IMPORT
         // ============================================================
         function exportData() {
             const data = {
@@ -2136,7 +2202,7 @@
             a.download = `san-andreas-data-${new Date().toISOString().slice(0,10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            setiCloudStatus('ok', `✓ Data exportována do iCloud • ${new Date().toLocaleTimeString('cs-CZ')}`);
+            setCloudStatus('ok', `✓ Data exportována • ${new Date().toLocaleTimeString('cs-CZ')}`);
         }
 
         function importData(event) {
@@ -2150,10 +2216,8 @@
                         alert('Neplatný soubor – chybí požadované struktury.');
                         return;
                     }
-                    // Potvrzení
                     if (!confirm('Tímto přepíšete všechna aktuální data. Pokračovat?')) return;
                     showLoading(true);
-                    // Naplnění
                     callSigns = data.callSigns || defaultCallSigns;
                     members = data.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police',
                         department: 'LSPD', canManage: true }];
@@ -2168,12 +2232,10 @@
                     personIncidents = data.personIncidents || {};
                     globalIncidents = data.globalIncidents || [];
                     fines = data.fines || [];
-
                     await saveAllData();
                     showLoading(false);
-                    setiCloudStatus('ok', `✓ Data importována z iCloudu • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                    setCloudStatus('ok', `✓ Data importována • ${new Date().toLocaleTimeString('cs-CZ')}`);
                     alert('Data byla úspěšně importována!');
-                    // Refresh UI
                     if (currentUser) {
                         displayCallSigns();
                         displayMembers();
@@ -2187,7 +2249,7 @@
                 } catch (err) {
                     showLoading(false);
                     alert('Chyba při importu: ' + err.message);
-                    setiCloudStatus('error', '⚠ Import selhal');
+                    setCloudStatus('error', '⚠ Import selhal');
                 }
             };
             reader.readAsText(file);
@@ -3360,16 +3422,34 @@
         function showContact() { showDashboard(); }
 
         // ============================================================
-        // INIT
+        // INIT – načtení nastavení a dat
         // ============================================================
         async function init() {
+            // Načíst cloud nastavení do polí
+            document.getElementById('cloudBinId').value = cloudBinId;
+            document.getElementById('cloudApiKey').value = cloudApiKey;
+
             showLoading(true);
             await loadDataFromCloud();
             showLoading(false);
+            // Otestovat připojení
+            testCloudConnection();
+
             switchDepartment('LSPD');
             populateRanks();
             toggleDocFields();
+
+            // Automatická synchronizace každých 15 sekund
+            setInterval(async () => {
+                if (document.hidden || syncInProgress) return;
+                await loadDataFromCloud({ silent: true });
+            }, 15000);
+
+            document.addEventListener('visibilitychange', async () => {
+                if (!document.hidden) await loadDataFromCloud({ silent: true });
+            });
         }
+
         init();
     </script>
 
