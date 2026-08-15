@@ -17,71 +17,50 @@
     }
 
     :root {
-      --primary: #818cf8;
-      --primary-dark: #6366f1;
-      --primary-glow: rgba(99, 102, 241, 0.4);
-      --secondary: #22d3ee;
-      --success: #34d399;
-      --danger: #f87171;
-      --warning: #fbbf24;
-      --dark: #020617;
-      --card-bg: rgba(15, 23, 42, 0.8);
-      --border-subtle: rgba(255, 255, 255, 0.06);
-      --text-primary: #f8fafc;
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --secondary: #0ea5e9;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --dark: #0b1120;
+      --darker: #060b17;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --text-primary: #f1f5f9;
       --text-secondary: #94a3b8;
-      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
-      --radius-xl: 32px;
-      --radius-lg: 20px;
+      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      --radius-xl: 28px;
+      --radius-lg: 18px;
       --radius-md: 14px;
-      --transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
       --glass-bg: rgba(255, 255, 255, 0.03);
     }
 
     body {
       font-family: var(--font);
-      background: radial-gradient(ellipse at 20% 30%, #1e293b, #020617 90%);
+      background: radial-gradient(ellipse at 30% 40%, #111827, #020617 100%);
       min-height: 100vh;
       color: var(--text-primary);
       overflow-x: hidden;
       line-height: 1.6;
     }
 
-    /* ----- SCROLLBAR ----- */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-    /* ----- ANIMATIONS ----- */
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
-    @keyframes glowPulse {
-      0%, 100% { box-shadow: 0 0 20px var(--primary-glow); }
-      50% { box-shadow: 0 0 40px var(--primary-glow), 0 0 80px rgba(99,102,241,0.1); }
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-in {
-      animation: slideUp 0.6s ease forwards;
-    }
-
     /* ----- HEADER ----- */
     .header {
-      background: rgba(2, 6, 23, 0.92);
-      backdrop-filter: blur(24px);
+      background: rgba(6, 11, 23, 0.92);
+      backdrop-filter: blur(20px);
       padding: 0 40px;
       display: none;
       align-items: center;
       justify-content: space-between;
-      height: 76px;
+      height: 72px;
       position: fixed;
       top: 0;
       left: 0;
@@ -95,29 +74,25 @@
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
     .logo-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #fff;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      box-shadow: 0 4px 16px var(--primary-glow);
-      transition: var(--transition);
-    }
-    .logo-icon:hover {
-      transform: rotate(-5deg) scale(1.05);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
     .logo-text {
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: 2px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
       background: linear-gradient(to right, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -125,11 +100,11 @@
 
     .menu-nav {
       display: flex;
-      gap: 6px;
+      gap: 4px;
     }
     .menu-item {
       color: var(--text-secondary);
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: 40px;
       cursor: pointer;
       font-size: 0.85rem;
@@ -140,38 +115,23 @@
       gap: 8px;
       background: transparent;
       border: none;
-      position: relative;
-    }
-    .menu-item::after {
-      content: '';
-      position: absolute;
-      bottom: 4px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background: var(--primary);
-      transition: var(--transition);
-      border-radius: 2px;
-    }
-    .menu-item:hover::after,
-    .menu-item.active::after {
-      width: 60%;
     }
     .menu-item:hover {
       color: #fff;
+      background: rgba(255, 255, 255, 0.06);
     }
     .menu-item.active {
+      background: var(--primary);
       color: #fff;
-      background: rgba(99, 102, 241, 0.15);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       cursor: pointer;
-      padding: 8px 20px 8px 16px;
+      padding: 8px 18px 8px 14px;
       border-radius: 40px;
       border: 1px solid rgba(255, 255, 255, 0.06);
       background: var(--glass-bg);
@@ -181,10 +141,8 @@
     .user-info:hover {
       background: rgba(255, 255, 255, 0.06);
       border-color: rgba(255, 255, 255, 0.12);
-      transform: scale(1.02);
     }
-    .user-info i { color: var(--text-secondary); transition: var(--transition); }
-    .user-info:hover i { color: var(--primary); }
+    .user-info i { color: var(--text-secondary); }
 
     /* ----- MAIN CONTENT ----- */
     .main-content {
@@ -195,7 +153,7 @@
       padding: 30px 20px;
     }
     .main-content.with-header {
-      padding-top: 110px;
+      padding-top: 100px;
       display: block;
     }
 
@@ -203,13 +161,13 @@
     .flip-container {
       perspective: 1600px;
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       margin: 0 auto;
     }
     .flip-inner {
       position: relative;
       width: 100%;
-      transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+      transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
       transform-style: preserve-3d;
     }
     .flip-inner.flipped { transform: rotateY(180deg); }
@@ -229,57 +187,48 @@
     .welcome-screen,
     .login-screen {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
-      padding: 52px 44px;
+      padding: 48px 40px;
       text-align: center;
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-xl);
-      position: relative;
-      overflow: hidden;
-    }
-    .welcome-screen::before,
-    .login-screen::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 30% 40%, rgba(99,102,241,0.06), transparent 70%);
-      pointer-events: none;
     }
 
     .welcome-icon {
-      width: 110px;
-      height: 110px;
-      border-radius: 32px;
+      width: 100px;
+      height: 100px;
+      border-radius: 30px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 30px;
-      font-size: 3.5rem;
+      margin: 0 auto 28px;
+      font-size: 3.2rem;
       color: #fff;
-      box-shadow: 0 16px 40px var(--primary-glow);
-      animation: float 4s infinite ease-in-out, glowPulse 3s infinite ease-in-out;
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.3);
+      animation: pulse 3s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
     .welcome-screen h1 {
-      font-size: 3rem;
+      font-size: 2.8rem;
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
       background: linear-gradient(to right, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .welcome-screen p {
       color: var(--text-secondary);
-      margin: 10px 0 36px;
-      font-size: 1.1rem;
+      margin: 8px 0 32px;
+      font-size: 1.05rem;
     }
 
     .btn {
-      padding: 16px 28px;
+      padding: 16px 24px;
       border: none;
       border-radius: 60px;
       font-weight: 700;
@@ -289,28 +238,19 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       transition: var(--transition);
       position: relative;
       overflow: hidden;
     }
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite linear;
-      pointer-events: none;
-    }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
-      box-shadow: 0 8px 24px var(--primary-glow);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
     }
     .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px var(--primary-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(99, 102, 241, 0.4);
     }
     .btn-outline {
       background: transparent;
@@ -319,26 +259,25 @@
     }
     .btn-outline:hover {
       background: rgba(99, 102, 241, 0.08);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px var(--primary-glow);
+      transform: translateY(-2px);
     }
     .btn-danger {
-      background: linear-gradient(135deg, var(--danger), #ef4444);
+      background: linear-gradient(135deg, var(--danger), #dc2626);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25);
     }
     .btn-danger:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(239, 68, 68, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(239, 68, 68, 0.35);
     }
     .btn-success {
-      background: linear-gradient(135deg, var(--success), #10b981);
+      background: linear-gradient(135deg, var(--success), #16a34a);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(52, 211, 153, 0.25);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.25);
     }
     .btn-success:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(52, 211, 153, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(34, 197, 94, 0.35);
     }
     .btn-back {
       background: rgba(255, 255, 255, 0.06);
@@ -357,15 +296,14 @@
     .btn-back:hover {
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
-      transform: translateY(-2px);
     }
 
     /* ----- DEPARTMENT TABS ----- */
     .department-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 26px;
+      gap: 10px;
+      margin-bottom: 24px;
     }
     .dept-tab {
       padding: 14px;
@@ -379,33 +317,32 @@
       letter-spacing: 0.5px;
       font-size: 0.9rem;
       color: var(--text-secondary);
-      position: relative;
     }
     .dept-tab:hover { background: rgba(255, 255, 255, 0.06); }
-    .dept-tab.lspd.active { background: #1e3a8a; color: #fff; border-color: #3b82f6; box-shadow: 0 0 20px rgba(59,130,246,0.2); }
-    .dept-tab.lssd.active { background: #78350f; color: #fff; border-color: #b45309; box-shadow: 0 0 20px rgba(180,83,9,0.2); }
-    .dept-tab.sahp.active { background: #064e3b; color: #fff; border-color: #047857; box-shadow: 0 0 20px rgba(4,120,87,0.2); }
-    .dept-tab.doj.active { background: #3b0764; color: #fff; border-color: #6d28d9; box-shadow: 0 0 20px rgba(109,40,217,0.2); }
+    .dept-tab.lspd.active { background: #1e3a8a; color: #fff; border-color: #3b82f6; }
+    .dept-tab.lssd.active { background: #78350f; color: #fff; border-color: #b45309; }
+    .dept-tab.sahp.active { background: #064e3b; color: #fff; border-color: #047857; }
+    .dept-tab.doj.active { background: #3b0764; color: #fff; border-color: #6d28d9; }
 
     /* ----- FORMS ----- */
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       text-align: left;
     }
     .form-group label {
       display: block;
       font-weight: 600;
       margin-bottom: 6px;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.5px;
       color: var(--text-secondary);
     }
     .form-group input,
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 14px 20px;
+      padding: 14px 18px;
       border: 2px solid var(--border-subtle);
       border-radius: var(--radius-md);
       background: rgba(255, 255, 255, 0.04);
@@ -423,24 +360,24 @@
       box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
     }
     .form-group select option {
-      background: var(--dark);
+      background: var(--darker);
       color: #fff;
     }
 
     .photo-upload {
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       text-align: center;
     }
     .photo-preview {
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.04);
       border: 3px dashed var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
+      margin: 0 auto 14px;
       cursor: pointer;
       overflow: hidden;
       transition: var(--transition);
@@ -448,10 +385,9 @@
     .photo-preview:hover {
       border-color: var(--primary);
       background: rgba(99, 102, 241, 0.05);
-      transform: scale(1.02);
     }
     .photo-preview i {
-      font-size: 2.6rem;
+      font-size: 2.4rem;
       color: var(--text-secondary);
     }
     .photo-preview img {
@@ -462,9 +398,9 @@
 
     /* ----- MESSAGES ----- */
     .message {
-      padding: 14px 20px;
+      padding: 14px 18px;
       border-radius: var(--radius-md);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       font-weight: 600;
       font-size: 0.9rem;
     }
@@ -474,7 +410,7 @@
       border-left: 4px solid var(--danger);
     }
     .message.success {
-      background: rgba(52, 211, 153, 0.12);
+      background: rgba(34, 197, 94, 0.12);
       color: #86efac;
       border-left: 4px solid var(--success);
     }
@@ -483,19 +419,19 @@
     .dashboard-content {
       display: none;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 0 auto;
     }
     .dashboard-content.active { display: block; }
 
     .dashboard-header {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
-      padding: 40px 48px;
+      padding: 36px 40px;
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       position: relative;
       overflow: hidden;
     }
@@ -510,7 +446,7 @@
       pointer-events: none;
     }
     .dashboard-header h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 800;
       position: relative;
     }
@@ -518,39 +454,27 @@
       color: var(--text-secondary);
       margin-top: 4px;
       position: relative;
-      font-size: 1.05rem;
-    }
-    .dashboard-header .badge-dept {
-      display: inline-block;
-      padding: 4px 20px;
-      border-radius: 40px;
-      background: rgba(99, 102, 241, 0.15);
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 0.8rem;
-      margin-top: 8px;
-      letter-spacing: 1px;
     }
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
     }
 
     .info-card {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 32px 20px;
+      padding: 28px 20px;
       text-align: center;
       cursor: pointer;
       transition: var(--transition);
       position: relative;
       overflow: hidden;
     }
-    .info-card::before {
+    .info-card::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -559,32 +483,27 @@
       transition: var(--transition);
     }
     .info-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
     }
-    .info-card:hover::before { opacity: 1; }
+    .info-card:hover::after { opacity: 1; }
     .info-card .icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 1.8rem;
+      margin: 0 auto 14px;
+      font-size: 1.6rem;
       color: #fff;
-      box-shadow: 0 8px 20px var(--primary-glow);
       position: relative;
       z-index: 1;
-      transition: var(--transition);
-    }
-    .info-card:hover .icon {
-      transform: scale(1.05);
     }
     .info-card h3 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       position: relative;
       z-index: 1;
@@ -601,79 +520,64 @@
     .mdt-page {
       display: none;
       width: 100%;
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 0 auto;
     }
     .mdt-page.active { display: block; }
 
     .page-header {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
-      padding: 32px 36px;
+      padding: 28px 32px;
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       position: relative;
-      overflow: hidden;
-    }
-    .page-header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 30% 40%, rgba(99,102,241,0.04), transparent 70%);
-      pointer-events: none;
     }
     .page-header h2 {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      position: relative;
     }
     .page-header p {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      position: relative;
     }
     .page-header .btn-create-incident {
       position: absolute;
       top: 50%;
-      right: 32px;
+      right: 28px;
       transform: translateY(-50%);
-      background: linear-gradient(135deg, var(--danger), #ef4444);
+      background: linear-gradient(135deg, var(--danger), #dc2626);
       color: #fff;
       border: none;
       border-radius: 60px;
-      padding: 12px 28px;
+      padding: 12px 24px;
       cursor: pointer;
       font-weight: 700;
       font-size: 0.85rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       transition: var(--transition);
-      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.25);
-      position: relative;
-      z-index: 2;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
     }
     .page-header .btn-create-incident:hover {
-      transform: translateY(-50%) scale(1.03);
-      box-shadow: 0 8px 28px rgba(239, 68, 68, 0.35);
+      transform: translateY(-50%) scale(1.02);
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
     }
 
     /* ----- SEARCH ----- */
     .search-container {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       display: flex;
-      gap: 14px;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
     .search-container input {
       flex: 1;
-      padding: 14px 22px;
+      padding: 12px 18px;
       border: 2px solid var(--border-subtle);
       border-radius: var(--radius-md);
       background: rgba(255, 255, 255, 0.04);
@@ -696,34 +600,33 @@
     /* ----- CALL SIGN CARD ----- */
     .call-sign-card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
-      padding: 16px 24px;
-      margin-bottom: 8px;
+      padding: 14px 20px;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
       font-size: 0.9rem;
       transition: var(--transition);
     }
     .call-sign-card:hover {
       border-color: rgba(255, 255, 255, 0.1);
-      transform: translateX(4px);
     }
     .call-sign-divider {
       text-align: center;
       color: #334155;
-      margin: 16px 0 12px;
+      margin: 14px 0 10px;
       font-size: 0.75rem;
-      letter-spacing: 8px;
+      letter-spacing: 6px;
       font-weight: 600;
     }
 
     .badge {
       display: inline-block;
-      padding: 4px 16px;
+      padding: 4px 14px;
       border-radius: 30px;
       font-weight: 700;
       font-size: 0.7rem;
@@ -735,7 +638,7 @@
       color: #a5b4fc;
     }
     .badge-green {
-      background: rgba(52, 211, 153, 0.15);
+      background: rgba(34, 197, 94, 0.15);
       color: #86efac;
     }
     .badge-red {
@@ -747,8 +650,16 @@
       color: #c4b5fd;
     }
     .badge-yellow {
-      background: rgba(251, 191, 36, 0.15);
+      background: rgba(245, 158, 11, 0.15);
       color: #fcd34d;
+    }
+    .badge-gold {
+      background: rgba(234, 179, 8, 0.15);
+      color: #fde047;
+    }
+    .badge-gray {
+      background: rgba(148, 163, 184, 0.15);
+      color: #94a3b8;
     }
 
     .btn-remove {
@@ -756,7 +667,7 @@
       color: #fca5a5;
       border: none;
       border-radius: 8px;
-      padding: 4px 12px;
+      padding: 4px 10px;
       cursor: pointer;
       font-size: 0.7rem;
       transition: var(--transition);
@@ -770,7 +681,7 @@
       color: #a5b4fc;
       border: none;
       border-radius: 30px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: 600;
@@ -778,71 +689,98 @@
     }
     .btn-note:hover {
       background: rgba(99, 102, 241, 0.2);
-      transform: translateY(-2px);
     }
 
     .btn-summon {
-      background: rgba(52, 211, 153, 0.12);
+      background: rgba(34, 197, 94, 0.12);
       color: #86efac;
-      border: 1px solid rgba(52, 211, 153, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       border-radius: 30px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: 600;
       transition: var(--transition);
     }
     .btn-summon:hover {
-      background: rgba(52, 211, 153, 0.2);
-      transform: translateY(-2px);
+      background: rgba(34, 197, 94, 0.2);
     }
 
     .btn-add-law {
-      background: rgba(52, 211, 153, 0.12);
+      background: rgba(34, 197, 94, 0.12);
       color: #86efac;
-      border: 1px solid rgba(52, 211, 153, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       border-radius: 30px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: 600;
       transition: var(--transition);
     }
     .btn-add-law:hover {
-      background: rgba(52, 211, 153, 0.2);
-      transform: translateY(-2px);
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-assign {
+      background: rgba(99, 102, 241, 0.12);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 30px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-assign:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-fine {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 30px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-fine:hover {
+      background: rgba(245, 158, 11, 0.2);
     }
 
     /* ----- DETAIL LAYOUT ----- */
     .detail-layout {
       display: flex;
-      gap: 28px;
+      gap: 24px;
     }
     .detail-main {
       flex: 1;
       min-width: 0;
     }
     .detail-sidebar {
-      width: 260px;
+      width: 240px;
       flex-shrink: 0;
       background: var(--card-bg);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 20px;
     }
     .detail-sidebar h3 {
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       color: var(--text-secondary);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .detail-tag {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
+      gap: 10px;
+      padding: 10px 14px;
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: var(--transition);
@@ -862,65 +800,57 @@
     .tag-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 4px 14px;
+      gap: 6px;
+      padding: 4px 12px;
       background: rgba(255, 255, 255, 0.04);
       border-radius: 8px;
       font-size: 0.75rem;
       margin-bottom: 3px;
-      margin-left: 20px;
+      margin-left: 16px;
     }
 
     .notes-section {
-      margin-top: 20px;
+      margin-top: 18px;
       width: 100%;
     }
     .notes-section h4 {
       font-size: 0.85rem;
       font-weight: 700;
       color: var(--text-secondary);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .note-item {
       background: rgba(255, 255, 255, 0.04);
       border-radius: var(--radius-md);
-      padding: 14px 18px;
-      margin-bottom: 8px;
+      padding: 12px 16px;
+      margin-bottom: 6px;
       font-size: 0.85rem;
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
       border-left: 3px solid var(--primary);
-      transition: var(--transition);
-    }
-    .note-item:hover {
-      background: rgba(255, 255, 255, 0.06);
     }
 
-    .incident-section { margin-top: 12px; }
+    .incident-section { margin-top: 10px; }
     .incident-card {
       background: rgba(255, 255, 255, 0.04);
       border-radius: var(--radius-md);
-      padding: 14px 18px;
-      margin-bottom: 8px;
+      padding: 12px 16px;
+      margin-bottom: 6px;
       font-size: 0.8rem;
       border-left: 3px solid var(--danger);
-      transition: var(--transition);
-    }
-    .incident-card:hover {
-      background: rgba(255, 255, 255, 0.06);
     }
 
     /* ----- INCIDENT FORM ----- */
     .incident-form-layout {
       display: flex;
-      gap: 24px;
+      gap: 20px;
     }
     .incident-form-main { flex: 1; }
     .incident-form-sidebar {
-      width: 190px;
+      width: 180px;
       flex-shrink: 0;
     }
     .incident-form-sidebar h4 {
@@ -929,13 +859,13 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-secondary);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .incident-tag {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
+      gap: 10px;
+      padding: 10px 14px;
       border-radius: var(--radius-md);
       cursor: pointer;
       transition: var(--transition);
@@ -954,18 +884,18 @@
     }
 
     .added-laws-list {
-      margin-top: 12px;
+      margin-top: 10px;
       background: rgba(255, 255, 255, 0.02);
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 12px;
       min-height: 50px;
       border: 1px dashed var(--border-subtle);
     }
     .added-law-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 6px 14px;
+      gap: 8px;
+      padding: 6px 12px;
       background: rgba(255, 255, 255, 0.04);
       border-radius: 8px;
       margin-bottom: 4px;
@@ -977,13 +907,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
     .toggle-switch {
       position: relative;
-      width: 50px;
-      height: 28px;
+      width: 48px;
+      height: 26px;
       cursor: pointer;
     }
     .toggle-switch input {
@@ -998,22 +928,22 @@
       right: 0;
       bottom: 0;
       background: rgba(239, 68, 68, 0.25);
-      border-radius: 28px;
+      border-radius: 26px;
       transition: 0.3s;
     }
     .toggle-slider::before {
       content: '';
       position: absolute;
-      width: 20px;
-      height: 20px;
-      left: 4px;
-      bottom: 4px;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      bottom: 3px;
       background: var(--danger);
       border-radius: 50%;
       transition: 0.3s;
     }
     .toggle-switch input:checked + .toggle-slider {
-      background: rgba(52, 211, 153, 0.2);
+      background: rgba(34, 197, 94, 0.2);
     }
     .toggle-switch input:checked + .toggle-slider::before {
       transform: translateX(22px);
@@ -1030,8 +960,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
       z-index: 2000;
       display: flex;
       align-items: center;
@@ -1040,30 +970,29 @@
     }
     .modal-overlay.hidden { display: none; }
     .modal {
-      background: var(--dark);
+      background: var(--darker);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
-      padding: 34px;
-      max-width: 540px;
+      padding: 30px;
+      max-width: 520px;
       width: 100%;
       max-height: 80vh;
       overflow-y: auto;
       box-shadow: var(--shadow-xl);
-      animation: slideUp 0.4s ease;
     }
     .modal h3 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       text-align: center;
     }
     .modal-member {
-      padding: 14px 18px;
+      padding: 12px 16px;
       border-radius: var(--radius-md);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       background: rgba(255, 255, 255, 0.04);
       margin-bottom: 4px;
       transition: var(--transition);
@@ -1076,12 +1005,12 @@
       color: #fca5a5;
       border: none;
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 12px;
       cursor: pointer;
       width: 100%;
       font-weight: 600;
       transition: var(--transition);
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .btn-modal-close:hover {
       background: rgba(239, 68, 68, 0.2);
@@ -1098,25 +1027,23 @@
       .page-header .btn-create-incident {
         position: static;
         transform: none;
-        margin-top: 16px;
+        margin-top: 14px;
         justify-content: center;
       }
       .header { padding: 0 20px; height: 64px; }
-      .menu-item { padding: 8px 14px; font-size: 0.75rem; }
+      .menu-item { padding: 8px 12px; font-size: 0.75rem; }
       .menu-item span { display: none; }
       .welcome-screen, .login-screen { padding: 32px 24px; }
       .welcome-screen h1 { font-size: 2.2rem; }
       .cards-grid { grid-template-columns: 1fr 1fr; }
-      .dashboard-header { padding: 28px 24px; }
     }
 
     @media (max-width: 480px) {
       .cards-grid { grid-template-columns: 1fr; }
       .department-tabs { grid-template-columns: 1fr 1fr; }
-      .dashboard-header { padding: 20px 16px; }
+      .dashboard-header { padding: 24px 20px; }
       .page-header { padding: 20px; }
       .search-container input { min-width: 140px; }
-      .welcome-icon { width: 80px; height: 80px; font-size: 2.6rem; }
     }
   </style>
 </head>
@@ -1134,7 +1061,7 @@
       <button class="menu-item" onclick="showContact()"><i class="fas fa-envelope"></i><span>Kontakt</span></button>
     </nav>
     <div class="user-info" id="userInfo" onclick="logout()">
-      <i class="fas fa-user-astronaut"></i>
+      <i class="fas fa-user-circle"></i>
       <span id="userName">Nepřihlášen</span>
       <i class="fas fa-sign-out-alt"></i>
     </div>
@@ -1160,7 +1087,7 @@
         <div class="flip-back">
           <div class="login-screen">
             <h2 id="flipBackTitle">Přihlášení</h2>
-            <p style="color:var(--text-secondary);margin-bottom:26px;" id="flipBackSubtitle">Vyberte oddělení</p>
+            <p style="color:var(--text-secondary);margin-bottom:24px;" id="flipBackSubtitle">Vyberte oddělení</p>
             <div id="loginFormFields">
               <div class="department-tabs">
                 <div class="dept-tab lspd active" id="tabLSPD" onclick="switchDepartment('LSPD')">LSPD</div>
@@ -1216,11 +1143,10 @@
       <div class="dashboard-header">
         <h1 id="welcomeTitle">Vítejte!</h1>
         <p id="welcomeMessage">Jste přihlášeni do systému.</p>
-        <span class="badge-dept" id="deptBadge">LSPD</span>
       </div>
       <div class="cards-grid" id="dashboardCards">
         <div class="info-card" onclick="showMdtPage()"><div class="icon"><i class="fas fa-address-card"></i></div><h3>MDT</h3><p>Správa systému</p></div>
-        <div class="info-card" id="managePersonsCard" onclick="showManagePersonsPage()"><div class="icon"><i class="fas fa-users-cog"></i></div><h3>Správa členů</h3><p>Přidávání členů</p></div>
+        <div class="info-card" id="managePersonsCard" onclick="showManagePersonsPage()"><div class="icon"><i class="fas fa-users"></i></div><h3>Správa členů</h3><p>Přidávání členů</p></div>
         <div class="info-card" onclick="showLegislationPage()"><div class="icon"><i class="fas fa-gavel"></i></div><h3>Legislativa</h3><p>Zákony a tresty</p></div>
         <div class="info-card" onclick="showAnnouncementsPage()"><div class="icon"><i class="fas fa-bullhorn"></i></div><h3>Oznámení</h3><p>Zprávy od DOJ</p></div>
       </div>
@@ -1233,6 +1159,7 @@
         <div class="info-card" onclick="showPersonPage()"><div class="icon"><i class="fas fa-user"></i></div><h3>Osoby</h3></div>
         <div class="info-card" onclick="showVehiclePage()"><div class="icon"><i class="fas fa-car"></i></div><h3>Vozidla</h3></div>
         <div class="info-card" onclick="showIncidentsPage()"><div class="icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Incidenty</h3></div>
+        <div class="info-card" onclick="showFinesPage()"><div class="icon"><i class="fas fa-coins"></i></div><h3>Pokuty</h3></div>
       </div>
       <button class="btn-back" onclick="showDashboard()">Zpět</button>
     </div>
@@ -1253,7 +1180,7 @@
       <div class="search-container">
         <input type="text" id="incidentSearch" placeholder="🔍 Hledat incidenty (osoba, popis, tag…)" oninput="filterIncidents()" />
       </div>
-      <div id="createIncidentForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:28px;margin-bottom:28px;border:1px solid var(--border-subtle);">
+      <div id="createIncidentForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:24px;margin-bottom:24px;border:1px solid var(--border-subtle);">
         <div class="incident-form-layout">
           <div class="incident-form-sidebar">
             <h4>Štítky</h4>
@@ -1271,8 +1198,8 @@
               <label>Osoba</label>
               <select id="incidentPersonSelect"><option value="">Vyberte osobu</option></select>
             </div>
-            <div style="border-top:1px solid var(--border-subtle);margin:18px 0;padding-top:18px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div style="border-top:1px solid var(--border-subtle);margin:16px 0;padding-top:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                 <h4 style="font-size:0.85rem;font-weight:700;color:var(--text-secondary);">Pokuta a trest</h4>
                 <button class="btn-add-law" onclick="addLawToIncident()"><i class="fas fa-plus"></i> Přidat zákon</button>
               </div>
@@ -1288,10 +1215,38 @@
       <button class="btn-back" onclick="showMdtPage()">Zpět</button>
     </div>
 
+    <!-- FINES PAGE -->
+    <div id="finesPage" class="mdt-page">
+      <div class="page-header">
+        <h2>Pokuty</h2>
+        <button class="btn-create-incident" onclick="openCreateFineForm()"><i class="fas fa-plus"></i> Vytvořit pokutu</button>
+      </div>
+      <div class="search-container">
+        <input type="text" id="fineSearch" placeholder="🔍 Hledat pokuty (osoba, důvod…)" oninput="filterFines()" />
+      </div>
+      <div id="createFineForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:24px;margin-bottom:24px;border:1px solid var(--border-subtle);">
+        <div class="form-group">
+          <label>Osoba</label>
+          <select id="finePersonSelect"><option value="">Vyberte osobu</option></select>
+        </div>
+        <div class="form-group">
+          <label>Částka ($)</label>
+          <input type="number" id="fineAmount" placeholder="Zadejte částku" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Důvod</label>
+          <textarea id="fineReason" rows="3" placeholder="Zadejte důvod pokuty"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="createFine()"><i class="fas fa-save"></i> Uložit pokutu</button>
+      </div>
+      <div id="fineList"></div>
+      <button class="btn-back" onclick="showMdtPage()">Zpět</button>
+    </div>
+
     <!-- LEGISLATION -->
     <div id="legislationPage" class="mdt-page">
       <div class="page-header"><h2>Legislativa</h2><p id="legislationHeaderDesc">Zákony, pokuty a tresty</p></div>
-      <div id="addLawForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:28px;margin-bottom:28px;border:1px solid var(--border-subtle);">
+      <div id="addLawForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:24px;margin-bottom:24px;border:1px solid var(--border-subtle);">
         <div class="form-group"><label>Název zákona</label><input type="text" id="lawTitle" placeholder="Zadejte název" /></div>
         <div class="form-group"><label>Popis</label><textarea id="lawDescription" rows="3" placeholder="Zadejte popis"></textarea></div>
         <div class="form-group"><label>Minimální pokuta ($)</label><input type="number" id="lawMinFine" placeholder="Min pokuta" min="0" /></div>
@@ -1343,11 +1298,11 @@
     <!-- MANAGE PERSONS -->
     <div id="managePersonsPage" class="mdt-page">
       <div class="page-header"><h2>Správa členů</h2></div>
-      <div style="background:var(--card-bg);border-radius:var(--radius-xl);padding:28px;margin-bottom:28px;border:1px solid var(--border-subtle);">
+      <div style="background:var(--card-bg);border-radius:var(--radius-xl);padding:24px;margin-bottom:24px;border:1px solid var(--border-subtle);">
         <div class="form-group"><label>Jméno</label><input type="text" id="memberName" placeholder="Uživatelské jméno" /></div>
         <div class="form-group"><label>Heslo</label><input type="password" id="memberPassword" placeholder="Heslo" /></div>
         <div class="form-group"><label>Hodnost</label><select id="memberRank"><option value="">Vyberte hodnost</option></select></div>
-        <div class="toggle-container"><label>Přístup do správy členů</label><label class="toggle-switch"><input type="checkbox" id="memberCanManage" /><span class="toggle-slider"></span></label></div>
+        <div class="toggle-container"><label>Přístup do MDT (správa členů)</label><label class="toggle-switch"><input type="checkbox" id="memberCanManage" /><span class="toggle-slider"></span></label></div>
         <button class="btn btn-primary" onclick="addMember()">Přidat člena</button>
       </div>
       <div id="memberList"></div>
@@ -1357,7 +1312,7 @@
     <!-- ANNOUNCEMENTS -->
     <div id="announcementsPage" class="mdt-page">
       <div class="page-header"><h2>Oznámení</h2></div>
-      <div id="addAnnouncementForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:28px;margin-bottom:28px;border:1px solid var(--border-subtle);">
+      <div id="addAnnouncementForm" class="hidden" style="background:var(--card-bg);border-radius:var(--radius-xl);padding:24px;margin-bottom:24px;border:1px solid var(--border-subtle);">
         <div class="form-group"><label>Nadpis</label><input type="text" id="announcementTitle" placeholder="Nadpis oznámení" /></div>
         <div class="form-group"><label>Zpráva</label><textarea id="announcementText" rows="4" placeholder="Text oznámení"></textarea></div>
         <button class="btn btn-success" onclick="addAnnouncement()">Zveřejnit</button>
@@ -1393,7 +1348,7 @@
   <div id="summonModal" class="modal-overlay hidden">
     <div class="modal">
       <h3>Předvolat osobu</h3>
-      <p style="text-align:center;color:var(--text-secondary);margin-bottom:18px;" id="summonPersonInfo"></p>
+      <p style="text-align:center;color:var(--text-secondary);margin-bottom:16px;" id="summonPersonInfo"></p>
       <div class="form-group"><label>Stanice</label><select id="summonStation"><option value="LSPD">LSPD stanice</option><option value="LSSD">LSSD stanice</option></select></div>
       <div class="form-group"><label>Důvod předvolání</label><textarea id="summonReason" rows="3" placeholder="Zadejte důvod"></textarea></div>
       <button class="btn btn-danger" onclick="sendSummon()"><i class="fas fa-paper-plane"></i> Odeslat předvolání</button>
@@ -1410,6 +1365,23 @@
       <div class="form-group"><label>Trest (měsíce)</label><input type="number" id="incidentMonths" placeholder="Zadejte trest" min="0" /></div>
       <button class="btn btn-success" onclick="confirmAddLawToIncident()">Přidat</button>
       <button class="btn-modal-close" onclick="closeLawSelectionModal()">Zrušit</button>
+    </div>
+  </div>
+
+  <!-- PŘIŘAZENÍ VOLAČKY -->
+  <div id="assignCallSignModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Přiřadit volačku</h3>
+      <div class="form-group">
+        <label>Člen</label>
+        <input type="text" id="assignCallSignMemberName" readonly style="background:rgba(255,255,255,0.08);" />
+      </div>
+      <div class="form-group">
+        <label>Vyberte volačku</label>
+        <select id="assignCallSignSelect"></select>
+      </div>
+      <button class="btn btn-primary" onclick="assignCallSign()">Přiřadit</button>
+      <button class="btn-modal-close" onclick="closeAssignCallSignModal()">Zrušit</button>
     </div>
   </div>
 
@@ -1497,6 +1469,7 @@
     let vehicleNotes = loadData('vehicleNotes', {});
     let personIncidents = loadData('personIncidents', {});
     let globalIncidents = loadData('globalIncidents', []);
+    let fines = loadData('fines', []);
 
     if (!members.find(m => m.name === VALID_USERNAME)) {
       members.unshift({ name: VALID_USERNAME, password: VALID_PASSWORD, rank: 'Chief Of Police', department: 'LSPD', canManage: true });
@@ -1512,9 +1485,11 @@
     let selectedIncidentTag = 'incident';
     let addedLawsToIncident = [];
 
+    // Cache for filtered lists
     let filteredPersons = [];
     let filteredVehicles = [];
     let filteredIncidents = [];
+    let filteredFines = [];
 
     function saveAllData() {
       saveData('callSigns', callSigns);
@@ -1529,6 +1504,7 @@
       saveData('vehicleNotes', vehicleNotes);
       saveData('personIncidents', personIncidents);
       saveData('globalIncidents', globalIncidents);
+      saveData('fines', fines);
     }
 
     // ----- UI HELPERS -----
@@ -1591,7 +1567,7 @@
     }
 
     function hideAllPages() {
-      ['dashboardContent', 'mdtPage', 'callSignsPage', 'incidentsPage', 'personPage', 'personDetailPage',
+      ['dashboardContent', 'mdtPage', 'callSignsPage', 'incidentsPage', 'finesPage', 'personPage', 'personDetailPage',
         'vehiclePage', 'vehicleDetailPage', 'managePersonsPage', 'legislationPage', 'announcementsPage'
       ].forEach(id => {
         const el = document.getElementById(id);
@@ -1673,7 +1649,15 @@
     }
 
     function loginSuccess(username, dept, member) {
-      currentUser = member || { name: username, canManage: true, department: dept.name };
+      if (!member) {
+        member = {
+          name: username,
+          canManage: true,
+          department: dept.name,
+          rank: DEPARTMENTS[dept.name].ranks[DEPARTMENTS[dept.name].ranks.length - 1]
+        };
+      }
+      currentUser = member;
       currentDepartment = dept.name;
       hideAllPages();
       document.getElementById('dashboardContent').classList.add('active');
@@ -1685,7 +1669,6 @@
       document.getElementById('userName').textContent = username;
       document.getElementById('welcomeTitle').textContent = `Vítejte, ${username}!`;
       document.getElementById('welcomeMessage').textContent = `Oddělení: ${dept.name}`;
-      document.getElementById('deptBadge').textContent = dept.name;
       document.getElementById('managePersonsCard').style.display = currentUser.canManage ? 'block' : 'none';
       const oldCard = document.getElementById('callSignsCard');
       if (oldCard) oldCard.remove();
@@ -1926,6 +1909,148 @@
       filterIncidents();
     }
 
+    // ----- FINES -----
+    function showFinesPage() {
+      hideAllPages();
+      document.getElementById('finesPage').classList.add('active');
+      document.getElementById('createFineForm').classList.add('hidden');
+      populateFineForm();
+      renderFines();
+      document.getElementById('fineSearch').value = '';
+      filteredFines = [];
+    }
+
+    function openCreateFineForm() {
+      document.getElementById('createFineForm').classList.remove('hidden');
+      populateFineForm();
+      document.getElementById('fineAmount').value = '';
+      document.getElementById('fineReason').value = '';
+    }
+
+    function populateFineForm() {
+      const personSelect = document.getElementById('finePersonSelect');
+      personSelect.innerHTML = '<option value="">Vyberte osobu</option>';
+      documents.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d.id;
+        o.textContent = `${d.firstName} ${d.lastName}`;
+        personSelect.appendChild(o);
+      });
+    }
+
+    function createFine() {
+      const personId = parseInt(document.getElementById('finePersonSelect').value);
+      const amount = parseInt(document.getElementById('fineAmount').value);
+      const reason = document.getElementById('fineReason').value.trim();
+      if (!personId) { alert('Vyberte osobu.'); return; }
+      if (!amount || amount <= 0) { alert('Zadejte platnou částku.'); return; }
+      if (!reason) { alert('Zadejte důvod pokuty.'); return; }
+      const fine = {
+        id: Date.now(),
+        personId,
+        amount,
+        reason,
+        created: Date.now(),
+        paid: false
+      };
+      fines.push(fine);
+      saveAllData();
+      document.getElementById('finePersonSelect').value = '';
+      document.getElementById('fineAmount').value = '';
+      document.getElementById('fineReason').value = '';
+      renderFines();
+      document.getElementById('createFineForm').classList.add('hidden');
+      alert('Pokuta vytvořena!');
+    }
+
+    function payFine(id) {
+      const fine = fines.find(f => f.id === id);
+      if (fine) {
+        fine.paid = true;
+        saveAllData();
+        renderFines();
+        if (currentDetailType === 'person') refreshDetail();
+      }
+    }
+
+    function deleteFine(id) {
+      if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat pokuty.'); return; }
+      if (!confirm('Opravdu chcete smazat tuto pokutu?')) return;
+      fines = fines.filter(f => f.id !== id);
+      saveAllData();
+      renderFines();
+      if (currentDetailType === 'person') refreshDetail();
+    }
+
+    function getFineStatus(fine) {
+      if (fine.paid) return { label: 'Zaplaceno', class: 'badge-gray' };
+      const days = Math.floor((Date.now() - fine.created) / (1000 * 60 * 60 * 24));
+      if (days >= 7) return { label: 'Po splatnosti', class: 'badge-red' };
+      return { label: 'Aktivní', class: 'badge-green' };
+    }
+
+    function renderFines() {
+      const list = document.getElementById('fineList');
+      if (!fines || fines.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:30px;">Žádné pokuty</p>';
+        filteredFines = [];
+        return;
+      }
+      const allFines = fines.map(f => {
+        const person = documents.find(d => d.id === f.personId);
+        return { ...f, personName: person ? `${person.firstName} ${person.lastName}` : 'Neznámý' };
+      });
+      filteredFines = allFines.slice();
+      renderFilteredFines();
+    }
+
+    function filterFines() {
+      const query = document.getElementById('fineSearch').value.toLowerCase().trim();
+      if (!query) {
+        filteredFines = fines.map(f => {
+          const person = documents.find(d => d.id === f.personId);
+          return { ...f, personName: person ? `${person.firstName} ${person.lastName}` : 'Neznámý' };
+        });
+      } else {
+        filteredFines = fines
+          .map(f => {
+            const person = documents.find(d => d.id === f.personId);
+            return { ...f, personName: person ? `${person.firstName} ${person.lastName}` : 'Neznámý' };
+          })
+          .filter(f =>
+            f.personName.toLowerCase().includes(query) ||
+            f.reason.toLowerCase().includes(query)
+          );
+      }
+      renderFilteredFines();
+    }
+
+    function renderFilteredFines() {
+      const list = document.getElementById('fineList');
+      if (filteredFines.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:30px;">Žádné pokuty odpovídají hledání</p>';
+        return;
+      }
+      list.innerHTML = filteredFines.map(f => {
+        const status = getFineStatus(f);
+        const days = Math.floor((Date.now() - f.created) / (1000 * 60 * 60 * 24));
+        return `
+          <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:10px;">
+            <div style="display:flex;gap:10px;align-items:center;width:100%;flex-wrap:wrap;">
+              <strong>${f.personName}</strong>
+              <span class="${status.class}">${status.label}</span>
+              <span class="badge badge-blue">$${f.amount.toLocaleString()}</span>
+              <span style="font-size:0.7rem;color:#64748b;">${days} dní</span>
+              ${!f.paid ? `<button class="btn-success" style="padding:4px 12px;border:none;border-radius:30px;cursor:pointer;font-size:0.7rem;background:rgba(34,197,94,0.2);color:#86efac;" onclick="payFine(${f.id})"><i class="fas fa-check"></i> Zaplatit</button>` : ''}
+              ${currentUser?.canManage ? `<button class="btn-remove" onclick="deleteFine(${f.id})"><i class="fas fa-trash"></i></button>` : ''}
+            </div>
+            <p style="font-size:0.85rem;">${f.reason}</p>
+            <span style="font-size:0.7rem;color:#64748b;">Vystaveno: ${new Date(f.created).toLocaleString('cs-CZ')}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
     // ----- PERSON -----
     function showPersonPage() {
       hideAllPages();
@@ -2050,7 +2175,7 @@
       renderDetail(vehicle, vehicleTags[id] || {}, vehicleNotes[id] || [], [], 'vehicle');
     }
 
-    // ----- RENDER DETAIL -----
+    // ----- RENDER DETAIL (with fines) -----
     function renderDetail(data, tagsData, notesData, incidentsData, type) {
       const content = document.getElementById(type === 'person' ? 'personDetailContent' : 'vehicleDetailContent');
       if (!data) {
@@ -2073,6 +2198,36 @@
       ];
       const title = isPerson ? `${data.firstName} ${data.lastName}` : data.spz;
 
+      // Fines for person
+      let finesHtml = '';
+      if (isPerson) {
+        const personFines = fines.filter(f => f.personId === data.id);
+        if (personFines.length > 0) {
+          finesHtml = `
+            <div class="notes-section incident-section">
+              <h4>Pokuty</h4>
+              ${personFines.map(f => {
+                const status = getFineStatus(f);
+                const days = Math.floor((Date.now() - f.created) / (1000 * 60 * 60 * 24));
+                return `
+                  <div class="incident-card" style="border-left-color: ${status.label === 'Zaplaceno' ? 'var(--success)' : status.label === 'Po splatnosti' ? 'var(--danger)' : 'var(--warning)'};">
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                      <span class="${status.class}">${status.label}</span>
+                      <span class="badge badge-blue">$${f.amount.toLocaleString()}</span>
+                      <span style="font-size:0.7rem;color:#64748b;">${days} dní</span>
+                      ${!f.paid ? `<button class="btn-success" style="padding:2px 10px;border:none;border-radius:30px;cursor:pointer;font-size:0.65rem;background:rgba(34,197,94,0.2);color:#86efac;" onclick="payFine(${f.id}); refreshDetail();"><i class="fas fa-check"></i> Zaplatit</button>` : ''}
+                      ${currentUser?.canManage ? `<button class="btn-remove" onclick="deleteFine(${f.id}); refreshDetail();"><i class="fas fa-trash"></i></button>` : ''}
+                    </div>
+                    <p style="margin-top:4px;font-size:0.8rem;">${f.reason}</p>
+                    <span style="font-size:0.65rem;color:#64748b;">${new Date(f.created).toLocaleString('cs-CZ')}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+      }
+
       let incidentsHtml = '';
       if (isPerson && incidentsData && incidentsData.length > 0) {
         incidentsHtml = `
@@ -2092,15 +2247,17 @@
         <div class="detail-layout">
           <div class="detail-main">
             <div class="call-sign-card" style="flex-direction:column;align-items:flex-start;gap:18px;padding:28px;">
-              <div style="display:flex;align-items:center;gap:18px;width:100%;">
+              <div style="display:flex;align-items:center;gap:18px;width:100%;flex-wrap:wrap;">
                 <div style="width:72px;height:72px;border-radius:${isPerson ? '50%' : '14px'};overflow:hidden;background:rgba(99,102,241,0.12);display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0;">
                   ${isPerson && data.photo ? `<img src="${data.photo}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="fas ${isPerson ? 'fa-user' : 'fa-car'}" style="color:var(--text-secondary);"></i>`}
                 </div>
                 <div><h2 style="font-size:1.5rem;font-weight:800;">${title}</h2>
                 ${isPerson ? `<p style="color:var(--text-secondary);font-size:0.9rem;">${data.docType} • ${data.birthDate || 'N/A'}</p>` : `<p style="color:var(--text-secondary);font-size:0.9rem;">${data.make} ${data.model} • ${data.color}</p>`}
                 </div>
+                ${isPerson ? `<button class="btn-fine" onclick="openCreateFineForPerson(${data.id})"><i class="fas fa-plus"></i> Pokuta</button>` : ''}
               </div>
 
+              ${finesHtml}
               ${incidentsHtml}
 
               <div class="notes-section">
@@ -2131,6 +2288,15 @@
           </div>
         </div>
       `;
+    }
+
+    function openCreateFineForPerson(personId) {
+      showFinesPage();
+      document.getElementById('createFineForm').classList.remove('hidden');
+      const select = document.getElementById('finePersonSelect');
+      select.value = personId;
+      document.getElementById('fineAmount').value = '';
+      document.getElementById('fineReason').value = '';
     }
 
     // ----- NOTES -----
@@ -2288,7 +2454,7 @@
       }
     }
 
-    // ----- MANAGE PERSONS -----
+    // ----- MANAGE PERSONS (members) -----
     function showManagePersonsPage() {
       if (!currentUser?.canManage) { alert('Nemáte přístup.'); return; }
       hideAllPages();
@@ -2304,6 +2470,16 @@
       const canManage = document.getElementById('memberCanManage').checked;
       if (!name || !password || !rank) { alert('Vyplňte všechna pole.'); return; }
       if (members.find(m => m.name === name)) { alert('Člen existuje.'); return; }
+      if (!currentUser || !currentUser.rank) {
+        alert('Chyba: vaše hodnost nebyla nalezena. Odhlaste se a přihlaste znovu.');
+        return;
+      }
+      const currentRankIndex = DEPARTMENTS[currentDepartment].ranks.indexOf(currentUser.rank);
+      const newRankIndex = DEPARTMENTS[currentDepartment].ranks.indexOf(rank);
+      if (newRankIndex > currentRankIndex) {
+        alert('Nemůžete přidat člena s vyšší hodností, než máte vy.');
+        return;
+      }
       members.push({ name, password, rank, department: currentDepartment, canManage });
       saveAllData();
       displayMembers();
@@ -2314,20 +2490,94 @@
     }
 
     function deleteMember(name) {
-      if (name === 'honza2001') return;
+      if (name === 'honza2001') { alert('Tohoto člena nelze smazat.'); return; }
+      const current = members.find(m => m.name === currentUser.name);
+      const target = members.find(m => m.name === name);
+      if (!current || !target) return;
+
+      // Povolit správci mazat ze všech oddělení
+      if (!currentUser.canManage) {
+        if (current.department !== target.department) {
+          alert('Nemůžete mazat členy z jiného oddělení.');
+          return;
+        }
+      }
+
+      const ranks = DEPARTMENTS[current.department].ranks;
+      const currentRankIndex = ranks.indexOf(current.rank);
+      const targetRankIndex = ranks.indexOf(target.rank);
+
+      if (currentUser.name === name) {
+        alert('Nemůžete smazat sami sebe.');
+        return;
+      }
+      // Povolit smazání stejné hodnosti, pokud je uživatel správce
+      if (targetRankIndex > currentRankIndex) {
+        alert('Nemůžete smazat člena s vyšší hodností.');
+        return;
+      }
+
+      callSigns.forEach(cs => {
+        if (cs.assignedName === name) cs.assignedName = null;
+      });
       members = members.filter(m => m.name !== name);
       saveAllData();
       displayMembers();
+      displayCallSigns();
     }
 
     function displayMembers() {
-      document.getElementById('memberList').innerHTML = members.map(m => `
+      const list = document.getElementById('memberList');
+      list.innerHTML = members.map(m => `
         <div class="call-sign-card">
           <span class="badge badge-blue">${m.rank}</span>
           <strong>${m.name}</strong> (${m.department})
-          ${m.name !== 'honza2001' ? `<button class="btn-remove" onclick="deleteMember('${m.name}')"><i class="fas fa-trash"></i></button>` : ''}
+          ${m.canManage ? `<span class="badge badge-gold">🔑 Správce</span>` : `<span class="badge badge-green">👤 Uživatel</span>`}
+          ${m.name !== 'honza2001' ? `
+            <button class="btn-remove" onclick="deleteMember('${m.name}')"><i class="fas fa-trash"></i></button>
+          ` : ''}
+          ${currentUser?.canManage ? `
+            <button class="btn-assign" onclick="openAssignCallSign('${m.name}')"><i class="fas fa-broadcast-tower"></i> Volačka</button>
+          ` : ''}
         </div>
       `).join('');
+    }
+
+    // ----- PŘIŘAZENÍ VOLAČKY -----
+    function openAssignCallSign(memberName) {
+      const modal = document.getElementById('assignCallSignModal');
+      const select = document.getElementById('assignCallSignSelect');
+      select.innerHTML = '';
+      callSigns.forEach(cs => {
+        const opt = document.createElement('option');
+        opt.value = cs.id;
+        const assigned = cs.assignedName ? ` (přiřazeno: ${cs.assignedName})` : ' (volná)';
+        opt.textContent = `${cs.rank} ${cs.unit} ${cs.number}${assigned}`;
+        select.appendChild(opt);
+      });
+      document.getElementById('assignCallSignMemberName').value = memberName;
+      modal.classList.remove('hidden');
+    }
+
+    function closeAssignCallSignModal() {
+      document.getElementById('assignCallSignModal').classList.add('hidden');
+    }
+
+    function assignCallSign() {
+      const memberName = document.getElementById('assignCallSignMemberName').value;
+      const callSignId = parseInt(document.getElementById('assignCallSignSelect').value);
+      if (!callSignId) { alert('Vyberte volačku.'); return; }
+      callSigns.forEach(cs => {
+        if (cs.assignedName === memberName) cs.assignedName = null;
+      });
+      const cs = callSigns.find(c => c.id === callSignId);
+      if (cs) {
+        cs.assignedName = memberName;
+        saveAllData();
+        closeAssignCallSignModal();
+        displayCallSigns();
+        displayMembers();
+      }
     }
 
     // ----- LEGISLATION -----
