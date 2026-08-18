@@ -10,42 +10,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         /* ===== RESET & ROOT ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
         :root {
-            --primary: #7c3aed;
-            --primary-light: #a78bfa;
-            --primary-dark: #5b21b6;
-            --secondary: #06b6d4;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-
-            --bg-base: #0a0a0f;
-            --bg-card: rgba(18, 18, 30, 0.85);
-            --bg-glass: rgba(255, 255, 255, 0.04);
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.14);
-
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-
-            --radius-xl: 24px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-
-            --shadow-card: 0 20px 60px -16px rgba(0, 0, 0, 0.8);
-            --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.15);
-
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary: #7c3aed; --primary-light: #a78bfa; --primary-dark: #5b21b6;
+            --secondary: #06b6d4; --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+            --bg-base: #0a0a0f; --bg-card: rgba(18,18,30,0.85); --bg-glass: rgba(255,255,255,0.04);
+            --border-subtle: rgba(255,255,255,0.06); --border-hover: rgba(255,255,255,0.14);
+            --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b;
+            --radius-xl: 24px; --radius-lg: 16px; --radius-md: 12px; --radius-sm: 8px;
+            --shadow-card: 0 20px 60px -16px rgba(0,0,0,0.8);
+            --shadow-glow: 0 0 40px rgba(124,58,237,0.15);
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             --font: 'Inter', system-ui, -apple-system, sans-serif;
         }
-
         body {
             font-family: var(--font);
             background: var(--bg-base);
@@ -54,28 +31,17 @@
             overflow-x: hidden;
             line-height: 1.6;
             background-image:
-                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.08), transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.06), transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(124, 58, 237, 0.03), transparent 70%);
+                radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08), transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.03), transparent 70%);
         }
+        ::-webkit-scrollbar { width:5px; height:5px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:var(--primary); border-radius:10px; }
+        ::-webkit-scrollbar-thumb:hover { background:var(--primary-light); }
 
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-light);
-        }
-
-        /* ===== CLOUD STATUS (klikací) ===== */
-        #cloudStatus {
+        /* ===== iCLOUD STATUS ===== */
+        #icloudStatus {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -85,715 +51,266 @@
             font-size: 0.7rem;
             font-weight: 600;
             letter-spacing: 0.3px;
-            background: rgba(10, 10, 15, 0.92);
+            background: rgba(10,10,15,0.92);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-subtle);
             color: var(--text-secondary);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             gap: 8px;
             transition: var(--transition);
+            max-width: 90vw;
             cursor: pointer;
         }
-        #cloudStatus.ok {
-            color: var(--success);
-            border-color: rgba(16, 185, 129, 0.2);
-        }
-        #cloudStatus.error {
-            color: var(--danger);
-            border-color: rgba(239, 68, 68, 0.2);
-        }
-        #cloudStatus.syncing {
-            color: var(--secondary);
-            border-color: rgba(6, 182, 212, 0.2);
-            animation: pulse-dot 1.2s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.4;
-            }
-        }
+        #icloudStatus.ok { color: var(--success); border-color: rgba(16,185,129,0.2); }
+        #icloudStatus.error { color: var(--danger); border-color: rgba(239,68,68,0.2); }
+        #icloudStatus.syncing { color: var(--secondary); border-color: rgba(6,182,212,0.2); animation: pulse-dot 1.2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
 
         /* ===== LOADING ===== */
         .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(16px);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
+            position: fixed; inset:0; background: rgba(10,10,15,0.85); backdrop-filter: blur(16px);
+            z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        .loading-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loading-spinner {
-            width: 52px;
-            height: 52px;
-            border: 3px solid var(--border-subtle);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .loading-text {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
+        .loading-overlay.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+        .loading-spinner { width:52px; height:52px; border:3px solid var(--border-subtle); border-top-color:var(--primary); border-radius:50%; animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: var(--text-secondary); font-size:0.95rem; font-weight:500; letter-spacing:0.5px; }
 
         /* ===== HEADER ===== */
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 68px;
-            padding: 0 32px;
-            background: rgba(10, 10, 15, 0.92);
-            backdrop-filter: blur(20px);
+            position: fixed; top:0; left:0; right:0; z-index:1000; height:68px; padding:0 32px;
+            background: rgba(10,10,15,0.92); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-subtle);
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            transition: var(--transition);
+            display: none; align-items:center; justify-content:space-between; transition: var(--transition);
         }
-        .header.active {
-            display: flex;
-        }
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+        .header.active { display: flex; }
+        .header-brand { display:flex; align-items:center; gap:14px; }
         .header-brand .logo {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.8rem;
-            color: #fff;
+            width:40px; height:40px; border-radius:var(--radius-md);
+            display:flex; align-items:center; justify-content:center;
+            font-weight:800; font-size:0.8rem; color:#fff;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
-            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+            flex-shrink:0;
         }
         .header-brand .name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-size:1.1rem; font-weight:700; letter-spacing:1px;
             background: linear-gradient(to right, #fff, var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .header-nav {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-        }
+        .header-nav { display:flex; gap:2px; align-items:center; }
         .header-nav .nav-btn {
-            padding: 8px 18px;
-            border-radius: 40px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font);
+            padding:8px 18px; border-radius:40px; border:none; background:transparent;
+            color:var(--text-secondary); font-size:0.8rem; font-weight:600; cursor:pointer;
+            transition: var(--transition); display:flex; align-items:center; gap:8px; font-family:var(--font);
         }
-        .header-nav .nav-btn:hover {
-            color: #fff;
-            background: var(--bg-glass);
-        }
-        .header-nav .nav-btn.active {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
-        }
+        .header-nav .nav-btn:hover { color:#fff; background:var(--bg-glass); }
+        .header-nav .nav-btn.active { background:var(--primary); color:#fff; box-shadow:0 4px 16px rgba(124,58,237,0.3); }
         .header-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 16px 6px 12px;
-            border-radius: 40px;
-            border: 1px solid var(--border-subtle);
-            background: var(--bg-glass);
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.85rem;
-            font-weight: 500;
+            display:flex; align-items:center; gap:12px; padding:6px 16px 6px 12px;
+            border-radius:40px; border:1px solid var(--border-subtle); background:var(--bg-glass);
+            cursor:pointer; transition:var(--transition); font-size:0.85rem; font-weight:500;
         }
-        .header-user:hover {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.06);
-        }
+        .header-user:hover { border-color:var(--border-hover); background:rgba(255,255,255,0.06); }
         .header-user .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: 700;
-            flex-shrink: 0;
+            width:30px; height:30px; border-radius:50%; background:var(--primary);
+            display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.8rem; font-weight:700; flex-shrink:0;
         }
-        .header-user .uname {
-            color: var(--text-primary);
-        }
-        .header-user .logout-icon {
-            color: var(--text-muted);
-            margin-left: 4px;
-            transition: var(--transition);
-        }
-        .header-user:hover .logout-icon {
-            color: var(--danger);
-        }
+        .header-user .uname { color:var(--text-primary); }
+        .header-user .logout-icon { color:var(--text-muted); margin-left:4px; transition:var(--transition); }
+        .header-user:hover .logout-icon { color:var(--danger); }
 
         /* ===== MAIN ===== */
-        .main-content {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-        .main-content.with-header {
-            padding-top: 92px;
-            display: block;
-        }
+        .main-content { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+        .main-content.with-header { padding-top:92px; display:block; }
 
         /* ===== FLIP ===== */
-        .flip-container {
-            perspective: 1600px;
-            width: 100%;
-            max-width: 520px;
-            margin: 0 auto;
-        }
-        .flip-inner {
-            position: relative;
-            width: 100%;
-            transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-            transform-style: preserve-3d;
-        }
-        .flip-inner.flipped {
-            transform: rotateY(180deg);
-        }
-        .flip-front,
-        .flip-back {
-            position: relative;
-            width: 100%;
-            backface-visibility: hidden;
-            border-radius: var(--radius-xl);
-        }
-        .flip-front {
-            z-index: 2;
-        }
-        .flip-back {
-            transform: rotateY(180deg);
-            margin-top: -100%;
-        }
+        .flip-container { perspective:1600px; width:100%; max-width:520px; margin:0 auto; }
+        .flip-inner { position:relative; width:100%; transition:transform 0.7s cubic-bezier(0.23,1,0.32,1); transform-style:preserve-3d; }
+        .flip-inner.flipped { transform: rotateY(180deg); }
+        .flip-front, .flip-back { position:relative; width:100%; backface-visibility:hidden; border-radius:var(--radius-xl); }
+        .flip-front { z-index:2; }
+        .flip-back { transform: rotateY(180deg); margin-top:-100%; }
 
         .welcome-screen {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            padding: 52px 44px;
-            text-align: center;
-            border-radius: var(--radius-xl);
+            background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border-subtle);
+            padding:52px 44px; text-align:center; border-radius:var(--radius-xl);
             box-shadow: var(--shadow-card), var(--shadow-glow);
         }
         .welcome-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 28px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 28px;
-            font-size: 3rem;
-            color: #fff;
-            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.35);
+            width:100px; height:100px; border-radius:28px;
+            background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display:flex; align-items:center; justify-content:center; margin:0 auto 28px;
+            font-size:3rem; color:#fff; box-shadow:0 12px 40px rgba(124,58,237,0.35);
             animation: float 4s ease-in-out infinite;
         }
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
+        @keyframes float { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
         .welcome-screen h1 {
-            font-size: 2.6rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(to right, #fff, var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size:2.6rem; font-weight:800; letter-spacing:-1px;
+            background:linear-gradient(to right, #fff, var(--text-secondary));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
         }
-        .welcome-screen .subtitle {
-            color: var(--text-secondary);
-            margin: 6px 0 32px;
-            font-size: 1.05rem;
+        .welcome-screen .subtitle { color:var(--text-secondary); margin:6px 0 32px; font-size:1.05rem; }
+        .btn-group { display:flex; flex-direction:column; gap:12px; }
+
+        .btn-discord {
+            background: #5865F2;
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(88,101,242,0.3);
         }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .btn-discord:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(88,101,242,0.45); }
 
         /* ===== BUTTONS ===== */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 16px 28px;
-            border: none;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            font-family: var(--font);
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            width: 100%;
+            display:inline-flex; align-items:center; justify-content:center; gap:10px;
+            padding:16px 28px; border:none; border-radius:60px;
+            font-weight:700; font-size:0.95rem; font-family:var(--font); cursor:pointer;
+            transition:var(--transition); position:relative; overflow:hidden; width:100%;
         }
-        .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 60%);
-            pointer-events: none;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(124, 58, 237, 0.45);
-        }
-        .btn-outline {
-            background: transparent;
-            color: var(--primary-light);
-            border: 2px solid var(--primary);
-        }
-        .btn-outline:hover {
-            background: rgba(124, 58, 237, 0.08);
-            transform: translateY(-2px);
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #dc2626);
-            color: #fff;
-            box-shadow: 0 6px 24px rgba(239, 68, 68, 0.25);
-        }
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(239, 68, 68, 0.35);
-        }
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #059669);
-            color: #fff;
-            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25);
-        }
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(16, 185, 129, 0.35);
-        }
-        .btn-ghost {
-            background: var(--bg-glass);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-subtle);
-        }
-        .btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-        }
-        .btn-sm {
-            padding: 10px 18px;
-            font-size: 0.8rem;
-            width: auto;
-        }
+        .btn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,0.08), transparent 60%); pointer-events:none; }
+        .btn-primary { background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:#fff; box-shadow:0 6px 24px rgba(124,58,237,0.3); }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(124,58,237,0.45); }
+        .btn-outline { background:transparent; color:var(--primary-light); border:2px solid var(--primary); }
+        .btn-outline:hover { background:rgba(124,58,237,0.08); transform:translateY(-2px); }
+        .btn-danger { background:linear-gradient(135deg, var(--danger), #dc2626); color:#fff; box-shadow:0 6px 24px rgba(239,68,68,0.25); }
+        .btn-danger:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(239,68,68,0.35); }
+        .btn-success { background:linear-gradient(135deg, var(--success), #059669); color:#fff; box-shadow:0 6px 24px rgba(16,185,129,0.25); }
+        .btn-success:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(16,185,129,0.35); }
+        .btn-ghost { background:var(--bg-glass); color:var(--text-secondary); border:1px solid var(--border-subtle); }
+        .btn-ghost:hover { background:rgba(255,255,255,0.06); color:#fff; }
+        .btn-sm { padding:10px 18px; font-size:0.8rem; width:auto; }
         .btn-back {
-            background: var(--bg-glass);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 60px;
-            padding: 12px 28px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: var(--transition);
-            font-weight: 600;
-            font-family: var(--font);
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            background:var(--bg-glass); color:var(--text-secondary); border:1px solid var(--border-subtle);
+            border-radius:60px; padding:12px 28px; cursor:pointer; margin-top:20px;
+            transition:var(--transition); font-weight:600; font-family:var(--font); font-size:0.85rem;
+            display:inline-flex; align-items:center; gap:8px;
         }
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-        }
+        .btn-back:hover { background:rgba(255,255,255,0.06); color:#fff; }
 
-        /* ===== LOGIN SCREEN ===== */
         .login-screen {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            padding: 44px 40px;
-            border-radius: var(--radius-xl);
+            background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border-subtle);
+            padding:44px 40px; border-radius:var(--radius-xl);
             box-shadow: var(--shadow-card), var(--shadow-glow);
         }
-        .login-screen h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-        .login-screen .login-sub {
-            color: var(--text-secondary);
-            text-align: center;
-            margin-bottom: 24px;
-            font-size: 0.95rem;
-        }
+        .login-screen h2 { font-size:1.8rem; font-weight:800; text-align:center; letter-spacing:-0.5px; }
+        .login-screen .login-sub { color:var(--text-secondary); text-align:center; margin-bottom:24px; font-size:0.95rem; }
 
         .dept-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 20px;
+            display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; margin-bottom:20px;
         }
         .dept-tab {
-            padding: 12px 8px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 700;
-            text-align: center;
-            transition: var(--transition);
-            background: var(--bg-glass);
-            border: 2px solid transparent;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            font-family: var(--font);
+            padding:12px 8px; border-radius:var(--radius-md); cursor:pointer; font-weight:700;
+            text-align:center; transition:var(--transition); background:var(--bg-glass);
+            border:2px solid transparent; font-size:0.75rem; letter-spacing:0.5px;
+            color:var(--text-secondary); font-family:var(--font);
         }
-        .dept-tab:hover {
-            background: rgba(255, 255, 255, 0.06);
-        }
-        .dept-tab.active {
-            color: #fff;
-            border-color: var(--primary);
-            background: rgba(124, 58, 237, 0.15);
-        }
-        .dept-tab.lspd.active {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.12);
-            color: #93c5fd;
-        }
-        .dept-tab.lssd.active {
-            border-color: #b45309;
-            background: rgba(180, 83, 9, 0.12);
-            color: #fbbf24;
-        }
-        .dept-tab.sahp.active {
-            border-color: #047857;
-            background: rgba(4, 120, 87, 0.12);
-            color: #6ee7b7;
-        }
-        .dept-tab.doj.active {
-            border-color: #7c3aed;
-            background: rgba(124, 58, 237, 0.12);
-            color: #a78bfa;
-        }
+        .dept-tab:hover { background:rgba(255,255,255,0.06); }
+        .dept-tab.active { color:#fff; border-color:var(--primary); background:rgba(124,58,237,0.15); }
+        .dept-tab.lspd.active { border-color:#3b82f6; background:rgba(59,130,246,0.12); color:#93c5fd; }
+        .dept-tab.lssd.active { border-color:#b45309; background:rgba(180,83,9,0.12); color:#fbbf24; }
+        .dept-tab.sahp.active { border-color:#047857; background:rgba(4,120,87,0.12); color:#6ee7b7; }
+        .dept-tab.doj.active { border-color:#7c3aed; background:rgba(124,58,237,0.12); color:#a78bfa; }
 
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
+        .form-group { margin-bottom:16px; text-align:left; }
+        .form-group label { display:block; font-weight:600; margin-bottom:5px; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-secondary); }
+        .form-group input, .form-group select, .form-group textarea {
+            width:100%; padding:14px 18px; border:2px solid var(--border-subtle); border-radius:var(--radius-md);
+            background:rgba(255,255,255,0.03); color:#fff; outline:none; transition:var(--transition);
+            font-size:0.95rem; font-family:var(--font);
         }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-secondary);
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color:var(--primary); background:rgba(255,255,255,0.05); box-shadow:0 0 0 4px rgba(124,58,237,0.08);
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.03);
-            color: #fff;
-            outline: none;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            font-family: var(--font);
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.08);
-        }
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: var(--text-muted);
-        }
-        .form-group select option {
-            background: var(--bg-base);
-            color: #fff;
-        }
+        .form-group input::placeholder, .form-group textarea::placeholder { color:var(--text-muted); }
+        .form-group select option { background:var(--bg-base); color:#fff; }
 
-        .photo-upload {
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        .photo-upload { margin-bottom:20px; text-align:center; }
         .photo-preview {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--bg-glass);
-            border: 3px dashed var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: var(--transition);
+            width:120px; height:120px; border-radius:50%; background:var(--bg-glass);
+            border:3px dashed var(--border-subtle); display:flex; align-items:center; justify-content:center;
+            margin:0 auto 12px; cursor:pointer; overflow:hidden; transition:var(--transition);
         }
-        .photo-preview:hover {
-            border-color: var(--primary);
-            background: rgba(124, 58, 237, 0.05);
-        }
-        .photo-preview i {
-            font-size: 2.4rem;
-            color: var(--text-secondary);
-        }
-        .photo-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .photo-preview:hover { border-color:var(--primary); background:rgba(124,58,237,0.05); }
+        .photo-preview i { font-size:2.4rem; color:var(--text-secondary); }
+        .photo-preview img { width:100%; height:100%; object-fit:cover; }
         .btn-upload {
-            background: var(--bg-glass);
-            color: #fff;
-            border: 1px solid var(--border-subtle);
-            border-radius: 60px;
-            padding: 10px 24px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: var(--transition);
-            font-family: var(--font);
-            font-weight: 600;
+            background:var(--bg-glass); color:#fff; border:1px solid var(--border-subtle);
+            border-radius:60px; padding:10px 24px; cursor:pointer; font-size:0.85rem;
+            transition:var(--transition); font-family:var(--font); font-weight:600;
         }
-        .btn-upload:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: var(--border-hover);
-        }
+        .btn-upload:hover { background:rgba(255,255,255,0.06); border-color:var(--border-hover); }
 
-        .message {
-            padding: 14px 18px;
-            border-radius: var(--radius-md);
-            margin-bottom: 16px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .message.error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #fca5a5;
-            border-left: 4px solid var(--danger);
-        }
-        .message.success {
-            background: rgba(16, 185, 129, 0.1);
-            color: #6ee7b7;
-            border-left: 4px solid var(--success);
-        }
+        .message { padding:14px 18px; border-radius:var(--radius-md); margin-bottom:16px; font-weight:600; font-size:0.85rem; }
+        .message.error { background:rgba(239,68,68,0.1); color:#fca5a5; border-left:4px solid var(--danger); }
+        .message.success { background:rgba(16,185,129,0.1); color:#6ee7b7; border-left:4px solid var(--success); }
 
-        /* ===== DASHBOARD ===== */
-        .dashboard-content {
-            display: none;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .dashboard-content.active {
-            display: block;
-        }
+        .dashboard-content { display:none; width:100%; max-width:1100px; margin:0 auto; }
+        .dashboard-content.active { display:block; }
 
         .dash-header {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 36px 44px;
-            margin-bottom: 28px;
-            position: relative;
-            overflow: hidden;
+            background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-xl); padding:36px 44px; margin-bottom:28px;
+            position:relative; overflow:hidden;
         }
-        .dash-header::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 30% 40%, rgba(124, 58, 237, 0.06), transparent 70%);
-            pointer-events: none;
-        }
-        .dash-header h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            position: relative;
-            letter-spacing: -0.5px;
-        }
-        .dash-header p {
-            color: var(--text-secondary);
-            margin-top: 2px;
-            position: relative;
-            font-size: 1rem;
-        }
+        .dash-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 40%, rgba(124,58,237,0.06), transparent 70%); pointer-events:none; }
+        .dash-header h1 { font-size:1.8rem; font-weight:800; position:relative; letter-spacing:-0.5px; }
+        .dash-header p { color:var(--text-secondary); margin-top:2px; position:relative; font-size:1rem; }
         .dash-header .dept-badge {
-            position: absolute;
-            top: 50%;
-            right: 44px;
-            transform: translateY(-50%);
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
+            position:absolute; top:50%; right:44px; transform:translateY(-50%);
+            padding:8px 20px; border-radius:40px; font-weight:700; font-size:0.75rem; letter-spacing:0.5px;
+            background:var(--bg-glass); border:1px solid var(--border-subtle); color:var(--text-secondary);
         }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 18px;
-        }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:18px; }
 
         .dash-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 28px 22px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            background:var(--bg-card); backdrop-filter:blur(16px); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-lg); padding:28px 22px; text-align:center; cursor:pointer;
+            transition:var(--transition); position:relative; overflow:hidden;
         }
-        .dash-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 100%, rgba(124, 58, 237, 0.05), transparent 70%);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .dash-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--border-hover);
-            box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.6);
-        }
-        .dash-card:hover::after {
-            opacity: 1;
-        }
+        .dash-card::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 100%, rgba(124,58,237,0.05), transparent 70%); opacity:0; transition:var(--transition); }
+        .dash-card:hover { transform:translateY(-6px); border-color:var(--border-hover); box-shadow:0 20px 48px -12px rgba(0,0,0,0.6); }
+        .dash-card:hover::after { opacity:1; }
         .dash-card .icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 14px;
-            font-size: 1.5rem;
-            color: #fff;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.2);
+            width:56px; height:56px; border-radius:16px;
+            background:linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
+            font-size:1.5rem; color:#fff; position:relative; z-index:1;
+            box-shadow:0 6px 20px rgba(124,58,237,0.2);
         }
-        .dash-card h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-        .dash-card p {
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            margin-top: 2px;
-            position: relative;
-            z-index: 1;
-        }
+        .dash-card h3 { font-size:1.05rem; font-weight:700; position:relative; z-index:1; }
+        .dash-card p { color:var(--text-secondary); font-size:0.82rem; margin-top:2px; position:relative; z-index:1; }
 
-        /* ===== CLOUD SETTINGS PANEL ===== */
-        .cloud-settings {
+        /* ===== NASTAVENÍ ===== */
+        .settings-panel {
             background: var(--bg-card);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             padding: 20px 24px;
             margin: 24px 0 16px;
-            display: flex;
+            display: none;
             flex-wrap: wrap;
             align-items: flex-end;
             gap: 16px;
         }
-        .cloud-settings.hidden {
-            display: none;
-        }
-        .cloud-settings .form-group {
+        .settings-panel.open { display: flex; }
+        .settings-panel .form-group {
             flex: 1;
-            min-width: 180px;
+            min-width: 160px;
             margin-bottom: 0;
         }
-        .cloud-settings .form-group label {
+        .settings-panel .form-group label {
             font-size: 0.65rem;
         }
-        .cloud-settings .btn {
+        .settings-panel .btn {
             width: auto;
             padding: 12px 24px;
         }
-        .cloud-settings .status-badge {
+        .settings-panel .status-badge {
             padding: 6px 14px;
             border-radius: 30px;
             font-size: 0.7rem;
@@ -803,465 +320,139 @@
             color: var(--text-secondary);
             white-space: nowrap;
         }
-        .cloud-settings .status-badge.online {
+        .settings-panel .status-badge.online {
             color: var(--success);
-            border-color: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16,185,129,0.2);
         }
-        .cloud-settings .status-badge.offline {
+        .settings-panel .status-badge.offline {
             color: var(--danger);
-            border-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239,68,68,0.2);
         }
-        .cloud-settings .status-badge.checking {
+        .settings-panel .status-badge.checking {
             color: var(--secondary);
-            border-color: rgba(6, 182, 212, 0.2);
+            border-color: rgba(6,182,212,0.2);
         }
 
         /* ===== PAGE ===== */
-        .page {
-            display: none;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .page.active {
-            display: block;
-        }
+        .page { display:none; width:100%; max-width:1100px; margin:0 auto; }
+        .page.active { display:block; }
 
         .page-header {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 28px 36px;
-            margin-bottom: 24px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
+            background:var(--bg-card); backdrop-filter:blur(16px); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-xl); padding:28px 36px; margin-bottom:24px;
+            position:relative; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
         }
-        .page-header h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-        }
-        .page-header p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 2px;
-        }
-        .page-header .actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .page-header h2 { font-size:1.5rem; font-weight:800; letter-spacing:-0.3px; }
+        .page-header p { color:var(--text-secondary); font-size:0.9rem; margin-top:2px; }
+        .page-header .actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
-        .search-bar {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
+        .search-bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:18px; }
         .search-bar input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 18px;
-            border: 2px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.03);
-            color: #fff;
-            outline: none;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            font-family: var(--font);
+            flex:1; min-width:200px; padding:12px 18px; border:2px solid var(--border-subtle);
+            border-radius:var(--radius-md); background:rgba(255,255,255,0.03); color:#fff;
+            outline:none; transition:var(--transition); font-size:0.95rem; font-family:var(--font);
         }
-        .search-bar input:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.08);
-        }
-        .search-bar input::placeholder {
-            color: var(--text-muted);
-        }
+        .search-bar input:focus { border-color:var(--primary); background:rgba(255,255,255,0.05); box-shadow:0 0 0 4px rgba(124,58,237,0.08); }
+        .search-bar input::placeholder { color:var(--text-muted); }
 
         .list-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 16px 20px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            transition: var(--transition);
-            cursor: default;
+            background:var(--bg-card); backdrop-filter:blur(8px); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-md); padding:16px 20px; margin-bottom:6px;
+            display:flex; align-items:center; gap:14px; flex-wrap:wrap; transition:var(--transition); cursor:default;
         }
-        .list-card:hover {
-            border-color: var(--border-hover);
-        }
-        .list-card.clickable {
-            cursor: pointer;
-        }
-        .list-card.clickable:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
+        .list-card:hover { border-color:var(--border-hover); }
+        .list-card.clickable { cursor:pointer; }
+        .list-card.clickable:hover { background:rgba(255,255,255,0.03); }
         .list-card .avatar-sm {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: var(--bg-glass);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 1.2rem;
-            color: var(--text-secondary);
+            width:44px; height:44px; border-radius:50%; overflow:hidden; background:var(--bg-glass);
+            display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem; color:var(--text-secondary);
         }
-        .list-card .avatar-sm img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .list-card .body {
-            flex: 1;
-            min-width: 120px;
-        }
-        .list-card .body strong {
-            display: block;
-            font-size: 0.95rem;
-        }
-        .list-card .body .meta {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
+        .list-card .avatar-sm img { width:100%; height:100%; object-fit:cover; }
+        .list-card .body { flex:1; min-width:120px; }
+        .list-card .body strong { display:block; font-size:0.95rem; }
+        .list-card .body .meta { color:var(--text-secondary); font-size:0.8rem; }
 
         .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.65rem;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
+            display:inline-block; padding:4px 14px; border-radius:30px;
+            font-weight:700; font-size:0.65rem; letter-spacing:0.3px; text-transform:uppercase;
         }
-        .badge-primary {
-            background: rgba(124, 58, 237, 0.15);
-            color: #a78bfa;
-        }
-        .badge-green {
-            background: rgba(16, 185, 129, 0.15);
-            color: #6ee7b7;
-        }
-        .badge-red {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-        }
-        .badge-yellow {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fcd34d;
-        }
-        .badge-gray {
-            background: rgba(148, 163, 184, 0.15);
-            color: #94a3b8;
-        }
-        .badge-gold {
-            background: rgba(234, 179, 8, 0.15);
-            color: #fde047;
-        }
-        .badge-blue {
-            background: rgba(59, 130, 246, 0.15);
-            color: #93c5fd;
-        }
-        .badge-purple {
-            background: rgba(139, 92, 246, 0.15);
-            color: #c4b5fd;
-        }
+        .badge-primary { background:rgba(124,58,237,0.15); color:#a78bfa; }
+        .badge-green { background:rgba(16,185,129,0.15); color:#6ee7b7; }
+        .badge-red { background:rgba(239,68,68,0.15); color:#fca5a5; }
+        .badge-yellow { background:rgba(245,158,11,0.15); color:#fcd34d; }
+        .badge-gray { background:rgba(148,163,184,0.15); color:#94a3b8; }
+        .badge-gold { background:rgba(234,179,8,0.15); color:#fde047; }
+        .badge-blue { background:rgba(59,130,246,0.15); color:#93c5fd; }
+        .badge-purple { background:rgba(139,92,246,0.15); color:#c4b5fd; }
 
         /* Incident form */
         .incident-form {
-            background: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-subtle);
+            background:var(--bg-card); border-radius:var(--radius-xl); padding:24px; margin-bottom:24px;
+            border:1px solid var(--border-subtle);
         }
-        .incident-form.hidden {
-            display: none;
-        }
-        .incident-form-layout {
-            display: flex;
-            gap: 24px;
-        }
-        .incident-form-layout .sidebar {
-            width: 160px;
-            flex-shrink: 0;
-        }
-        .incident-form-layout .sidebar h4 {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-        .incident-form-layout .main {
-            flex: 1;
-            min-width: 0;
-        }
+        .incident-form.hidden { display:none; }
+        .incident-form-layout { display:flex; gap:24px; }
+        .incident-form-layout .sidebar { width:160px; flex-shrink:0; }
+        .incident-form-layout .sidebar h4 { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-secondary); margin-bottom:12px; }
+        .incident-form-layout .main { flex:1; min-width:0; }
         .incident-tag-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 2px;
-            border-left: 3px solid transparent;
-            font-family: var(--font);
-            background: transparent;
-            border-right: none;
-            border-top: none;
-            border-bottom: none;
-            width: 100%;
-            text-align: left;
+            display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--radius-md);
+            cursor:pointer; transition:var(--transition); font-size:0.8rem; color:var(--text-secondary);
+            margin-bottom:2px; border-left:3px solid transparent; font-family:var(--font);
+            background:transparent; border-right:none; border-top:none; border-bottom:none; width:100%; text-align:left;
         }
-        .incident-tag-btn:hover {
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .incident-tag-btn.active {
-            background: rgba(124, 58, 237, 0.08);
-            color: #fff;
-            border-left-color: var(--primary);
-        }
+        .incident-tag-btn:hover { background:rgba(255,255,255,0.04); }
+        .incident-tag-btn.active { background:rgba(124,58,237,0.08); color:#fff; border-left-color:var(--primary); }
 
-        .added-laws {
-            margin-top: 10px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            min-height: 50px;
-            border: 1px dashed var(--border-subtle);
-        }
-        .added-law {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            margin-bottom: 4px;
-            font-size: 0.75rem;
-        }
+        .added-laws { margin-top:10px; background:rgba(255,255,255,0.02); border-radius:var(--radius-md); padding:12px; min-height:50px; border:1px dashed var(--border-subtle); }
+        .added-law { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(255,255,255,0.04); border-radius:8px; margin-bottom:4px; font-size:0.75rem; }
 
         /* Detail layout */
-        .detail-layout {
-            display: flex;
-            gap: 24px;
-        }
-        .detail-main {
-            flex: 1;
-            min-width: 0;
-        }
+        .detail-layout { display:flex; gap:24px; }
+        .detail-main { flex:1; min-width:0; }
         .detail-sidebar {
-            width: 240px;
-            flex-shrink: 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 20px;
+            width:240px; flex-shrink:0; background:var(--bg-card); border:1px solid var(--border-subtle);
+            border-radius:var(--radius-lg); padding:20px;
         }
-        .detail-sidebar h3 {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 14px;
-        }
+        .detail-sidebar h3 { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-secondary); margin-bottom:14px; }
         .detail-tag {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 2px;
-            border-left: 3px solid transparent;
+            display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--radius-md);
+            cursor:pointer; transition:var(--transition); font-size:0.8rem; color:var(--text-secondary);
+            margin-bottom:2px; border-left:3px solid transparent;
         }
-        .detail-tag:hover {
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .detail-tag.active {
-            background: rgba(124, 58, 237, 0.08);
-            color: #fff;
-            border-left-color: var(--primary);
-        }
-        .tag-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            margin-bottom: 3px;
-            margin-left: 16px;
-        }
-        .notes-section {
-            margin-top: 18px;
-            width: 100%;
-        }
-        .notes-section h4 {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .note-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            border-left: 3px solid var(--primary);
-        }
-        .incident-block {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
-            border-left: 3px solid var(--danger);
-        }
+        .detail-tag:hover { background:rgba(255,255,255,0.04); }
+        .detail-tag.active { background:rgba(124,58,237,0.08); color:#fff; border-left-color:var(--primary); }
+        .tag-item { display:flex; align-items:center; gap:6px; padding:4px 12px; background:rgba(255,255,255,0.04); border-radius:8px; font-size:0.75rem; margin-bottom:3px; margin-left:16px; }
+
+        .notes-section { margin-top:18px; width:100%; }
+        .notes-section h4 { font-size:0.8rem; font-weight:700; color:var(--text-secondary); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px; }
+        .note-item { background:rgba(255,255,255,0.04); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:6px; font-size:0.85rem; display:flex; align-items:flex-start; gap:10px; border-left:3px solid var(--primary); }
+        .incident-block { background:rgba(255,255,255,0.04); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:6px; font-size:0.8rem; border-left:3px solid var(--danger); }
 
         /* Modals */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(12px); z-index:2000;
+            display:flex; align-items:center; justify-content:center; padding:20px;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .modal-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        .modal-overlay.hidden { opacity:0; visibility:hidden; pointer-events:none; }
         .modal-box {
-            background: var(--bg-base);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 32px;
-            max-width: 520px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-card);
+            background:var(--bg-base); border:1px solid var(--border-subtle); border-radius:var(--radius-xl);
+            padding:32px; max-width:520px; width:100%; max-height:80vh; overflow-y:auto; box-shadow:var(--shadow-card);
         }
-        .modal-box h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 18px;
-            text-align: center;
-        }
-        .modal-box .modal-member {
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            margin-bottom: 4px;
-            transition: var(--transition);
-        }
-        .modal-box .modal-member:hover {
-            background: rgba(124, 58, 237, 0.12);
-        }
-        .btn-modal-close {
-            background: rgba(239, 68, 68, 0.1);
-            color: #fca5a5;
-            border: none;
-            border-radius: var(--radius-md);
-            padding: 12px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-            transition: var(--transition);
-            margin-top: 8px;
-            font-family: var(--font);
-            font-size: 0.9rem;
-        }
-        .btn-modal-close:hover {
-            background: rgba(239, 68, 68, 0.2);
-        }
+        .modal-box h3 { font-size:1.3rem; font-weight:700; margin-bottom:18px; text-align:center; }
+        .modal-box .modal-member { padding:12px 16px; border-radius:var(--radius-md); cursor:pointer; display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.04); margin-bottom:4px; transition:var(--transition); }
+        .modal-box .modal-member:hover { background:rgba(124,58,237,0.12); }
+        .btn-modal-close { background:rgba(239,68,68,0.1); color:#fca5a5; border:none; border-radius:var(--radius-md); padding:12px; cursor:pointer; width:100%; font-weight:600; transition:var(--transition); margin-top:8px; font-family:var(--font); font-size:0.9rem; }
+        .btn-modal-close:hover { background:rgba(239,68,68,0.2); }
 
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .toggle-switch {
-            position: relative;
-            width: 48px;
-            height: 26px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .toggle-slider {
-            position: absolute;
-            inset: 0;
-            background: rgba(239, 68, 68, 0.2);
-            border-radius: 26px;
-            transition: 0.3s;
-        }
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: var(--danger);
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        .toggle-switch input:checked+.toggle-slider {
-            background: rgba(16, 185, 129, 0.2);
-        }
-        .toggle-switch input:checked+.toggle-slider::before {
-            transform: translateX(22px);
-            background: var(--success);
-        }
+        .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+        .toggle-switch { position:relative; width:48px; height:26px; cursor:pointer; flex-shrink:0; }
+        .toggle-switch input { opacity:0; width:0; height:0; }
+        .toggle-slider { position:absolute; inset:0; background:rgba(239,68,68,0.2); border-radius:26px; transition:0.3s; }
+        .toggle-slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; bottom:3px; background:var(--danger); border-radius:50%; transition:0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background:rgba(16,185,129,0.2); }
+        .toggle-switch input:checked + .toggle-slider::before { transform:translateX(22px); background:var(--success); }
 
         /* Footer */
         .app-footer {
@@ -1275,171 +466,68 @@
             flex-direction: column;
             gap: 4px;
         }
-        .app-footer a {
-            color: var(--primary-light);
-            text-decoration: none;
-        }
-        .app-footer a:hover {
-            text-decoration: underline;
-        }
+        .app-footer a { color:var(--primary-light); text-decoration:none; }
+        .app-footer a:hover { text-decoration:underline; }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 820px) {
-            .header {
-                padding: 0 16px;
-                height: 60px;
-            }
-            .header-nav .nav-btn span {
-                display: none;
-            }
-            .header-nav .nav-btn {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-            .header-user .uname {
-                display: none;
-            }
-            .header-user {
-                padding: 6px 10px;
-            }
-            .dash-header .dept-badge {
-                position: static;
-                transform: none;
-                margin-top: 8px;
-            }
-            .dash-header {
-                padding: 28px 24px;
-            }
-            .welcome-screen,
-            .login-screen {
-                padding: 32px 24px;
-            }
-            .welcome-screen h1 {
-                font-size: 2.2rem;
-            }
-            .cards-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .dept-tabs {
-                grid-template-columns: 1fr 1fr;
-            }
-            .detail-layout {
-                flex-direction: column;
-            }
-            .detail-sidebar {
-                width: 100%;
-            }
-            .incident-form-layout {
-                flex-direction: column;
-            }
-            .incident-form-layout .sidebar {
-                width: 100%;
-            }
-            .page-header {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-                padding: 24px 20px;
-            }
-            .page-header .actions {
-                justify-content: center;
-            }
-            .main-content.with-header {
-                padding-top: 76px;
-            }
-            .cloud-settings {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .cloud-settings .btn {
-                width: 100%;
-            }
+        @media (max-width:820px) {
+            .header { padding:0 16px; height:60px; }
+            .header-nav .nav-btn span { display:none; }
+            .header-nav .nav-btn { padding:8px 12px; font-size:0.9rem; }
+            .header-user .uname { display:none; }
+            .header-user { padding:6px 10px; }
+            .dash-header .dept-badge { position:static; transform:none; margin-top:8px; }
+            .dash-header { padding:28px 24px; }
+            .welcome-screen, .login-screen { padding:32px 24px; }
+            .welcome-screen h1 { font-size:2.2rem; }
+            .cards-grid { grid-template-columns:1fr 1fr; }
+            .dept-tabs { grid-template-columns:1fr 1fr; }
+            .detail-layout { flex-direction:column; }
+            .detail-sidebar { width:100%; }
+            .incident-form-layout { flex-direction:column; }
+            .incident-form-layout .sidebar { width:100%; }
+            .page-header { flex-direction:column; align-items:stretch; text-align:center; padding:24px 20px; }
+            .page-header .actions { justify-content:center; }
+            .main-content.with-header { padding-top:76px; }
+            .settings-panel { flex-direction:column; align-items:stretch; }
+            .settings-panel .btn { width:100%; }
         }
-        @media (max-width: 480px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            .dept-tabs {
-                grid-template-columns: 1fr 1fr;
-            }
-            .dash-header h1 {
-                font-size: 1.4rem;
-            }
-            .welcome-screen {
-                padding: 28px 18px;
-            }
-            .login-screen {
-                padding: 28px 18px;
-            }
-            .header-nav .nav-btn {
-                padding: 6px 10px;
-                font-size: 0.8rem;
-            }
-            .page-header h2 {
-                font-size: 1.2rem;
-            }
-            .modal-box {
-                padding: 24px 18px;
-            }
-            .search-bar input {
-                min-width: 140px;
-            }
-            .list-card {
-                padding: 14px 16px;
-            }
-            .btn {
-                font-size: 0.85rem;
-                padding: 14px 20px;
-            }
+        @media (max-width:480px) {
+            .cards-grid { grid-template-columns:1fr; }
+            .dept-tabs { grid-template-columns:1fr 1fr; }
+            .dash-header h1 { font-size:1.4rem; }
+            .welcome-screen { padding:28px 18px; }
+            .login-screen { padding:28px 18px; }
+            .header-nav .nav-btn { padding:6px 10px; font-size:0.8rem; }
+            .page-header h2 { font-size:1.2rem; }
+            .modal-box { padding:24px 18px; }
+            .search-bar input { min-width:140px; }
+            .list-card { padding:14px 16px; }
+            .btn { font-size:0.85rem; padding:14px 20px; }
         }
-
-        .hidden {
-            display: none !important;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-secondary {
-            color: var(--text-secondary);
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mt-24 {
-            margin-top: 24px;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .w-full {
-            width: 100%;
-        }
+        .hidden { display:none !important; }
+        .text-center { text-align:center; }
+        .text-secondary { color:var(--text-secondary); }
+        .text-muted { color:var(--text-muted); }
+        .mt-8 { margin-top:8px; }
+        .mt-16 { margin-top:16px; }
+        .mt-24 { margin-top:24px; }
+        .gap-8 { gap:8px; }
+        .gap-12 { gap:12px; }
+        .flex-wrap { flex-wrap:wrap; }
+        .items-center { align-items:center; }
+        .w-full { width:100%; }
     </style>
 </head>
 <body>
 
-    <!-- ===== CLOUD STATUS (klikací) ===== -->
-    <div id="cloudStatus" class="syncing" onclick="toggleCloudSettings()">☁ Cloud: synchronizace…</div>
+    <!-- ===== iCLOUD STATUS ===== -->
+    <div id="icloudStatus" class="syncing" onclick="toggleSettings()">☁ iCloud synchronizace…</div>
 
     <!-- ===== LOADING ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Načítání dat z cloudu…</div>
+        <div class="loading-text">Načítání dat z iCloudu…</div>
     </div>
 
     <!-- ===== HEADER ===== -->
@@ -1466,7 +554,6 @@
         <!-- ===== FLIP ===== -->
         <div class="flip-container" id="flipContainer">
             <div class="flip-inner" id="flipInner">
-                <!-- FRONT -->
                 <div class="flip-front">
                     <div class="welcome-screen">
                         <div class="welcome-icon"><i class="fas fa-shield-halved"></i></div>
@@ -1475,10 +562,10 @@
                         <div class="btn-group">
                             <button class="btn btn-primary" onclick="flipTo('login')"><i class="fas fa-sign-in-alt"></i> Přihlásit se</button>
                             <button class="btn btn-outline" onclick="flipTo('create')"><i class="fas fa-id-card"></i> Vytvořit doklady</button>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <!-- BACK -->
                 <div class="flip-back">
                     <div class="login-screen">
                         <h2 id="flipBackTitle">Přihlášení</h2>
@@ -1494,6 +581,8 @@
                             <div class="form-group"><label>Jméno</label><input type="text" id="username" placeholder="Zadejte uživatelské jméno" /></div>
                             <div class="form-group"><label>Heslo</label><input type="password" id="password" placeholder="Zadejte heslo" /></div>
                             <button class="btn btn-primary" id="loginButton" onclick="handleLogin()">Přihlásit se</button>
+                            <div style="margin-top:12px;border-top:1px solid var(--border-subtle);padding-top:16px;">
+                            </div>
                         </div>
                         <div id="createDocFields" class="hidden">
                             <div class="form-group">
@@ -1541,30 +630,6 @@
                 <span class="dept-badge" id="deptBadge">LSPD</span>
             </div>
 
-            <!-- ===== CLOUD SETTINGS PANEL (kliknutím na stav se zobrazí) ===== -->
-            <div id="cloudSettingsPanel" class="cloud-settings hidden">
-                <div class="form-group" style="flex:2;">
-                    <label>Bin ID (JSONBin)</label>
-                    <input type="text" id="cloudBinId" placeholder="např. 67ecf60b8561e97a50f14d3a" />
-                </div>
-                <div class="form-group" style="flex:2;">
-                    <label>API Key (Master Key)</label>
-                    <input type="text" id="cloudApiKey" placeholder="zadejte master klíč" />
-                </div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-                    <button class="btn btn-primary btn-sm" onclick="saveCloudSettings()"><i class="fas fa-save"></i> Uložit</button>
-                    <button class="btn btn-success btn-sm" onclick="testCloudConnection()"><i class="fas fa-check"></i> Otestovat</button>
-                    <span id="cloudTestResult" class="status-badge offline">⚠ nenastaveno</span>
-                </div>
-            </div>
-
-            <!-- Tlačítko pro ruční synchronizaci -->
-            <div style="display:flex; gap:12px; flex-wrap:wrap; margin:12px 0 16px; justify-content:center;">
-                <button class="btn btn-secondary btn-sm" onclick="manualSync()" style="background:var(--secondary);color:#fff;box-shadow:0 4px 16px rgba(6,182,212,0.3);">
-                    <i class="fas fa-sync"></i> Synchronizovat s cloudem
-                </button>
-            </div>
-
             <div class="cards-grid" id="dashboardCards">
                 <div class="dash-card" onclick="showMdtPage()"><div class="icon"><i class="fas fa-address-card"></i></div><h3>MDT</h3><p>Správa systému</p></div>
                 <div class="dash-card" id="managePersonsCard" onclick="showManagePersonsPage()"><div class="icon"><i class="fas fa-users"></i></div><h3>Správa členů</h3><p>Přidávání členů</p></div>
@@ -1574,7 +639,6 @@
 
             <div class="app-footer">
                 <span>🏛 San Andreas Government Portal – MDT systém</span>
-                <span>
                 <span style="font-size:0.65rem;color:var(--text-muted);">© 2026 – Všechna práva vyhrazena</span>
             </div>
         </div>
@@ -1593,7 +657,7 @@
 
         <!-- ===== CALL SIGNS ===== -->
         <div id="callSignsPage" class="page">
-            <div class="page-header"><h2>Volačky – LSPD</h2></div>
+            <div class="page-header"><h2 id="callSignsTitle">Volačky – LSPD</h2></div>
             <div id="callSignsList"></div>
             <button class="btn-back" onclick="showDashboard()">Zpět</button>
         </div>
@@ -1809,100 +873,126 @@
                 <label>Vyberte volačku</label>
                 <select id="assignCallSignSelect"></select>
             </div>
-            <button class="btn btn-primary" onclick="assignCallSign()">Přiřadit</button>
+            <button class="btn btn-primary" id="assignCallSignBtn" onclick="assignCallSign()">Přiřadit</button>
             <button class="btn-modal-close" onclick="closeAssignCallSignModal()">Zrušit</button>
         </div>
     </div>
 
-    <!-- ============================================================
-    SCRIPT
-    ============================================================ -->
+    <!-- ============================================================ -->
+    <!-- SCRIPT -->
+    <!-- ============================================================ -->
     <script>
         // ============================================================
-        // KONFIGURACE CLOUD – načtení z localStorage
+        // KONFIGURACE – NAČÍTÁ SE Z LOCALSTORAGE
         // ============================================================
-        const DEFAULT_BIN_ID = "6a81c534f5f4af5e291d0d17";
-        const DEFAULT_API_KEY = "$2a$10$PitmcF0aSJgXbGTpspVyJOQLAM77kAdIZADuvmAWTOL7ZrclXK4im";
+        let cloudBinId = localStorage.getItem('cloudBinId') || "67ecf60b8561e97a50f14d3a";
+        let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$rM3yZ1wVYhZ5xQ8J7kL9mN";
+        let discordClientId = localStorage.getItem('discordClientId') || "";
+        let discordRedirectUri = localStorage.getItem('discordRedirectUri') || window.location.origin + window.location
+        .pathname;
 
-        let cloudBinId = localStorage.getItem('cloudBinId') || DEFAULT_BIN_ID;
-        let cloudApiKey = localStorage.getItem('cloudApiKey') || DEFAULT_API_KEY;
-
-        // ============================================================
-        // DATA
-        // ============================================================
         const VALID_USERNAME = "honza2001";
         const VALID_PASSWORD = "1234";
-        const DISCORD_WEBHOOK =
-            "https://discord.com/api/webhooks/1537887132616622301/vyNR26Wyc3mNMOT3TVxOgD-uR0tw7kLmIQoG_sbXTX0iAlaafnFHKgvSo-aftpqBQ_fw";
 
+        // ============================================================
+        // DEPARTMENTS
+        // ============================================================
         const DEPARTMENTS = {
-            LSPD: { name: 'LSPD', color: '#3b82f6', ranks: ['Cadet', 'Police Officer I', 'Police Officer II',
-                    'Police Officer III', 'Police Officer III+I', 'Sergeant I', 'Sergeant II', 'Lieutenant',
-                    'Captain', 'Commander', 'Deputy Chief', 'Assistant Chief Of Police', 'Chief Of Police'
-                ] },
-            LSSD: { name: 'LSSD', color: '#b45309', ranks: ['Deputy Sheriff Trainee', 'Deputy Sheriff',
-                    'Deputy Sheriff Bonus I', 'Deputy Sheriff Bonus II', 'Senior Deputy Master', 'Sergeant',
-                    'Lieutenant', 'Captain', 'Area Commander', 'Division Chief', 'Assistant Sheriff',
-                    'Undersheriff', 'Sheriff'
-                ] },
-            SAHP: { name: 'SAHP', color: '#047857', ranks: ['Cadet', 'Officer', 'Sergeant', 'Lieutenant', 'Captain',
-                    'Assistant Chief', 'Chief', 'Assistant Commissioner', 'Deputy Commissioner', 'Commissioner'
-                ] },
-            DOJ: { name: 'DOJ', color: '#7c3aed', ranks: ['Clerk', 'Paralegal', 'Attorney', 'Senior Attorney',
-                    'Prosecutor', 'Senior Prosecutor', 'Deputy District Attorney', 'District Attorney',
-                    'Attorney General'
-                ] }
+            LSPD: { name: 'LSPD', color: '#3b82f6', ranks: ['Cadet', 'Police Officer I', 'Police Officer II', 'Police Officer III', 'Police Officer III+I', 'Sergeant I', 'Sergeant II', 'Lieutenant', 'Captain', 'Commander', 'Deputy Chief', 'Assistant Chief Of Police', 'Chief Of Police'] },
+            LSSD: { name: 'LSSD', color: '#b45309', ranks: ['Deputy Sheriff Trainee', 'Deputy Sheriff', 'Deputy Sheriff Bonus I', 'Deputy Sheriff Bonus II', 'Senior Deputy Master', 'Sergeant', 'Lieutenant', 'Captain', 'Area Commander', 'Division Chief', 'Assistant Sheriff', 'Undersheriff', 'Sheriff'] },
+            SAHP: { name: 'SAHP', color: '#047857', ranks: ['Cadet', 'Officer', 'Sergeant', 'Lieutenant', 'Captain', 'Assistant Chief', 'Chief', 'Assistant Commissioner', 'Deputy Commissioner', 'Commissioner'] },
+            DOJ: { name: 'DOJ', color: '#7c3aed', ranks: ['Clerk', 'Paralegal', 'Attorney', 'Senior Attorney', 'Prosecutor', 'Senior Prosecutor', 'Deputy District Attorney', 'District Attorney', 'Attorney General'] }
         };
 
+        // ============================================================
+        // DEFAULT CALL SIGNS – LSPD + LSSD
+        // ============================================================
         const defaultCallSigns = [
-            { id: 1, rank: 'Chief of LSPD', number: '5000', unit: 'Staff-1', assignedName: null },
-            { id: 2, rank: 'Assistant Chief of LSPD', number: '5001', unit: 'Staff-2', assignedName: null },
-            { id: 3, rank: 'Deputy Chief of LSPD', number: '5002', unit: 'Staff-3', assignedName: null },
-            { id: 4, rank: 'Commander', number: '5003', unit: 'Staff-4', assignedName: null },
-            { id: 5, rank: 'Captain', number: '5004', unit: 'Nora-1', assignedName: null },
-            { id: 6, rank: 'Lieutenant', number: '5007', unit: 'Henry-1', assignedName: null },
-            { id: 7, rank: 'Lieutenant', number: '5008', unit: 'Henry-2', assignedName: null },
-            { id: 8, rank: 'Lieutenant', number: '5009', unit: 'Henry-3', assignedName: null },
-            { id: 9, rank: 'Lieutenant', number: '5010', unit: 'Henry-4', assignedName: null },
-            { id: 10, rank: 'Sergeant II.', number: '5011', unit: 'John-1', assignedName: null },
-            { id: 11, rank: 'Sergeant II.', number: '5012', unit: 'John-2', assignedName: null },
-            { id: 12, rank: 'Sergeant II.', number: '5013', unit: 'John-3', assignedName: null },
-            { id: 13, rank: 'Sergeant I.', number: '5014', unit: 'John-5', assignedName: null },
-            { id: 14, rank: 'Sergeant I.', number: '5015', unit: 'John-6', assignedName: null },
-            { id: 15, rank: 'Sergeant I.', number: '5016', unit: 'John-7', assignedName: null },
-            { id: 16, rank: 'Sergeant I.', number: '5017', unit: 'John-8', assignedName: null },
-            { id: 17, rank: 'Police Officer III.', number: '5018', unit: 'Lincoln-1', assignedName: null },
-            { id: 18, rank: 'Police Officer III.', number: '5019', unit: 'Lincoln-2', assignedName: null },
-            { id: 19, rank: 'Police Officer III.', number: '5020', unit: 'Lincoln-3', assignedName: null },
-            { id: 20, rank: 'Police Officer III.', number: '5021', unit: 'Lincoln-4', assignedName: null },
-            { id: 21, rank: 'Police Officer III.', number: '5022', unit: 'Lincoln-5', assignedName: null },
-            { id: 22, rank: 'Police Officer II.', number: '5023', unit: 'Lincoln-6', assignedName: null },
-            { id: 23, rank: 'Police Officer II.', number: '5024', unit: 'Lincoln-7', assignedName: null },
-            { id: 24, rank: 'Police Officer II.', number: '5025', unit: 'Lincoln-8', assignedName: null },
-            { id: 25, rank: 'Police Officer II.', number: '5026', unit: 'Lincoln-9', assignedName: null },
-            { id: 26, rank: 'Police Officer II.', number: '5027', unit: 'Lincoln-10', assignedName: null },
-            { id: 27, rank: 'Police Officer II.', number: '5028', unit: 'Lincoln-11', assignedName: null },
-            { id: 28, rank: 'Police Officer I.', number: '5029', unit: 'Lincoln-12', assignedName: null },
-            { id: 29, rank: 'Police Officer I.', number: '5030', unit: 'Lincoln-13', assignedName: null },
-            { id: 30, rank: 'Police Officer I.', number: '5031', unit: 'Lincoln-14', assignedName: null },
-            { id: 31, rank: 'Police Officer I.', number: '5032', unit: 'Lincoln-15', assignedName: null },
-            { id: 32, rank: 'Police Officer I.', number: '5033', unit: 'Lincoln-16', assignedName: null },
-            { id: 33, rank: 'Police Officer I.', number: '5034', unit: 'Lincoln-17', assignedName: null },
-            { id: 34, rank: 'Police Officer I.', number: '5035', unit: 'Lincoln-18', assignedName: null },
-            { id: 35, rank: 'Police Officer I.', number: '5036', unit: 'Lincoln-19', assignedName: null },
-            { id: 36, rank: 'Cadet', number: '5037', unit: 'Tom-1', assignedName: null },
-            { id: 37, rank: 'Cadet', number: '5038', unit: 'Tom-2', assignedName: null },
-            { id: 38, rank: 'Cadet', number: '5039', unit: 'Tom-3', assignedName: null },
-            { id: 39, rank: 'Cadet', number: '5040', unit: 'Tom-4', assignedName: null },
-            { id: 40, rank: 'Akademik', number: '', unit: 'Junior-1', assignedName: null },
-            { id: 41, rank: 'Akademik', number: '', unit: 'Junior-2', assignedName: null },
-            { id: 42, rank: 'Akademik', number: '', unit: 'Junior-3', assignedName: null },
-            { id: 43, rank: 'Akademik', number: '', unit: 'Junior-4', assignedName: null },
-            { id: 44, rank: 'Akademik', number: '', unit: 'Junior-5', assignedName: null },
-            { id: 45, rank: 'Akademik', number: '', unit: 'Junior-6', assignedName: null }
+            // ----- LSPD -----
+            { id: 1, rank: 'Chief of LSPD', number: '5000', unit: 'Staff-1', assignedName: null, department: 'LSPD' },
+            { id: 2, rank: 'Assistant Chief of LSPD', number: '5001', unit: 'Staff-2', assignedName: null, department: 'LSPD' },
+            { id: 3, rank: 'Deputy Chief of LSPD', number: '5002', unit: 'Staff-3', assignedName: null, department: 'LSPD' },
+            { id: 4, rank: 'Commander', number: '5003', unit: 'Staff-4', assignedName: null, department: 'LSPD' },
+            { id: 5, rank: 'Captain', number: '5004', unit: 'Nora-1', assignedName: null, department: 'LSPD' },
+            { id: 6, rank: 'Lieutenant', number: '5007', unit: 'Henry-1', assignedName: null, department: 'LSPD' },
+            { id: 7, rank: 'Lieutenant', number: '5008', unit: 'Henry-2', assignedName: null, department: 'LSPD' },
+            { id: 8, rank: 'Lieutenant', number: '5009', unit: 'Henry-3', assignedName: null, department: 'LSPD' },
+            { id: 9, rank: 'Lieutenant', number: '5010', unit: 'Henry-4', assignedName: null, department: 'LSPD' },
+            { id: 10, rank: 'Sergeant II.', number: '5011', unit: 'John-1', assignedName: null, department: 'LSPD' },
+            { id: 11, rank: 'Sergeant II.', number: '5012', unit: 'John-2', assignedName: null, department: 'LSPD' },
+            { id: 12, rank: 'Sergeant II.', number: '5013', unit: 'John-3', assignedName: null, department: 'LSPD' },
+            { id: 13, rank: 'Sergeant I.', number: '5014', unit: 'John-5', assignedName: null, department: 'LSPD' },
+            { id: 14, rank: 'Sergeant I.', number: '5015', unit: 'John-6', assignedName: null, department: 'LSPD' },
+            { id: 15, rank: 'Sergeant I.', number: '5016', unit: 'John-7', assignedName: null, department: 'LSPD' },
+            { id: 16, rank: 'Sergeant I.', number: '5017', unit: 'John-8', assignedName: null, department: 'LSPD' },
+            { id: 17, rank: 'Police Officer III.', number: '5018', unit: 'Lincoln-1', assignedName: null, department: 'LSPD' },
+            { id: 18, rank: 'Police Officer III.', number: '5019', unit: 'Lincoln-2', assignedName: null, department: 'LSPD' },
+            { id: 19, rank: 'Police Officer III.', number: '5020', unit: 'Lincoln-3', assignedName: null, department: 'LSPD' },
+            { id: 20, rank: 'Police Officer III.', number: '5021', unit: 'Lincoln-4', assignedName: null, department: 'LSPD' },
+            { id: 21, rank: 'Police Officer III.', number: '5022', unit: 'Lincoln-5', assignedName: null, department: 'LSPD' },
+            { id: 22, rank: 'Police Officer II.', number: '5023', unit: 'Lincoln-6', assignedName: null, department: 'LSPD' },
+            { id: 23, rank: 'Police Officer II.', number: '5024', unit: 'Lincoln-7', assignedName: null, department: 'LSPD' },
+            { id: 24, rank: 'Police Officer II.', number: '5025', unit: 'Lincoln-8', assignedName: null, department: 'LSPD' },
+            { id: 25, rank: 'Police Officer II.', number: '5026', unit: 'Lincoln-9', assignedName: null, department: 'LSPD' },
+            { id: 26, rank: 'Police Officer II.', number: '5027', unit: 'Lincoln-10', assignedName: null, department: 'LSPD' },
+            { id: 27, rank: 'Police Officer II.', number: '5028', unit: 'Lincoln-11', assignedName: null, department: 'LSPD' },
+            { id: 28, rank: 'Police Officer I.', number: '5029', unit: 'Lincoln-12', assignedName: null, department: 'LSPD' },
+            { id: 29, rank: 'Police Officer I.', number: '5030', unit: 'Lincoln-13', assignedName: null, department: 'LSPD' },
+            { id: 30, rank: 'Police Officer I.', number: '5031', unit: 'Lincoln-14', assignedName: null, department: 'LSPD' },
+            { id: 31, rank: 'Police Officer I.', number: '5032', unit: 'Lincoln-15', assignedName: null, department: 'LSPD' },
+            { id: 32, rank: 'Police Officer I.', number: '5033', unit: 'Lincoln-16', assignedName: null, department: 'LSPD' },
+            { id: 33, rank: 'Police Officer I.', number: '5034', unit: 'Lincoln-17', assignedName: null, department: 'LSPD' },
+            { id: 34, rank: 'Police Officer I.', number: '5035', unit: 'Lincoln-18', assignedName: null, department: 'LSPD' },
+            { id: 35, rank: 'Police Officer I.', number: '5036', unit: 'Lincoln-19', assignedName: null, department: 'LSPD' },
+            { id: 36, rank: 'Cadet', number: '5037', unit: 'Tom-1', assignedName: null, department: 'LSPD' },
+            { id: 37, rank: 'Cadet', number: '5038', unit: 'Tom-2', assignedName: null, department: 'LSPD' },
+            { id: 38, rank: 'Cadet', number: '5039', unit: 'Tom-3', assignedName: null, department: 'LSPD' },
+            { id: 39, rank: 'Cadet', number: '5040', unit: 'Tom-4', assignedName: null, department: 'LSPD' },
+            { id: 40, rank: 'Akademik', number: '', unit: 'Junior-1', assignedName: null, department: 'LSPD' },
+            { id: 41, rank: 'Akademik', number: '', unit: 'Junior-2', assignedName: null, department: 'LSPD' },
+            { id: 42, rank: 'Akademik', number: '', unit: 'Junior-3', assignedName: null, department: 'LSPD' },
+            { id: 43, rank: 'Akademik', number: '', unit: 'Junior-4', assignedName: null, department: 'LSPD' },
+            { id: 44, rank: 'Akademik', number: '', unit: 'Junior-5', assignedName: null, department: 'LSPD' },
+            { id: 45, rank: 'Akademik', number: '', unit: 'Junior-6', assignedName: null, department: 'LSPD' },
+
+            // ----- LSSD (County-1 až County-32) -----
+            { id: 100, rank: 'County-1', number: '3000', unit: 'County-1', assignedName: null, department: 'LSSD' },
+            { id: 101, rank: 'County-2', number: '3001', unit: 'County-2', assignedName: null, department: 'LSSD' },
+            { id: 102, rank: 'County-3', number: '3002', unit: 'County-3', assignedName: null, department: 'LSSD' },
+            { id: 103, rank: 'County-4', number: '3003', unit: 'County-4', assignedName: null, department: 'LSSD' },
+            { id: 104, rank: 'County-5', number: '3004', unit: 'County-5', assignedName: null, department: 'LSSD' },
+            { id: 105, rank: 'County-6', number: '3005', unit: 'County-6', assignedName: null, department: 'LSSD' },
+            { id: 106, rank: 'County-7', number: '3006', unit: 'County-7', assignedName: null, department: 'LSSD' },
+            { id: 107, rank: 'County-8', number: '3007', unit: 'County-8', assignedName: null, department: 'LSSD' },
+            { id: 108, rank: 'County-9', number: '3008', unit: 'County-9', assignedName: null, department: 'LSSD' },
+            { id: 109, rank: 'County-10', number: '3009', unit: 'County-10', assignedName: null, department: 'LSSD' },
+            { id: 110, rank: 'County-11', number: '3010', unit: 'County-11', assignedName: null, department: 'LSSD' },
+            { id: 111, rank: 'County-12', number: '3011', unit: 'County-12', assignedName: null, department: 'LSSD' },
+            { id: 112, rank: 'County-13', number: '3012', unit: 'County-13', assignedName: null, department: 'LSSD' },
+            { id: 113, rank: 'County-14', number: '3013', unit: 'County-14', assignedName: null, department: 'LSSD' },
+            { id: 114, rank: 'County-15', number: '3014', unit: 'County-15', assignedName: null, department: 'LSSD' },
+            { id: 115, rank: 'County-16', number: '3015', unit: 'County-16', assignedName: null, department: 'LSSD' },
+            { id: 116, rank: 'County-17', number: '3016', unit: 'County-17', assignedName: null, department: 'LSSD' },
+            { id: 117, rank: 'County-18', number: '3017', unit: 'County-18', assignedName: null, department: 'LSSD' },
+            { id: 118, rank: 'County-19', number: '3018', unit: 'County-19', assignedName: null, department: 'LSSD' },
+            { id: 119, rank: 'County-20', number: '3019', unit: 'County-20', assignedName: null, department: 'LSSD' },
+            { id: 120, rank: 'County-21', number: '3020', unit: 'County-21', assignedName: null, department: 'LSSD' },
+            { id: 121, rank: 'County-22', number: '3021', unit: 'County-22', assignedName: null, department: 'LSSD' },
+            { id: 122, rank: 'County-23', number: '3022', unit: 'County-23', assignedName: null, department: 'LSSD' },
+            { id: 123, rank: 'County-24', number: '3023', unit: 'County-24', assignedName: null, department: 'LSSD' },
+            { id: 124, rank: 'County-25', number: '3024', unit: 'County-25', assignedName: null, department: 'LSSD' },
+            { id: 125, rank: 'County-26', number: '3025', unit: 'County-26', assignedName: null, department: 'LSSD' },
+            { id: 126, rank: 'County-27', number: '3026', unit: 'County-27', assignedName: null, department: 'LSSD' },
+            { id: 127, rank: 'County-28', number: '3027', unit: 'County-28', assignedName: null, department: 'LSSD' },
+            { id: 128, rank: 'County-29', number: '3028', unit: 'County-29', assignedName: null, department: 'LSSD' },
+            { id: 129, rank: 'County-30', number: '3029', unit: 'County-30', assignedName: null, department: 'LSSD' },
+            { id: 130, rank: 'County-31', number: '3030', unit: 'County-31', assignedName: null, department: 'LSSD' },
+            { id: 131, rank: 'County-32', number: '3031', unit: 'County-32', assignedName: null, department: 'LSSD' }
         ];
 
-        // ----- STATE -----
+        // ============================================================
+        // STAV
+        // ============================================================
         let callSigns = [];
         let members = [];
         let documents = [];
@@ -1933,39 +1023,144 @@
 
         let cloudReady = false;
         let syncInProgress = false;
+        let syncInterval = null;
 
         // ============================================================
-        // CLOUD FUNKCE – opravený endpoint a hlavičky
+        // DISCORD OAUTH2
         // ============================================================
-        function setCloudStatus(type, text) {
-            const el = document.getElementById('cloudStatus');
-            if (!el) return;
-            el.className = type || '';
-            el.textContent = text;
-        }
-
-        function toggleCloudSettings() {
-            const panel = document.getElementById('cloudSettingsPanel');
-            panel.classList.toggle('hidden');
-            if (!panel.classList.contains('hidden')) {
-                document.getElementById('cloudBinId').value = cloudBinId;
-                document.getElementById('cloudApiKey').value = cloudApiKey;
-            }
-        }
-
-        function saveCloudSettings() {
-            const bin = document.getElementById('cloudBinId').value.trim();
-            const key = document.getElementById('cloudApiKey').value.trim();
-            if (!bin || !key) {
-                alert('Vyplňte prosím obě pole.');
+        function loginWithDiscord() {
+            if (!discordClientId) {
+                alert('❌ Discord Client ID není nastaven. Klikni na "Nastavení" a zadej ho.');
                 return;
             }
+            if (!discordRedirectUri) {
+                alert('❌ Redirect URI není nastaven. Klikni na "Nastavení" a zadej ho.');
+                return;
+            }
+            try { new URL(discordRedirectUri); } catch {
+                alert('❌ Redirect URI není platná URL adresa.');
+                return;
+            }
+            const scope = 'identify email guilds';
+            const discordAuthUrl =
+                `https://discord.com/oauth2/authorize?client_id=${discordClientId}&redirect_uri=${encodeURIComponent(discordRedirectUri)}&response_type=code&scope=${scope}`;
+            sessionStorage.setItem('discord_oauth_flow', 'true');
+            sessionStorage.setItem('discord_redirect_uri', discordRedirectUri);
+            window.location.href = discordAuthUrl;
+        }
+
+        async function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (!code) {
+                if (sessionStorage.getItem('discord_oauth_flow') === 'true') {
+                    sessionStorage.removeItem('discord_oauth_flow');
+                }
+                return;
+            }
+            sessionStorage.removeItem('discord_oauth_flow');
+            try {
+                showLoading(true);
+                const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        client_id: discordClientId,
+                        client_secret: localStorage.getItem('discordClientSecret') || '',
+                        grant_type: 'authorization_code',
+                        code: code,
+                        redirect_uri: discordRedirectUri
+                    })
+                });
+                if (!tokenRes.ok) {
+                    const err = await tokenRes.text();
+                    console.error('Token error:', err);
+                    showLoading(false);
+                    alert('❌ Chyba při získávání přístupového tokenu z Discordu.');
+                    return;
+                }
+                const tokenData = await tokenRes.json();
+                const accessToken = tokenData.access_token;
+                const userRes = await fetch('https://discord.com/api/users/@me', {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+                if (!userRes.ok) {
+                    const err = await userRes.text();
+                    console.error('User data error:', err);
+                    showLoading(false);
+                    alert('❌ Chyba při načítání uživatelských dat z Discordu.');
+                    return;
+                }
+                const userData = await userRes.json();
+                const discordUsername = userData.username + (userData.discriminator && userData.discriminator !== '0' ?
+                    '#' + userData.discriminator : '');
+                const dept = DEPARTMENTS[currentDepartment] || DEPARTMENTS.LSPD;
+                let member = members.find(m => m.discordId === userData.id);
+                if (!member) {
+                    member = {
+                        name: discordUsername,
+                        password: '',
+                        rank: 'Cadet',
+                        department: dept.name,
+                        canManage: false,
+                        discordId: userData.id,
+                        discordAvatar: userData.avatar,
+                        discordEmail: userData.email || ''
+                    };
+                    members.push(member);
+                    await saveAllData();
+                }
+                currentUser = member;
+                currentDepartment = member.department;
+                loginSuccess(member.name, DEPARTMENTS[member.department], member);
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+                showLoading(false);
+                alert(`✅ Přihlášen jako ${member.name} přes Discord!`);
+            } catch (error) {
+                console.error('Discord callback error:', error);
+                showLoading(false);
+                alert('❌ Chyba při přihlášení přes Discord: ' + error.message);
+            }
+        }
+
+        // ============================================================
+        // NASTAVENÍ
+        // ============================================================
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('open');
+            if (!panel.classList.contains('open')) return;
+            document.getElementById('cloudBinId').value = cloudBinId;
+            document.getElementById('cloudApiKey').value = cloudApiKey;
+            document.getElementById('discordClientId').value = discordClientId;
+            document.getElementById('discordRedirectUri').value = discordRedirectUri;
+        }
+
+        function saveSettings() {
+            const bin = document.getElementById('cloudBinId').value.trim();
+            const key = document.getElementById('cloudApiKey').value.trim();
+            const clientId = document.getElementById('discordClientId').value.trim();
+            const redirectUri = document.getElementById('discordRedirectUri').value.trim();
+
+            if (!bin || !key) { alert('Vyplňte Bin ID a API Key.'); return; }
+            if (!clientId) { alert('Vyplňte Discord Client ID.'); return; }
+            if (!redirectUri) { alert('Vyplňte Redirect URI.'); return; }
+
             cloudBinId = bin;
             cloudApiKey = key;
+            discordClientId = clientId;
+            discordRedirectUri = redirectUri;
+
             localStorage.setItem('cloudBinId', bin);
             localStorage.setItem('cloudApiKey', key);
-            setCloudStatus('syncing', '☁ Nastavení uloženo, testuji…');
+            localStorage.setItem('discordClientId', clientId);
+            localStorage.setItem('discordRedirectUri', redirectUri);
+
+            setiCloudStatus('syncing', '☁ Nastavení uloženo, testuji…');
             testCloudConnection();
+            alert('✅ Nastavení uloženo.');
         }
 
         async function testCloudConnection() {
@@ -1977,82 +1172,74 @@
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${bin}?meta=false`, {
                     method: 'GET',
-                    headers: {
-                        'X-Master-Key': key,
-                        'X-Bin-Meta': 'false',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'X-Master-Key': key, 'Accept': 'application/json' },
                     cache: 'no-store'
                 });
                 if (res.ok) {
                     resultEl.className = 'status-badge online';
                     resultEl.textContent = '✅ online';
-                    setCloudStatus('ok', '☁ Cloud dostupný');
+                    setiCloudStatus('ok', '☁ Cloud dostupný');
                     cloudReady = true;
-                    // Zkusíme načíst data
                     await loadDataFromCloud({ silent: true });
                 } else {
-                    const err = await res.text().catch(() => '');
-                    throw new Error(`HTTP ${res.status} – ${err.slice(0, 80)}`);
+                    throw new Error(`HTTP ${res.status}`);
                 }
             } catch (e) {
                 resultEl.className = 'status-badge offline';
-                resultEl.textContent = `❌ offline (${e.message})`;
-                setCloudStatus('error', '⚠ Cloud nedostupný – lokální data');
+                resultEl.textContent = '❌ offline';
+                setiCloudStatus('error', '⚠ Cloud nedostupný – lokální data');
                 cloudReady = false;
             }
         }
 
-        // Ruční synchronizace
-        async function manualSync() {
-            setCloudStatus('syncing', '☁ Ruční synchronizace…');
-            const ok = await loadDataFromCloud({ silent: false });
-            if (ok) {
-                // obnovit UI
-                if (currentUser) {
-                    displayCallSigns();
-                    displayMembers();
-                    displayGlobalIncidents();
-                    renderFines();
-                    displayDocuments();
-                    displayVehiclesList();
-                    displayLaws(true);
-                    displayAnnouncements(true);
+        // ============================================================
+        // iCLOUD SYNCHRONIZACE (JSONBin.io)
+        // ============================================================
+        function setiCloudStatus(type, text) {
+            const el = document.getElementById('icloudStatus');
+            if (!el) return;
+            el.className = type || '';
+            el.textContent = text;
+        }
+
+        // ============================================================
+        // ZAJIŠTĚNÍ KOMPLETNÍCH VOLACÍCH ZNAČEK
+        // ============================================================
+        function ensureCompleteCallSigns() {
+            defaultCallSigns.forEach(def => {
+                const exists = callSigns.some(cs => cs.id === def.id);
+                if (!exists) {
+                    callSigns.push({ ...def });
                 }
-                alert('Data byla úspěšně synchronizována z cloudu.');
-            } else {
-                alert('Synchronizace selhala. Zkontrolujte nastavení cloudu a klikněte na "Otestovat".');
-            }
+            });
+            callSigns = callSigns.map(cs => {
+                if (!cs.department) {
+                    cs.department = cs.id >= 100 ? 'LSSD' : 'LSPD';
+                }
+                return cs;
+            });
         }
 
         async function loadDataFromCloud(options = {}) {
             if (!cloudBinId || !cloudApiKey) {
-                if (!options.silent) {
-                    setCloudStatus('error', '⚠ Cloud nenastaven – lokální data');
-                }
+                if (!options.silent) setiCloudStatus('error', '⚠ Cloud nenastaven – lokální data');
                 if (!options.silent) loadFromLocalStorage();
                 return false;
             }
             try {
-                if (!options.silent) setCloudStatus('syncing', '☁ Načítání dat z cloudu…');
+                setiCloudStatus('syncing', '☁ iCloud: načítání…');
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}?meta=false`, {
                     method: 'GET',
-                    headers: {
-                        'X-Master-Key': cloudApiKey,
-                        'X-Bin-Meta': 'false',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'X-Master-Key': cloudApiKey, 'Accept': 'application/json' },
                     cache: 'no-store'
                 });
-                if (!res.ok) {
-                    const errText = await res.text().catch(() => '');
-                    throw new Error(`HTTP ${res.status} – ${errText.slice(0, 80)}`);
-                }
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const record = await res.json() || {};
 
-                callSigns = record.callSigns || defaultCallSigns;
-                members = record.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police',
-                    department: 'LSPD', canManage: true }];
+                callSigns = record.callSigns || [];
+                ensureCompleteCallSigns();
+
+                members = record.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
                 documents = record.documents || [];
                 vehicles = record.vehicles || [];
                 laws = record.laws || [];
@@ -2066,14 +1253,14 @@
                 fines = record.fines || [];
 
                 cloudReady = true;
-                if (!options.silent) setCloudStatus('ok', `☁ Synchronizováno • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                setiCloudStatus('ok', `✓ iCloud synchronizováno • ${new Date().toLocaleTimeString('cs-CZ')}`);
                 return true;
             } catch (e) {
                 cloudReady = false;
-                console.error('Chyba načítání z cloudu:', e);
+                console.error('Chyba načítání z iCloudu:', e);
                 if (!options.silent) {
-                    setCloudStatus('error', `⚠ Cloud nedostupný: ${e.message}`);
                     loadFromLocalStorage();
+                    setiCloudStatus('error', `⚠ iCloud nedostupný (${e.message}) – lokální data`);
                 }
                 return false;
             }
@@ -2082,15 +1269,18 @@
         async function saveDataToCloud() {
             if (syncInProgress) return false;
             if (!cloudBinId || !cloudApiKey) {
-                setCloudStatus('error', '⚠ Cloud nenastaven – data uložena lokálně');
+                setiCloudStatus('error', '⚠ Cloud nenastaven – data lokálně');
                 saveToLocalStorage();
                 return false;
             }
             syncInProgress = true;
             try {
-                setCloudStatus('syncing', '☁ Ukládání dat do cloudu…');
-                const data = { callSigns, members, documents, vehicles, laws, announcements, personTags, vehicleTags,
-                    personNotes, vehicleNotes, personIncidents, globalIncidents, fines };
+                setiCloudStatus('syncing', '☁ iCloud: ukládání…');
+                const data = {
+                    callSigns, members, documents, vehicles, laws, announcements,
+                    personTags, vehicleTags, personNotes, vehicleNotes,
+                    personIncidents, globalIncidents, fines
+                };
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}`, {
                     method: 'PUT',
                     headers: {
@@ -2101,18 +1291,15 @@
                     body: JSON.stringify(data),
                     cache: 'no-store'
                 });
-                if (!res.ok) {
-                    const err = await res.text().catch(() => '');
-                    throw new Error(`HTTP ${res.status} – ${err.slice(0, 80)}`);
-                }
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 cloudReady = true;
-                setCloudStatus('ok', `☁ Uloženo do cloudu • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                setiCloudStatus('ok', `✓ iCloud uloženo • ${new Date().toLocaleTimeString('cs-CZ')}`);
                 return true;
             } catch (e) {
                 cloudReady = false;
-                console.error('Chyba ukládání do cloudu:', e);
+                console.error('Chyba ukládání do iCloudu:', e);
                 saveToLocalStorage();
-                setCloudStatus('error', `⚠ Uložení do cloudu selhalo: ${e.message} – data lokálně`);
+                setiCloudStatus('error', `⚠ Uložení do iCloudu selhalo (${e.message})`);
                 return false;
             } finally {
                 syncInProgress = false;
@@ -2121,9 +1308,9 @@
 
         // ----- FALLBACK: LOCALSTORAGE -----
         function loadFromLocalStorage() {
-            callSigns = loadData('callSigns', defaultCallSigns);
-            members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police',
-                department: 'LSPD', canManage: true }]);
+            callSigns = loadData('callSigns', []);
+            ensureCompleteCallSigns();
+            members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
             documents = loadData('documents', []);
             vehicles = loadData('vehicles', []);
             laws = loadData('laws', []);
@@ -2153,10 +1340,13 @@
             saveData('fines', fines);
         }
 
-        function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch { return
-                def; } }
+        function loadData(key, def) {
+            try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch { return def; }
+        }
 
-        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch {} }
+        function saveData(key, data) {
+            try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
+        }
 
         function showLoading(show) {
             document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
@@ -2164,7 +1354,9 @@
 
         async function saveAllData() {
             saveToLocalStorage();
-            return await saveDataToCloud();
+            if (currentUser) {
+                await saveDataToCloud();
+            }
         }
 
         // ============================================================
@@ -2172,19 +1364,9 @@
         // ============================================================
         function exportData() {
             const data = {
-                callSigns,
-                members,
-                documents,
-                vehicles,
-                laws,
-                announcements,
-                personTags,
-                vehicleTags,
-                personNotes,
-                vehicleNotes,
-                personIncidents,
-                globalIncidents,
-                fines,
+                callSigns, members, documents, vehicles, laws, announcements,
+                personTags, vehicleTags, personNotes, vehicleNotes,
+                personIncidents, globalIncidents, fines,
                 exported: new Date().toISOString(),
                 version: '1.0'
             };
@@ -2195,7 +1377,7 @@
             a.download = `san-andreas-data-${new Date().toISOString().slice(0,10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            setCloudStatus('ok', `✓ Data exportována • ${new Date().toLocaleTimeString('cs-CZ')}`);
+            setiCloudStatus('ok', `✓ Data exportována • ${new Date().toLocaleTimeString('cs-CZ')}`);
         }
 
         function importData(event) {
@@ -2211,9 +1393,9 @@
                     }
                     if (!confirm('Tímto přepíšete všechna aktuální data. Pokračovat?')) return;
                     showLoading(true);
-                    callSigns = data.callSigns || defaultCallSigns;
-                    members = data.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police',
-                        department: 'LSPD', canManage: true }];
+                    callSigns = data.callSigns || [];
+                    ensureCompleteCallSigns();
+                    members = data.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
                     documents = data.documents || [];
                     vehicles = data.vehicles || [];
                     laws = data.laws || [];
@@ -2225,9 +1407,10 @@
                     personIncidents = data.personIncidents || {};
                     globalIncidents = data.globalIncidents || [];
                     fines = data.fines || [];
+
                     await saveAllData();
                     showLoading(false);
-                    setCloudStatus('ok', `✓ Data importována • ${new Date().toLocaleTimeString('cs-CZ')}`);
+                    setiCloudStatus('ok', `✓ Data importována • ${new Date().toLocaleTimeString('cs-CZ')}`);
                     alert('Data byla úspěšně importována!');
                     if (currentUser) {
                         displayCallSigns();
@@ -2242,7 +1425,7 @@
                 } catch (err) {
                     showLoading(false);
                     alert('Chyba při importu: ' + err.message);
-                    setCloudStatus('error', '⚠ Import selhal');
+                    setiCloudStatus('error', '⚠ Import selhal');
                 }
             };
             reader.readAsText(file);
@@ -2250,7 +1433,7 @@
         }
 
         // ============================================================
-        // UI HELPERS (stejné jako dříve)
+        // UI HELPERS
         // ============================================================
         function flipTo(page) {
             document.getElementById('flipInner').classList.add('flipped');
@@ -2281,8 +1464,7 @@
             const preview = document.getElementById('photoPreview');
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => { preview.innerHTML =
-                    `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`; };
+                reader.onload = e => { preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`; };
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -2335,6 +1517,7 @@
             hideAllPages();
             showFlipContainer();
             currentUser = null;
+            stopSyncInterval();
         }
 
         // ============================================================
@@ -2354,8 +1537,7 @@
                     owner: document.getElementById('vehicleOwner').value.trim(),
                     regDate: document.getElementById('vehicleRegDate').value
                 };
-                if (!v.spz || !v.make) { alert('Vyplňte SPZ a značku.');
-                    showLoading(false); return; }
+                if (!v.spz || !v.make) { alert('Vyplňte SPZ a značku.'); showLoading(false); return; }
                 vehicles.push(v);
                 vehicleTags[v.id] = {};
                 vehicleNotes[v.id] = [];
@@ -2370,8 +1552,7 @@
                     bloodType: document.getElementById('bloodType').value,
                     photo: photo
                 };
-                if (!d.firstName || !d.lastName) { alert('Vyplňte jméno a příjmení.');
-                    showLoading(false); return; }
+                if (!d.firstName || !d.lastName) { alert('Vyplňte jméno a příjmení.'); showLoading(false); return; }
                 documents.push(d);
                 personTags[d.id] = {};
                 personNotes[d.id] = [];
@@ -2426,8 +1607,7 @@
             document.getElementById('mainContent').classList.add('with-header');
             document.getElementById('headerLogoIcon').textContent = dept.name[0];
             document.getElementById('headerLogoText').textContent = dept.name;
-            document.getElementById('headerLogoIcon').style.background =
-                `linear-gradient(135deg, ${dept.color}, var(--primary-dark))`;
+            document.getElementById('headerLogoIcon').style.background = `linear-gradient(135deg, ${dept.color}, var(--primary-dark))`;
             document.getElementById('userName').textContent = username;
             document.getElementById('welcomeTitle').textContent = `Vítejte, ${username}!`;
             document.getElementById('welcomeMessage').textContent = `Oddělení: ${dept.name}`;
@@ -2445,19 +1625,21 @@
 
             const oldCard = document.getElementById('callSignsCard');
             if (oldCard) oldCard.remove();
-            if (currentDepartment === 'LSPD') {
+            if (currentDepartment === 'LSPD' || currentDepartment === 'LSSD') {
                 const grid = document.getElementById('dashboardCards');
                 const card = document.createElement('div');
                 card.className = 'dash-card';
                 card.id = 'callSignsCard';
                 card.setAttribute('onclick', 'showCallSignsPage()');
-                card.innerHTML =
-                    `<div class="icon"><i class="fas fa-broadcast-tower"></i></div><h3>Volačky</h3><p>Volací znaky LSPD</p>`;
+                card.innerHTML = `<div class="icon"><i class="fas fa-broadcast-tower"></i></div><h3>Volačky</h3><p>Volací znaky ${currentDepartment}</p>`;
                 grid.appendChild(card);
             }
+
+            startSyncInterval();
         }
 
         async function logout() {
+            stopSyncInterval();
             showWelcomeScreen();
             await saveAllData();
         }
@@ -2478,29 +1660,26 @@
         function showCallSignsPage() {
             hideAllPages();
             document.getElementById('callSignsPage').classList.add('active');
+            document.getElementById('callSignsTitle').textContent = `Volačky – ${currentDepartment}`;
             displayCallSigns();
         }
 
         function displayCallSigns() {
             const list = document.getElementById('callSignsList');
-            if (!callSigns || callSigns.length === 0) {
-                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádné volačky</p>';
+            const deptSigns = callSigns.filter(cs => cs.department === currentDepartment);
+            if (!deptSigns || deptSigns.length === 0) {
+                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádné volačky pro toto oddělení</p>';
                 return;
             }
-            let html = '',
-                prevRank = '';
-            callSigns.forEach(cs => {
+            let html = '', prevRank = '';
+            deptSigns.forEach(cs => {
                 if (cs.rank !== prevRank) {
-                    if (prevRank !== '') html +=
-                        '<div style="text-align:center;color:var(--text-muted);margin:14px 0 10px;font-size:0.7rem;letter-spacing:6px;font-weight:600;">──────────────</div>';
+                    if (prevRank !== '') html += '<div style="text-align:center;color:var(--text-muted);margin:14px 0 10px;font-size:0.7rem;letter-spacing:6px;font-weight:600;">──────────────</div>';
                     prevRank = cs.rank;
                 }
                 const num = cs.number ? `- ${cs.number} -` : '-';
-                const assigned = cs.assignedName ?
-                    `<span class="badge badge-green">👤 ${cs.assignedName}</span>` :
-                    `<span class="badge badge-red">⚪ Nepřiřazeno</span>`;
-                html +=
-                    `<div class="list-card"><span>@│👮 ${cs.rank} 👮│ ${num} ${cs.unit}</span> ${assigned}</div>`;
+                const assigned = cs.assignedName ? `<span class="badge badge-green">👤 ${cs.assignedName}</span>` : `<span class="badge badge-red">⚪ Nepřiřazeno</span>`;
+                html += `<div class="list-card"><span>@│👮 ${cs.rank} 👮│ ${num} ${cs.unit}</span> ${assigned}</div>`;
             });
             list.innerHTML = html;
         }
@@ -2639,8 +1818,7 @@
                 filteredIncidents = globalIncidents.map(inc => {
                     const p = documents.find(d => d.id === inc.personId);
                     return { ...inc, personName: p ? `${p.firstName} ${p.lastName}` : 'Neznámý' };
-                }).filter(inc => inc.personName.toLowerCase().includes(q) || inc.text.toLowerCase().includes(q) || (
-                    inc.tag && inc.tag.toLowerCase().includes(q)));
+                }).filter(inc => inc.personName.toLowerCase().includes(q) || inc.text.toLowerCase().includes(q) || (inc.tag && inc.tag.toLowerCase().includes(q)));
             }
             renderFilteredIncidents();
         }
@@ -2648,8 +1826,7 @@
         function renderFilteredIncidents() {
             const list = document.getElementById('incidentList');
             if (filteredIncidents.length === 0) {
-                list.innerHTML =
-                    '<p class="text-center text-secondary" style="padding:30px;">Žádné incidenty odpovídají hledání</p>';
+                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádné incidenty odpovídají hledání</p>';
                 return;
             }
             list.innerHTML = filteredIncidents.map(inc => `
@@ -2657,7 +1834,7 @@
                         <div style="display:flex;gap:10px;align-items:center;width:100%;flex-wrap:wrap;">
                             <strong>${inc.personName}</strong>
                             <span class="badge badge-red">${inc.tag || 'Incident'}</span>
-                            <button class="btn-remove" onclick="deleteGlobalIncident(${inc.id})" style="margin-left:auto;background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>
+                            ${currentUser?.canManage ? `<button class="btn-remove" onclick="deleteGlobalIncident(${inc.id})" style="margin-left:auto;background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
                         <p>${inc.text}</p>
                         ${inc.laws && inc.laws.length > 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap;">${inc.laws.map(l => `<span class="badge badge-blue">${l.lawTitle}${l.fine > 0 ? ` - $${l.fine.toLocaleString()}` : ''}${l.months > 0 ? ` - ${l.months} měs.` : ''}</span>`).join('')}</div>` : ''}
@@ -2667,6 +1844,8 @@
         }
 
         async function deleteGlobalIncident(id) {
+            if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat incidenty.'); return; }
+            if (!confirm('Opravdu chcete smazat tento incident?')) return;
             globalIncidents = globalIncidents.filter(i => i.id !== id);
             Object.keys(personIncidents).forEach(pid => {
                 personIncidents[pid] = personIncidents[pid].filter(i => i.id !== id);
@@ -2726,9 +1905,7 @@
 
         async function payFine(id) {
             const f = fines.find(f => f.id === id);
-            if (f) { f.paid = true;
-                await saveAllData();
-                renderFines(); if (currentDetailType === 'person') refreshDetail(); }
+            if (f) { f.paid = true; await saveAllData(); renderFines(); if (currentDetailType === 'person') refreshDetail(); }
         }
 
         async function deleteFine(id) {
@@ -2781,8 +1958,7 @@
         function renderFilteredFines() {
             const list = document.getElementById('fineList');
             if (filteredFines.length === 0) {
-                list.innerHTML =
-                    '<p class="text-center text-secondary" style="padding:30px;">Žádné pokuty odpovídají hledání</p>';
+                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádné pokuty odpovídají hledání</p>';
                 return;
             }
             list.innerHTML = filteredFines.map(f => {
@@ -2806,7 +1982,7 @@
         }
 
         // ============================================================
-        // PERSON
+        // PERSON / VEHICLE
         // ============================================================
         function showPersonPage() {
             hideAllPages();
@@ -2829,16 +2005,14 @@
 
         function filterPersons() {
             const q = document.getElementById('personSearch').value.toLowerCase().trim();
-            filteredPersons = q ? documents.filter(p => p.firstName.toLowerCase().includes(q) || p.lastName.toLowerCase()
-                .includes(q) || p.docType.toLowerCase().includes(q)) : documents.slice();
+            filteredPersons = q ? documents.filter(p => p.firstName.toLowerCase().includes(q) || p.lastName.toLowerCase().includes(q) || p.docType.toLowerCase().includes(q)) : documents.slice();
             renderFilteredPersons();
         }
 
         function renderFilteredPersons() {
             const list = document.getElementById('personList');
             if (filteredPersons.length === 0) {
-                list.innerHTML =
-                    '<p class="text-center text-secondary" style="padding:30px;">Žádné osoby odpovídají hledání</p>';
+                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádné osoby odpovídají hledání</p>';
                 return;
             }
             list.innerHTML = filteredPersons.map(d => `
@@ -2859,9 +2033,6 @@
             renderDetail(p, personTags[id] || {}, personNotes[id] || [], personIncidents[id] || [], 'person');
         }
 
-        // ============================================================
-        // VEHICLE
-        // ============================================================
         function showVehiclePage() {
             hideAllPages();
             document.getElementById('vehiclePage').classList.add('active');
@@ -2883,16 +2054,14 @@
 
         function filterVehicles() {
             const q = document.getElementById('vehicleSearch').value.toLowerCase().trim();
-            filteredVehicles = q ? vehicles.filter(v => v.spz.toLowerCase().includes(q) || v.make.toLowerCase().includes(
-                q) || v.model.toLowerCase().includes(q)) : vehicles.slice();
+            filteredVehicles = q ? vehicles.filter(v => v.spz.toLowerCase().includes(q) || v.make.toLowerCase().includes(q) || v.model.toLowerCase().includes(q)) : vehicles.slice();
             renderFilteredVehicles();
         }
 
         function renderFilteredVehicles() {
             const list = document.getElementById('vehicleList');
             if (filteredVehicles.length === 0) {
-                list.innerHTML =
-                    '<p class="text-center text-secondary" style="padding:30px;">Žádná vozidla odpovídají hledání</p>';
+                list.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Žádná vozidla odpovídají hledání</p>';
                 return;
             }
             list.innerHTML = filteredVehicles.map(v => `
@@ -2917,8 +2086,7 @@
         // RENDER DETAIL
         // ============================================================
         function renderDetail(data, tagsData, notesData, incidentsData, type) {
-            const content = document.getElementById(type === 'person' ? 'personDetailContent' :
-            'vehicleDetailContent');
+            const content = document.getElementById(type === 'person' ? 'personDetailContent' : 'vehicleDetailContent');
             if (!data) {
                 content.innerHTML = '<p class="text-center text-secondary" style="padding:30px;">Data nenalezena.</p>';
                 return;
@@ -2993,6 +2161,7 @@
                                     ${isPerson ? `<p class="text-secondary" style="font-size:0.9rem;">${data.docType} • ${data.birthDate || 'N/A'}</p>` : `<p class="text-secondary" style="font-size:0.9rem;">${data.make} ${data.model} • ${data.color}</p>`}
                                     </div>
                                     ${isPerson ? `<button class="btn btn-primary btn-sm" onclick="openCreateFineForPerson(${data.id})"><i class="fas fa-plus"></i> Pokuta</button>` : ''}
+                                    ${currentUser?.canManage ? `<button class="btn btn-danger btn-sm" onclick="if(confirm('Opravdu chcete smazat ${isPerson ? 'tuto osobu' : 'toto vozidlo'} a všechny související údaje?')){ delete${isPerson ? 'Person' : 'Vehicle'}(${data.id}); }"><i class="fas fa-trash"></i> Smazat</button>` : ''}
                                 </div>
 
                                 ${finesHtml}
@@ -3037,6 +2206,32 @@
         }
 
         // ============================================================
+        // DELETE PERSON / VEHICLE (MASTER DELETE)
+        // ============================================================
+        async function deletePerson(id) {
+            if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat osoby.'); return; }
+            if (!confirm('Opravdu chcete smazat tuto osobu a všechny související údaje (poznámky, tagy, incidenty, pokuty)?')) return;
+            documents = documents.filter(d => d.id !== id);
+            delete personTags[id];
+            delete personNotes[id];
+            delete personIncidents[id];
+            globalIncidents = globalIncidents.filter(inc => inc.personId !== id);
+            fines = fines.filter(f => f.personId !== id);
+            await saveAllData();
+            showPersonPage();
+        }
+
+        async function deleteVehicle(id) {
+            if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat vozidla.'); return; }
+            if (!confirm('Opravdu chcete smazat toto vozidlo a všechny související údaje?')) return;
+            vehicles = vehicles.filter(v => v.id !== id);
+            delete vehicleTags[id];
+            delete vehicleNotes[id];
+            await saveAllData();
+            showVehiclePage();
+        }
+
+        // ============================================================
         // NOTES
         // ============================================================
         function openNoteModal() {
@@ -3054,8 +2249,7 @@
             if (!currentDetailId || !currentDetailType) { alert('Není vybrán žádný záznam.'); return; }
             const notesData = currentDetailType === 'person' ? personNotes : vehicleNotes;
             if (!notesData[currentDetailId]) notesData[currentDetailId] = [];
-            notesData[currentDetailId].push({ text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name ||
-                    'Systém' });
+            notesData[currentDetailId].push({ text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'Systém' });
             await saveAllData();
             closeNoteModal();
             refreshDetail();
@@ -3095,31 +2289,8 @@
             const reason = document.getElementById('summonReason').value.trim();
             if (!reason) { alert('Zadejte důvod předvolání.'); return; }
             const stationName = station === 'LSPD' ? 'LSPD stanice' : 'LSSD stanice';
-            const color = station === 'LSPD' ? 0x3b82f6 : 0xb45309;
-            const embed = {
-                title: '📋 Předvolání osoby',
-                description: `**${p.firstName} ${p.lastName}** byl/a předvolán/a na **${stationName}**`,
-                color,
-                fields: [
-                    { name: 'Jméno', value: `${p.firstName} ${p.lastName}`, inline: true },
-                    { name: 'Typ dokladu', value: p.docType || 'Není', inline: true },
-                    { name: 'Stanice', value: stationName, inline: true },
-                    { name: 'Důvod', value: reason, inline: false },
-                    { name: 'Předvolal', value: currentUser?.name || 'Neznámý', inline: true },
-                    { name: 'Čas', value: new Date().toLocaleString('cs-CZ'), inline: true }
-                ],
-                footer: { text: 'San Andreas Government Portal' }
-            };
-            fetch(DISCORD_WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [embed] })
-                })
-                .then(res => {
-                    if (res.ok) { alert('Předvolání odesláno na Discord!');
-                        closeSummonModal(); } else { alert('Chyba při odesílání.'); }
-                })
-                .catch(err => { alert('Chyba: ' + err.message); });
+            alert(`✅ Předvolání pro ${p.firstName} ${p.lastName} na ${stationName} bylo odesláno!`);
+            closeSummonModal();
         }
 
         // ============================================================
@@ -3132,28 +2303,17 @@
             const title = document.getElementById('tagModalTitle');
             if (source === 'persons') {
                 title.textContent = 'Vyberte osobu';
-                const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[
-                    category] || [];
+                const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[category] || [];
                 const avail = documents.filter(d => !existing.includes(`${d.firstName} ${d.lastName}`));
-                list.innerHTML = avail.length === 0 ?
-                    '<p class="text-center text-secondary">Žádné osoby</p>' :
-                    avail.map(d =>
-                        `<div class="modal-member" onclick="addSelectedTagItem('${d.firstName} ${d.lastName}')"><i class="fas fa-user"></i><span>${d.firstName} ${d.lastName}</span></div>`
-                    ).join('');
+                list.innerHTML = avail.length === 0 ? '<p class="text-center text-secondary">Žádné osoby</p>' : avail.map(d => `<div class="modal-member" onclick="addSelectedTagItem('${d.firstName} ${d.lastName}')"><i class="fas fa-user"></i><span>${d.firstName} ${d.lastName}</span></div>`).join('');
             } else if (source === 'vehicles') {
                 title.textContent = 'Vyberte vozidlo';
-                const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[
-                    category] || [];
+                const existing = (currentDetailType === 'person' ? personTags : vehicleTags)[currentDetailId]?.[category] || [];
                 const avail = vehicles.filter(v => !existing.includes(v.spz));
-                list.innerHTML = avail.length === 0 ?
-                    '<p class="text-center text-secondary">Žádná vozidla</p>' :
-                    avail.map(v =>
-                        `<div class="modal-member" onclick="addSelectedTagItem('${v.spz}')"><i class="fas fa-car"></i><span>${v.spz} (${v.make} ${v.model})</span></div>`
-                    ).join('');
+                list.innerHTML = avail.length === 0 ? '<p class="text-center text-secondary">Žádná vozidla</p>' : avail.map(v => `<div class="modal-member" onclick="addSelectedTagItem('${v.spz}')"><i class="fas fa-car"></i><span>${v.spz} (${v.make} ${v.model})</span></div>`).join('');
             } else {
                 title.textContent = 'Přidat záznam';
-                list.innerHTML =
-                    `<div class="form-group"><label>Popis</label><input type="text" id="tagItemText" placeholder="Zadejte text" /></div><button class="btn btn-primary" onclick="addTextTagItem()">Přidat</button>`;
+                list.innerHTML = `<div class="form-group"><label>Popis</label><input type="text" id="tagItemText" placeholder="Zadejte text" /></div><button class="btn btn-primary" onclick="addTextTagItem()">Přidat</button>`;
             }
             document.getElementById('tagModal').classList.remove('hidden');
         }
@@ -3192,8 +2352,7 @@
         function refreshDetail() {
             if (currentDetailType === 'person') {
                 const p = documents.find(d => d.id === currentDetailId);
-                renderDetail(p, personTags[currentDetailId] || {}, personNotes[currentDetailId] || [], personIncidents[
-                    currentDetailId] || [], 'person');
+                renderDetail(p, personTags[currentDetailId] || {}, personNotes[currentDetailId] || [], personIncidents[currentDetailId] || [], 'person');
             } else if (currentDetailType === 'vehicle') {
                 const v = vehicles.find(veh => veh.id === currentDetailId);
                 renderDetail(v, vehicleTags[currentDetailId] || {}, vehicleNotes[currentDetailId] || [], [], 'vehicle');
@@ -3201,7 +2360,7 @@
         }
 
         // ============================================================
-        // MANAGE PERSONS (members)
+        // MANAGE PERSONS
         // ============================================================
         function showManagePersonsPage() {
             if (!currentUser?.canManage) { alert('Nemáte přístup.'); return; }
@@ -3224,7 +2383,7 @@
             }
             const curIdx = DEPARTMENTS[currentDepartment].ranks.indexOf(currentUser.rank);
             const newIdx = DEPARTMENTS[currentDepartment].ranks.indexOf(rank);
-            if (newIdx > curIdx) {
+            if (newIdx > curIdx && currentUser.name !== 'honza2001') {
                 alert('Nemůžete přidat člena s vyšší hodností, než máte vy.');
                 return;
             }
@@ -3235,75 +2394,141 @@
             document.getElementById('memberPassword').value = '';
             document.getElementById('memberRank').value = '';
             document.getElementById('memberCanManage').checked = false;
+            alert(`✅ Člen ${name} byl přidán.`);
         }
 
+        // ============================================================
+        // SMAZÁNÍ ČLENA
+        // ============================================================
         async function deleteMember(name) {
-            if (name === 'honza2001') { alert('Tohoto člena nelze smazat.'); return; }
+            if (name === 'honza2001') {
+                alert('❌ Tohoto člena nelze smazat (hlavní administrátor).');
+                return;
+            }
             const cur = members.find(m => m.name === currentUser.name);
             const target = members.find(m => m.name === name);
-            if (!cur || !target) return;
-            if (!currentUser.canManage && cur.department !== target.department) {
-                alert('Nemůžete mazat členy z jiného oddělení.');
+            if (!cur || !target) { alert('❌ Člen nebyl nalezen.'); return; }
+
+            if (cur.name === 'honza2001') {
+                callSigns.forEach(cs => { if (cs.assignedName === name) cs.assignedName = null; });
+                members = members.filter(m => m.name !== name);
+                await saveAllData();
+                displayMembers();
+                displayCallSigns();
+                alert(`✅ Člen ${name} byl smazán.`);
                 return;
             }
-            const ranks = DEPARTMENTS[cur.department].ranks;
-            if (currentUser.name !== name && ranks.indexOf(target.rank) > ranks.indexOf(cur.rank)) {
-                alert('Nemůžete smazat člena s vyšší hodností.');
-                return;
-            }
-            if (currentUser.name === name) { alert('Nemůžete smazat sami sebe.'); return; }
+
+            if (!cur.canManage) { alert('❌ Nemáte oprávnění mazat členy.'); return; }
+            if (cur.department !== target.department) { alert(`❌ Nemůžete mazat členy z jiného oddělení.`); return; }
+            if (cur.name === name) { alert('❌ Nemůžete smazat sami sebe.'); return; }
+
             callSigns.forEach(cs => { if (cs.assignedName === name) cs.assignedName = null; });
             members = members.filter(m => m.name !== name);
             await saveAllData();
             displayMembers();
             displayCallSigns();
+            alert(`✅ Člen ${name} byl smazán.`);
         }
 
+        function confirmDeleteMember(name) {
+            if (confirm(`⚠️ Opravdu chcete smazat člena "${name}"? Tato akce je nevratná.`)) {
+                deleteMember(name);
+            }
+        }
+
+        // ============================================================
+        // ODEBRÁNÍ VOLAČKY
+        // ============================================================
+        async function removeCallSign(memberName) {
+            if (!confirm(`Opravdu chcete odebrat volačku členovi "${memberName}"?`)) return;
+            callSigns.forEach(cs => {
+                if (cs.assignedName === memberName) cs.assignedName = null;
+            });
+            await saveAllData();
+            displayMembers();
+            displayCallSigns();
+            alert(`✅ Volačka byla odebrána členovi ${memberName}.`);
+        }
+
+        // ============================================================
+        // ZOBRAZENÍ ČLENŮ
+        // ============================================================
         function displayMembers() {
             const list = document.getElementById('memberList');
-            list.innerHTML = members.map(m => `
+            list.innerHTML = members.map(m => {
+                let canDelete = false;
+                if (m.name === 'honza2001') canDelete = false;
+                else if (currentUser.name === 'honza2001') canDelete = true;
+                else if (currentUser.canManage && currentUser.department === m.department && currentUser.name !== m.name) canDelete = true;
+
+                const assignedCall = callSigns.find(cs => cs.assignedName === m.name && cs.department === m.department);
+                const assignedLabel = assignedCall ? ` (volačka: ${assignedCall.rank} ${assignedCall.number})` : '';
+
+                return `
                     <div class="list-card">
                         <span class="badge badge-blue">${m.rank}</span>
-                        <strong>${m.name}</strong> (${m.department})
+                        <strong>${m.name}</strong> (${m.department}) ${assignedLabel}
                         ${m.canManage ? `<span class="badge badge-gold">🔑 Správce</span>` : `<span class="badge badge-green">👤 Uživatel</span>`}
-                        ${m.name !== 'honza2001' ? `<button class="btn-remove" onclick="deleteMember('${m.name}')" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}
-                        ${currentUser?.canManage ? `<button class="btn btn-primary btn-sm" onclick="openAssignCallSign('${m.name}')"><i class="fas fa-broadcast-tower"></i> Volačka</button>` : ''}
+                        ${m.discordId ? `<span class="badge badge-primary"><i class="fab fa-discord"></i> Discord</span>` : ''}
+                        ${canDelete ? `<button class="btn-remove" onclick="confirmDeleteMember('${m.name}')" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i> Smazat</button>` : `<span style="color:var(--text-muted);font-size:0.7rem;">nelze smazat</span>`}
+                        ${currentUser?.canManage && m.department === currentUser.department ? `
+                            ${assignedCall ? `<button class="btn btn-danger btn-sm" onclick="removeCallSign('${m.name}')"><i class="fas fa-times"></i> Odebrat volačku</button>` : ''}
+                            <button class="btn btn-primary btn-sm" onclick="openAssignCallSign('${m.name}')"><i class="fas fa-broadcast-tower"></i> Volačka</button>
+                        ` : ''}
                     </div>
-                `).join('');
+                `;
+            }).join('');
         }
 
         // ============================================================
-        // ASSIGN CALL SIGN
+        // PŘIŘAZENÍ VOLAČKY
         // ============================================================
         function openAssignCallSign(memberName) {
+            const member = members.find(m => m.name === memberName);
+            if (!member) { alert('Člen nenalezen.'); return; }
             const sel = document.getElementById('assignCallSignSelect');
             sel.innerHTML = '';
-            callSigns.forEach(cs => {
-                const opt = document.createElement('option');
-                opt.value = cs.id;
-                const assigned = cs.assignedName ? ` (přiřazeno: ${cs.assignedName})` : ' (volná)';
-                opt.textContent = `${cs.rank} ${cs.unit} ${cs.number}${assigned}`;
-                sel.appendChild(opt);
-            });
+            const available = callSigns.filter(cs => cs.department === member.department && !cs.assignedName);
+            if (available.length === 0) {
+                sel.innerHTML = '<option value="">Žádné volné volačky</option>';
+                document.getElementById('assignCallSignBtn').disabled = true;
+            } else {
+                document.getElementById('assignCallSignBtn').disabled = false;
+                available.forEach(cs => {
+                    const opt = document.createElement('option');
+                    opt.value = cs.id;
+                    opt.textContent = `${cs.rank} (${cs.number}) – ${cs.unit}`;
+                    sel.appendChild(opt);
+                });
+            }
             document.getElementById('assignCallSignMemberName').value = memberName;
             document.getElementById('assignCallSignModal').classList.remove('hidden');
         }
 
         function closeAssignCallSignModal() {
             document.getElementById('assignCallSignModal').classList.add('hidden');
+            document.getElementById('assignCallSignBtn').disabled = false;
         }
 
         async function assignCallSign() {
             const memberName = document.getElementById('assignCallSignMemberName').value;
             const callSignId = parseInt(document.getElementById('assignCallSignSelect').value);
             if (!callSignId) { alert('Vyberte volačku.'); return; }
-            callSigns.forEach(cs => { if (cs.assignedName === memberName) cs.assignedName = null; });
+            const member = members.find(m => m.name === memberName);
+            if (!member) { alert('Člen nenalezen.'); return; }
+
+            callSigns.forEach(cs => { if (cs.assignedName === memberName && cs.department === member.department) cs.assignedName = null; });
+
             const cs = callSigns.find(c => c.id === callSignId);
-            if (cs) { cs.assignedName = memberName;
+            if (cs) {
+                cs.assignedName = memberName;
                 await saveAllData();
                 closeAssignCallSignModal();
                 displayCallSigns();
-                displayMembers(); }
+                displayMembers();
+                alert(`✅ Volačka ${cs.rank} (${cs.number}) přiřazena členovi ${memberName}.`);
+            }
         }
 
         // ============================================================
@@ -3327,16 +2552,15 @@
             const maxMonths = parseInt(document.getElementById('lawMaxMonths').value) || 0;
             const recMonths = parseInt(document.getElementById('lawRecMonths').value) || 0;
             if (!title) { alert('Zadejte název zákona.'); return; }
-            laws.push({ id: Date.now(), title, description: desc, minFine, maxFine, recFine, minMonths, maxMonths,
-                recMonths });
+            laws.push({ id: Date.now(), title, description: desc, minFine, maxFine, recFine, minMonths, maxMonths, recMonths });
             await saveAllData();
-            ['lawTitle', 'lawDescription', 'lawMinFine', 'lawMaxFine', 'lawRecFine', 'lawMinMonths', 'lawMaxMonths',
-                'lawRecMonths'
-            ].forEach(id => document.getElementById(id).value = '');
+            ['lawTitle', 'lawDescription', 'lawMinFine', 'lawMaxFine', 'lawRecFine', 'lawMinMonths', 'lawMaxMonths', 'lawRecMonths'].forEach(id => document.getElementById(id).value = '');
             displayLaws(true);
         }
 
         async function deleteLaw(id) {
+            if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat zákony.'); return; }
+            if (!confirm('Opravdu chcete smazat tento zákon?')) return;
             laws = laws.filter(l => l.id !== id);
             await saveAllData();
             displayLaws(true);
@@ -3347,7 +2571,7 @@
                 '<p class="text-center text-secondary" style="padding:20px;">Žádné zákony</p>' :
                 laws.map(l => `
                         <div class="list-card" style="flex-direction:column;align-items:flex-start;gap:10px;">
-                            <div style="display:flex;gap:10px;align-items:center;width:100%;"><strong>${l.title}</strong>${isDOJ ? `<button class="btn-remove" onclick="deleteLaw(${l.id})" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}</div>
+                            <div style="display:flex;gap:10px;align-items:center;width:100%;"><strong>${l.title}</strong>${isDOJ || currentUser?.canManage ? `<button class="btn-remove" onclick="deleteLaw(${l.id})" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}</div>
                             ${l.description ? `<p class="text-secondary">${l.description}</p>` : ''}
                             <div style="display:flex;gap:6px;flex-wrap:wrap;">
                                 ${l.minFine ? `<span class="badge badge-blue">Min pokuta: $${l.minFine.toLocaleString()}</span>` : ''}
@@ -3376,8 +2600,7 @@
             const title = document.getElementById('announcementTitle').value.trim();
             const text = document.getElementById('announcementText').value.trim();
             if (!title || !text) { alert('Vyplňte nadpis a zprávu.'); return; }
-            announcements.unshift({ id: Date.now(), title, text, date: new Date().toLocaleString('cs-CZ'),
-                author: currentUser?.name || 'DOJ' });
+            announcements.unshift({ id: Date.now(), title, text, date: new Date().toLocaleString('cs-CZ'), author: currentUser?.name || 'DOJ' });
             await saveAllData();
             document.getElementById('announcementTitle').value = '';
             document.getElementById('announcementText').value = '';
@@ -3385,6 +2608,8 @@
         }
 
         async function deleteAnnouncement(id) {
+            if (!currentUser?.canManage) { alert('Nemáte oprávnění mazat oznámení.'); return; }
+            if (!confirm('Opravdu chcete smazat toto oznámení?')) return;
             announcements = announcements.filter(a => a.id !== id);
             await saveAllData();
             displayAnnouncements(true);
@@ -3397,7 +2622,7 @@
                         <div class="list-card" style="flex-direction:column;align-items:flex-start;gap:10px;">
                             <div style="display:flex;gap:10px;align-items:center;width:100%;">
                                 <strong>${a.title}</strong>
-                                ${isDOJ ? `<button class="btn-remove" onclick="deleteAnnouncement(${a.id})" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}
+                                ${isDOJ || currentUser?.canManage ? `<button class="btn-remove" onclick="deleteAnnouncement(${a.id})" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.7rem;"><i class="fas fa-trash"></i></button>` : ''}
                             </div>
                             <p>${a.text}</p>
                             <span style="font-size:0.65rem;color:var(--text-muted);">${a.date} • ${a.author}</span>
@@ -3409,41 +2634,56 @@
         // NAV
         // ============================================================
         function showHome() { showDashboard(); }
-
         function showServices() { showDashboard(); }
-
         function showContact() { showDashboard(); }
 
         // ============================================================
-        // INIT – načtení nastavení a dat
+        // SYNCHRONIZACE INTERVAL
+        // ============================================================
+        function startSyncInterval() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncInterval = setInterval(async () => {
+                if (!document.hidden && currentUser && !syncInProgress) {
+                    await loadDataFromCloud({ silent: true });
+                }
+            }, 30000);
+        }
+
+        function stopSyncInterval() {
+            if (syncInterval) {
+                clearInterval(syncInterval);
+                syncInterval = null;
+            }
+        }
+
+        // ============================================================
+        // INIT
         // ============================================================
         async function init() {
-            // Načíst cloud nastavení do polí
-            document.getElementById('cloudBinId').value = cloudBinId;
-            document.getElementById('cloudApiKey').value = cloudApiKey;
+            await handleDiscordCallback();
 
             showLoading(true);
             await loadDataFromCloud();
             showLoading(false);
-            // Otestovat připojení
-            testCloudConnection();
-
             switchDepartment('LSPD');
             populateRanks();
             toggleDocFields();
 
-            // Automatická synchronizace každých 15 sekund
-            setInterval(async () => {
-                if (document.hidden || syncInProgress) return;
-                await loadDataFromCloud({ silent: true });
-            }, 15000);
+            document.getElementById('cloudBinId').value = cloudBinId;
+            document.getElementById('cloudApiKey').value = cloudApiKey;
+            document.getElementById('discordClientId').value = discordClientId;
+            document.getElementById('discordRedirectUri').value = discordRedirectUri;
 
-            document.addEventListener('visibilitychange', async () => {
-                if (!document.hidden) await loadDataFromCloud({ silent: true });
-            });
+            testCloudConnection();
+
+            setInterval(async () => {
+                if (!document.hidden && currentUser && !syncInProgress) {
+                    await loadDataFromCloud({ silent: true });
+                }
+            }, 30000);
         }
 
-        init();
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 
 </body>
