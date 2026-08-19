@@ -95,6 +95,21 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             box-shadow: 0 4px 16px rgba(124,58,237,0.3);
             flex-shrink:0;
+            overflow:hidden;
+            cursor:pointer;
+            transition: var(--transition);
+        }
+        .header-brand .logo:hover { opacity:0.8; transform:scale(1.05); }
+        .header-brand .logo img {
+            width:100%;
+            height:100%;
+            object-fit:contain;
+            display:block;
+        }
+        .header-brand .logo .letter {
+            font-size:1.2rem;
+            font-weight:800;
+            color:#fff;
         }
         .header-brand .name {
             font-size:1.1rem; font-weight:700; letter-spacing:1px;
@@ -533,13 +548,15 @@
     <!-- ===== HEADER ===== -->
     <header class="header" id="header">
         <div class="header-brand">
-            <div class="logo" id="headerLogoIcon">SA</div>
+            <div class="logo" id="headerLogo" onclick="changeLogo()">
+                <span class="letter" id="headerLogoLetter">--</span>
+            </div>
             <span class="name" id="headerLogoText">PORTÁL</span>
         </div>
         <nav class="header-nav">
             <button class="nav-btn active" onclick="showDashboard()"><i class="fas fa-home"></i><span>Domů</span></button>
             <button class="nav-btn" onclick="showDashboard()"><i class="fas fa-concierge-bell"></i><span>Služby</span></button>
-            <button class="nav-btn" onclick="showDashboard()"><i class="fas fa-envelope"></i><span>Kontakt</span></button>
+            <button class="nav-btn" onclick="showContactPage()"><i class="fas fa-envelope"></i><span>Kontakt</span></button>
         </nav>
         <div class="header-user" id="userInfo" onclick="logout()">
             <div class="avatar"><i class="fas fa-user"></i></div>
@@ -820,6 +837,43 @@
             <button class="btn-back" onclick="showDashboard()">Zpět</button>
         </div>
 
+        <!-- ===== KONTAKT ===== -->
+        <div id="contactPage" class="page">
+            <div class="page-header"><h2>Kontakt</h2></div>
+            <div class="incident-form" style="max-width:600px;margin:0 auto;">
+                <div class="form-group">
+                    <label>Odesílatel</label>
+                    <select id="contactSender"></select>
+                </div>
+                <div class="form-group">
+                    <label>Příjemce</label>
+                    <select id="contactRecipientSelect" onchange="toggleContactRecipient()">
+                        <option value="">Vyberte příjemce</option>
+                        <option value="LSPD">LSPD</option>
+                        <option value="LSSD">LSSD</option>
+                        <option value="SAHP">SAHP</option>
+                        <option value="DOJ">DOJ</option>
+                        <option value="member">Člen</option>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="contactMemberGroup">
+                    <label>Vyberte člena</label>
+                    <select id="contactMemberSelect"><option value="">Vyberte člena</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Zpráva</label>
+                    <textarea id="contactMessage" rows="5" placeholder="Napište vaši zprávu…"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="sendContactMessage()"><i class="fas fa-paper-plane"></i> Odeslat zprávu</button>
+            </div>
+            <div class="incident-form" style="max-width:600px;margin:24px auto 0;">
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:16px;">📨 Odeslané zprávy</h3>
+                <div id="contactHistoryList"><p class="text-secondary" style="text-align:center;padding:16px;">Zatím žádné odeslané zprávy</p></div>
+                <button class="btn btn-danger btn-sm" onclick="clearContactHistory()" style="width:auto;margin-top:8px;"><i class="fas fa-trash"></i> Smazat historii</button>
+                <button class="btn-back" onclick="showDashboard()" style="margin-top:16px;">Zpět</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- ===== MODALS ===== -->
@@ -882,6 +936,30 @@
     <!-- SCRIPT -->
     <!-- ============================================================ -->
     <script>
+        // ============================================================
+        // KONFIGURACE LOG – OBRÁZKY PRO KAŽDÉ ODDĚLENÍ
+        // ============================================================
+        // Uživatel může změnit odkazy – stačí upravit hodnoty níže.
+        // Odkazy se ukládají do localStorage, takže změny zůstanou.
+        const DEFAULT_LOGOS = {
+            LSPD: '',   // prázdné = zobrazí se písmeno L
+            LSSD: '',
+            SAHP: '',
+            DOJ: ''
+        };
+
+        function getLogos() {
+            const stored = localStorage.getItem('departmentLogos');
+            if (stored) {
+                try { return { ...DEFAULT_LOGOS, ...JSON.parse(stored) }; } catch {}
+            }
+            return { ...DEFAULT_LOGOS };
+        }
+
+        function saveLogos(logos) {
+            localStorage.setItem('departmentLogos', JSON.stringify(logos));
+        }
+
         // ============================================================
         // KONFIGURACE – NAČÍTÁ SE Z LOCALSTORAGE
         // ============================================================
@@ -1498,7 +1576,7 @@
         function hideAllPages() {
             ['dashboardContent', 'mdtPage', 'callSignsPage', 'incidentsPage', 'finesPage', 'personPage',
                 'personDetailPage', 'vehiclePage', 'vehicleDetailPage', 'managePersonsPage', 'legislationPage',
-                'announcementsPage'
+                'announcementsPage', 'contactPage'
             ].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.remove('active');
@@ -1518,6 +1596,50 @@
             showFlipContainer();
             currentUser = null;
             stopSyncInterval();
+        }
+
+        // ============================================================
+        // LOGO – NASTAVENÍ OBRÁZKU PODLE ODDĚLENÍ
+        // ============================================================
+        function updateHeaderLogo(deptName) {
+            const logos = getLogos();
+            const logoEl = document.getElementById('headerLogo');
+            const letterEl = document.getElementById('headerLogoLetter');
+            const url = logos[deptName] || '';
+
+            // Vyčistit předchozí obsah
+            logoEl.innerHTML = '';
+
+            if (url && url.trim() !== '') {
+                // Zobrazit obrázek
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = deptName;
+                img.onerror = function() {
+                    // Pokud obrázek nejde načíst, zobrazit písmeno
+                    logoEl.innerHTML = `<span class="letter">${deptName.charAt(0)}</span>`;
+                };
+                logoEl.appendChild(img);
+            } else {
+                // Zobrazit písmeno
+                const span = document.createElement('span');
+                span.className = 'letter';
+                span.textContent = deptName.charAt(0);
+                logoEl.appendChild(span);
+            }
+        }
+
+        // Kliknutí na logo – změna obrázku
+        function changeLogo() {
+            const dept = currentDepartment || 'LSPD';
+            const currentUrl = getLogos()[dept] || '';
+            const newUrl = prompt(`Zadejte URL obrázku pro oddělení ${dept} (nechte prázdné pro písmeno):`, currentUrl);
+            if (newUrl === null) return; // zrušeno
+
+            const logos = getLogos();
+            logos[dept] = newUrl.trim();
+            saveLogos(logos);
+            updateHeaderLogo(dept);
         }
 
         // ============================================================
@@ -1605,7 +1727,6 @@
             document.getElementById('dashboardContent').classList.add('active');
             document.getElementById('header').classList.add('active');
             document.getElementById('mainContent').classList.add('with-header');
-            document.getElementById('headerLogoIcon').textContent = dept.name[0];
             document.getElementById('headerLogoText').textContent = dept.name;
             document.getElementById('headerLogoIcon').style.background = `linear-gradient(135deg, ${dept.color}, var(--primary-dark))`;
             document.getElementById('userName').textContent = username;
@@ -1613,6 +1734,9 @@
             document.getElementById('welcomeMessage').textContent = `Oddělení: ${dept.name}`;
             document.getElementById('deptBadge').textContent = dept.name;
             document.getElementById('managePersonsCard').style.display = currentUser.canManage ? 'block' : 'none';
+
+            // Nastavení loga
+            updateHeaderLogo(dept.name);
 
             displayCallSigns();
             displayMembers();
@@ -2631,11 +2755,119 @@
         }
 
         // ============================================================
+        // KONTAKT
+        // ============================================================
+        function showContactPage() {
+            hideAllPages();
+            document.getElementById('contactPage').classList.add('active');
+
+            const senderSelect = document.getElementById('contactSender');
+            const userLabel = currentUser ? currentUser.name : 'nepřihlášen';
+            const deptLabel = currentDepartment || 'LSPD';
+            senderSelect.innerHTML = `
+                <option value="me">Já (${userLabel})</option>
+                <option value="zbor">Zbor (${deptLabel})</option>
+            `;
+
+            const memberSelect = document.getElementById('contactMemberSelect');
+            memberSelect.innerHTML = '<option value="">Vyberte člena</option>';
+            members.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.name;
+                opt.textContent = `${m.name} (${m.department})`;
+                memberSelect.appendChild(opt);
+            });
+
+            document.getElementById('contactMemberGroup').classList.add('hidden');
+            document.getElementById('contactRecipientSelect').value = '';
+            document.getElementById('contactMessage').value = '';
+            renderContactHistory();
+        }
+
+        function toggleContactRecipient() {
+            const select = document.getElementById('contactRecipientSelect');
+            const memberGroup = document.getElementById('contactMemberGroup');
+            if (select.value === 'member') {
+                memberGroup.classList.remove('hidden');
+            } else {
+                memberGroup.classList.add('hidden');
+            }
+        }
+
+        function sendContactMessage() {
+            const sender = document.getElementById('contactSender').value;
+            const recipientSelect = document.getElementById('contactRecipientSelect').value;
+            let recipient = recipientSelect;
+            if (recipientSelect === 'member') {
+                recipient = document.getElementById('contactMemberSelect').value;
+                if (!recipient) { alert('Vyberte člena.'); return; }
+            } else if (!recipient) {
+                alert('Vyberte příjemce.');
+                return;
+            }
+
+            const message = document.getElementById('contactMessage').value.trim();
+            if (!message) { alert('Napište zprávu.'); return; }
+
+            let senderLabel;
+            if (sender === 'me') {
+                senderLabel = currentUser ? currentUser.name : 'Já';
+            } else {
+                senderLabel = `Zbor (${currentDepartment || 'LSPD'})`;
+            }
+
+            const history = JSON.parse(localStorage.getItem('contactHistory') || '[]');
+            history.push({
+                from: senderLabel,
+                to: recipient,
+                message: message,
+                date: new Date().toLocaleString('cs-CZ')
+            });
+            localStorage.setItem('contactHistory', JSON.stringify(history));
+
+            alert(`✅ Zpráva odeslána!\n\nOdesílatel: ${senderLabel}\nPříjemce: ${recipient}\nZpráva: ${message}`);
+
+            document.getElementById('contactRecipientSelect').value = '';
+            document.getElementById('contactMemberSelect').value = '';
+            document.getElementById('contactMemberGroup').classList.add('hidden');
+            document.getElementById('contactMessage').value = '';
+            renderContactHistory();
+        }
+
+        function renderContactHistory() {
+            const history = JSON.parse(localStorage.getItem('contactHistory') || '[]');
+            const container = document.getElementById('contactHistoryList');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-secondary" style="text-align:center;padding:16px;">Zatím žádné odeslané zprávy</p>';
+                return;
+            }
+
+            const sorted = history.slice().reverse();
+            container.innerHTML = sorted.map(item => `
+                    <div class="list-card" style="flex-direction:column;align-items:flex-start;gap:6px;margin-bottom:8px;">
+                        <div style="display:flex;gap:10px;align-items:center;width:100%;flex-wrap:wrap;">
+                            <strong>${item.from}</strong> → <span class="badge badge-blue">${item.to}</span>
+                            <span style="font-size:0.65rem;color:var(--text-muted);margin-left:auto;">${item.date}</span>
+                        </div>
+                        <p style="font-size:0.85rem;margin:0;">${item.message}</p>
+                    </div>
+                `).join('');
+        }
+
+        function clearContactHistory() {
+            if (!confirm('Opravdu chcete smazat celou historii odeslaných zpráv?')) return;
+            localStorage.removeItem('contactHistory');
+            renderContactHistory();
+            alert('Historie smazána.');
+        }
+
+        // ============================================================
         // NAV
         // ============================================================
         function showHome() { showDashboard(); }
         function showServices() { showDashboard(); }
-        function showContact() { showDashboard(); }
+        function showContact() { showContactPage(); }
 
         // ============================================================
         // SYNCHRONIZACE INTERVAL
@@ -2675,6 +2907,9 @@
             document.getElementById('discordRedirectUri').value = discordRedirectUri;
 
             testCloudConnection();
+
+            // Při načtení nastavit logo pro výchozí oddělení
+            updateHeaderLogo('LSPD');
 
             setInterval(async () => {
                 if (!document.hidden && currentUser && !syncInProgress) {
