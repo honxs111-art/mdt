@@ -225,7 +225,7 @@
         .dept-tab:hover { background:rgba(255,255,255,0.06); }
         .dept-tab.active { color:#fff; border-color:var(--primary); background:rgba(124,58,237,0.15); }
         .dept-tab.lspd.active { border-color:#3b82f6; background:rgba(59,130,246,0.12); color:#93c5fd; }
-        .dept-tab.lssd.active { border-color:#b45309; background:rgba(180,83,9,0.12); color:#fbbf24; }
+        .dept-tab.lssd.active { border-color:#b45309; background:rgba(180,83,09,0.12); color:#fbbf24; }
         .dept-tab.sahp.active { border-color:#047857; background:rgba(4,120,87,0.12); color:#6ee7b7; }
         .dept-tab.doj.active { border-color:#7c3aed; background:rgba(124,58,237,0.12); color:#a78bfa; }
 
@@ -549,14 +549,13 @@
     <header class="header" id="header">
         <div class="header-brand">
             <div class="logo" id="headerLogo" onclick="changeLogo()">
-                <span class="letter" id="headerLogoLetter">--</span>
+                <span class="letter" id="headerLogoLetter">SA</span>
             </div>
             <span class="name" id="headerLogoText">PORTÁL</span>
         </div>
         <nav class="header-nav">
             <button class="nav-btn active" onclick="showDashboard()"><i class="fas fa-home"></i><span>Domů</span></button>
-            <button class="nav-btn" onclick="showDashboard()"><i class="fas fa-concierge-bell"></i><span>Služby</span></button>
-            <button class="nav-btn" onclick="showContactPage()"><i class="fas fa-envelope"></i><span>Kontakt</span></button>
+            <button class="nav-btn" onclick="showContactPage()"><i class="fas fa-envelope"></i><span>Gmail</span></button>
         </nav>
         <div class="header-user" id="userInfo" onclick="logout()">
             <div class="avatar"><i class="fas fa-user"></i></div>
@@ -942,11 +941,22 @@
         // Uživatel může změnit odkazy – stačí upravit hodnoty níže.
         // Odkazy se ukládají do localStorage, takže změny zůstanou.
         const DEFAULT_LOGOS = {
-            LSPD: '',   // prázdné = zobrazí se písmeno L
-            LSSD: '',
-            SAHP: '',
-            DOJ: ''
+            LSPD: '',   // prázdné = zobrazí se zkratka "PD"
+            LSSD: '',   // "SD"
+            SAHP: '',   // "HP"
+            DOJ: ''     // "OJ"
         };
+
+        // ===== MAPOVÁNÍ ODDĚLENÍ NA ZKRATKY PRO LOGO =====
+        function getDeptLetters(deptName) {
+            const map = {
+                'LSPD': 'PD',
+                'LSSD': 'SD',
+                'SAHP': 'HP',
+                'DOJ': 'OJ'
+            };
+            return map[deptName] || deptName.charAt(0);
+        }
 
         function getLogos() {
             const stored = localStorage.getItem('departmentLogos');
@@ -963,14 +973,14 @@
         // ============================================================
         // KONFIGURACE – NAČÍTÁ SE Z LOCALSTORAGE
         // ============================================================
-        let cloudBinId = localStorage.getItem('cloudBinId') || "67ecf60b8561e97a50f14d3a";
-        let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$rM3yZ1wVYhZ5xQ8J7kL9mN";
+        let cloudBinId = localStorage.getItem('cloudBinId') || "6a86034af5f4af5e2929f3e1";
+        let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$PitmcF0aSJgXbGTpspVyJOQLAM77kAdIZADuvmAWTOL7ZrclXK4im";
         let discordClientId = localStorage.getItem('discordClientId') || "";
         let discordRedirectUri = localStorage.getItem('discordRedirectUri') || window.location.origin + window.location
         .pathname;
 
-        const VALID_USERNAME = "honza2001";
-        const VALID_PASSWORD = "1234";
+        const VALID_USERNAME = "admin";
+        const VALID_PASSWORD = "admin";
 
         // ============================================================
         // DEPARTMENTS
@@ -1388,7 +1398,7 @@
         function loadFromLocalStorage() {
             callSigns = loadData('callSigns', []);
             ensureCompleteCallSigns();
-            members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }]);
+            members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'správce', department: '---', canManage: true }]);
             documents = loadData('documents', []);
             vehicles = loadData('vehicles', []);
             laws = loadData('laws', []);
@@ -1599,12 +1609,11 @@
         }
 
         // ============================================================
-        // LOGO – NASTAVENÍ OBRÁZKU PODLE ODDĚLENÍ
+        // LOGO – NASTAVENÍ OBRÁZKU NEBO ZKRATEK
         // ============================================================
         function updateHeaderLogo(deptName) {
             const logos = getLogos();
             const logoEl = document.getElementById('headerLogo');
-            const letterEl = document.getElementById('headerLogoLetter');
             const url = logos[deptName] || '';
 
             // Vyčistit předchozí obsah
@@ -1616,24 +1625,25 @@
                 img.src = url;
                 img.alt = deptName;
                 img.onerror = function() {
-                    // Pokud obrázek nejde načíst, zobrazit písmeno
-                    logoEl.innerHTML = `<span class="letter">${deptName.charAt(0)}</span>`;
+                    // Pokud obrázek nejde načíst, zobrazit zkratku
+                    logoEl.innerHTML = `<span class="letter">${getDeptLetters(deptName)}</span>`;
                 };
                 logoEl.appendChild(img);
             } else {
-                // Zobrazit písmeno
+                // Zobrazit zkratku (PD, SD, HP, OJ)
                 const span = document.createElement('span');
                 span.className = 'letter';
-                span.textContent = deptName.charAt(0);
+                span.textContent = getDeptLetters(deptName);
                 logoEl.appendChild(span);
             }
         }
 
-        // Kliknutí na logo – změna obrázku
+        // Kliknutí na logo – změna obrázku (nebo návrat ke zkratce)
         function changeLogo() {
             const dept = currentDepartment || 'LSPD';
             const currentUrl = getLogos()[dept] || '';
-            const newUrl = prompt(`Zadejte URL obrázku pro oddělení ${dept} (nechte prázdné pro písmeno):`, currentUrl);
+            const currentLetters = getDeptLetters(dept);
+            const newUrl = prompt(`Zadejte URL obrázku pro oddělení ${dept} (nechte prázdné pro zkratku "${currentLetters}"):`, currentUrl);
             if (newUrl === null) return; // zrušeno
 
             const logos = getLogos();
@@ -1728,14 +1738,13 @@
             document.getElementById('header').classList.add('active');
             document.getElementById('mainContent').classList.add('with-header');
             document.getElementById('headerLogoText').textContent = dept.name;
-            document.getElementById('headerLogoIcon').style.background = `linear-gradient(135deg, ${dept.color}, var(--primary-dark))`;
             document.getElementById('userName').textContent = username;
             document.getElementById('welcomeTitle').textContent = `Vítejte, ${username}!`;
             document.getElementById('welcomeMessage').textContent = `Oddělení: ${dept.name}`;
             document.getElementById('deptBadge').textContent = dept.name;
             document.getElementById('managePersonsCard').style.display = currentUser.canManage ? 'block' : 'none';
 
-            // Nastavení loga
+            // Nastavení loga podle oddělení (zkratka PD, SD, HP, OJ)
             updateHeaderLogo(dept.name);
 
             displayCallSigns();
@@ -2908,7 +2917,7 @@
 
             testCloudConnection();
 
-            // Při načtení nastavit logo pro výchozí oddělení
+            // Při načtení nastavit logo pro výchozí oddělení (LSPD → PD)
             updateHeaderLogo('LSPD');
 
             setInterval(async () => {
