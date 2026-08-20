@@ -950,7 +950,7 @@
         // ===== MAPOVÁNÍ ODDĚLENÍ NA ZKRATKY PRO LOGO =====
         function getDeptLetters(deptName) {
             const map = {
-                'LSPD': 'PD', 
+                'LSPD': 'PD',
                 'LSSD': 'SD',
                 'SAHP': 'HP',
                 'DOJ': 'OJ'
@@ -973,8 +973,8 @@
         // ============================================================
         // KONFIGURACE – NAČÍTÁ SE Z LOCALSTORAGE
         // ============================================================
-        let cloudBinId = localStorage.getItem('cloudBinId') || "67ecf60b8561e97a50f14d3a";
-        let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$rM3yZ1wVYhZ5xQ8J7kL9mN";
+        let cloudBinId = localStorage.getItem('cloudBinId') || "6a86034af5f4af5e2929f3e1";
+        let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$PitmcF0aSJgXbGTpspVyJOQLAM77kAdIZADuvmAWTOL7ZrclXK4im";
         let discordClientId = localStorage.getItem('discordClientId') || "";
         let discordRedirectUri = localStorage.getItem('discordRedirectUri') || window.location.origin + window.location
         .pathname;
@@ -1327,7 +1327,7 @@
                 callSigns = record.callSigns || [];
                 ensureCompleteCallSigns();
 
-                members = record.members || [];
+                members = record.members || [{ name: 'honza2001', password: '1234', rank: 'Chief Of Police', department: 'LSPD', canManage: true }];
                 documents = record.documents || [];
                 vehicles = record.vehicles || [];
                 laws = record.laws || [];
@@ -1398,7 +1398,7 @@
         function loadFromLocalStorage() {
             callSigns = loadData('callSigns', []);
             ensureCompleteCallSigns();
-            members = loadData('members', []);
+            members = loadData('members', [{ name: 'honza2001', password: '1234', rank: 'správce', department: '---', canManage: true }]);
             documents = loadData('documents', []);
             vehicles = loadData('vehicles', []);
             laws = loadData('laws', []);
@@ -1622,7 +1622,7 @@
             if (url && url.trim() !== '') {
                 // Zobrazit obrázek
                 const img = document.createElement('img');
-                img.src = url;6
+                img.src = url;
                 img.alt = deptName;
                 img.onerror = function() {
                     // Pokud obrázek nejde načíst, zobrazit zkratku
