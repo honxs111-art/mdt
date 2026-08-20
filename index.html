@@ -938,8 +938,6 @@
         // ============================================================
         // KONFIGURACE LOG – OBRÁZKY PRO KAŽDÉ ODDĚLENÍ
         // ============================================================
-        // Uživatel může změnit odkazy – stačí upravit hodnoty níže.
-        // Odkazy se ukládají do localStorage, takže změny zůstanou.
         const DEFAULT_LOGOS = {
             LSPD: '',   // prázdné = zobrazí se zkratka "PD"
             LSSD: '',   // "SD"
@@ -973,7 +971,7 @@
         // ============================================================
         // KONFIGURACE – NAČÍTÁ SE Z LOCALSTORAGE
         // ============================================================
-        let cloudBinId = localStorage.getItem('cloudBinId') || "6a86034af5f4af5e2929f3e1";
+        let cloudBinId = localStorage.getItem('cloudBinId') || "6a872f40f5f4af5e292db3ba";
         let cloudApiKey = localStorage.getItem('cloudApiKey') || "$2a$10$PitmcF0aSJgXbGTpspVyJOQLAM77kAdIZADuvmAWTOL7ZrclXK4im";
         let discordClientId = localStorage.getItem('discordClientId') || "";
         let discordRedirectUri = localStorage.getItem('discordRedirectUri') || window.location.origin + window.location
@@ -1691,8 +1689,35 @@
                 personIncidents[d.id] = [];
             }
             await saveAllData();
+
+            // ===== OBNOVENÍ SEZNAMŮ (OPRAVA) =====
+            // Pokud je stránka Osoby aktivní, obnov seznam
+            if (document.getElementById('personPage').classList.contains('active')) {
+                displayDocuments();
+            }
+            // Pokud je stránka Vozidla aktivní, obnov seznam
+            if (document.getElementById('vehiclePage').classList.contains('active')) {
+                displayVehiclesList();
+            }
+
+            // Vyčištění formuláře
+            document.getElementById('docType').value = '';
+            document.getElementById('photoPreview').innerHTML = '<i class="fas fa-camera"></i>';
+            document.getElementById('photoInput').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('birthDate').value = '';
+            document.getElementById('bloodType').value = '';
+            document.getElementById('vehicleSPZ').value = '';
+            document.getElementById('vehicleMake').value = '';
+            document.getElementById('vehicleModel').value = '';
+            document.getElementById('vehicleColor').value = '';
+            document.getElementById('vehicleOwner').value = '';
+            document.getElementById('vehicleRegDate').value = '';
+
             showLoading(false);
-            showWelcomeScreen();
+            alert('✅ Doklad byl vytvořen!');
+            // Zůstaň na aktuální stránce (nezavírej flip)
         }
 
         // ============================================================
